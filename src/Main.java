@@ -7,8 +7,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 
 public class Main {
 	WebDriver driver;
-	String email = "1113421658@qq.com";
-	String password = "2010017980502";
+	String email = "";
+	String password = "";
 	//learn it by heart, there are 8 elements that can be searched by findElement() method.
 	//id, name, classname, tagname, cssSelector,
 	//linkText, partialLinkText, xpath
