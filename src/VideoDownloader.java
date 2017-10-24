@@ -9,12 +9,12 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-public class Main {
+public class VideoDownloader {
 	WebDriver driver;
 	String downloadDir = "D:\\11134\\Download\\Video";
 	String email = "";
 	String password = "";
-	String SMnumber = "sm31832794";
+	String SMnumber = "sm32128035";
 	String videoURL;
 	String videoTitle;
 	String producerName;
@@ -101,8 +101,10 @@ public class Main {
 
 	public void downloadVideo() {
 		try {
-			Process downloadingProcess = Runtime.getRuntime().exec("cmd /c C:\\ChromeAuto\\wget64.exe -P " + downloadDir + " --no-check-certificate " + videoURL);
+			Process downloadingProcess = Runtime.getRuntime().exec("cmd /c C:\\ChromeAuto\\wget64.exe -P " + downloadDir + " --no-check-certificate -nv " + videoURL);
+			System.out.println("start downloading");
 			downloadingProcess.waitFor();
+			System.out.println("done");
 		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			System.out.println(e);
@@ -112,7 +114,7 @@ public class Main {
 	public void rename() {
 
 		String fileTile = videoTitle + "【" + producerName.substring(0, producerName.length() - 3) + "】";
-		System.out.println(fileTile);
+		
 		File dir = new File(downloadDir);
 		FilenameFilter filter = new FilenameFilter() {
 			public boolean accept(File dir, String name) {
@@ -123,15 +125,17 @@ public class Main {
 		if (fileList.length == 0) {
 			System.out.println("video file is not found");
 		} else {
+			System.out.println("file found, rename to");
 			File video = new File(downloadDir + "\\" + fileList[0]);
 			video.renameTo(new File(downloadDir + "\\" + fileTile + ".mp4"));
 		}
+		System.out.println(fileTile + ".mp4, done!");
 		
 	}
 
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
-		Main aMain = new Main();
+		VideoDownloader aMain = new VideoDownloader();
 		aMain.openChrome();
 		aMain.login();
 		aMain.setupNicoNico();
