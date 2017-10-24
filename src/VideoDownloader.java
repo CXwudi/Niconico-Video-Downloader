@@ -1,6 +1,8 @@
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
@@ -33,7 +35,7 @@ public class VideoDownloader {
 		driver.manage().deleteAllCookies();
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS);
+		driver.manage().timeouts().pageLoadTimeout(15, TimeUnit.SECONDS);
 	}
 
 	public void login() {
@@ -42,20 +44,22 @@ public class VideoDownloader {
 		WebElement ps = driver.findElement(By.id("input__password"));
 		ps.sendKeys(password);
 		ps.submit();
+		
+		if (driver.getCurrentUrl().equals("http://www.nicovideo.jp/")) 
+			System.out.println("login success");
+		else
+			System.out.println("login fail");
 	}
 
-	public void setupNicoNico() throws Exception {
+	public void setupNicoNico() {
 
-		if (!driver.getCurrentUrl().equals("http://www.nicovideo.jp/")) {
-			throw new Exception("nicovideo main website does not open after login");
-		}
 		driver.findElement(By.id("areaTrigger")).click();
 		driver.findElement(By.cssSelector("a.selectType.JP")).click();
-		if (!driver.getCurrentUrl().equals("http://www.nicovideo.jp/")) {
-			throw new Exception("nicovideo main website does not open after region selection");
-		}
+		System.out.println("change region success");
+		
 		driver.findElement(By.id("langTrigger")).click();
 		driver.findElement(By.cssSelector("a.selectType.ja-jp")).click();
+		System.out.println("change language success");
 	}
 
 	public void getVideoInfo() {
@@ -63,7 +67,16 @@ public class VideoDownloader {
 		int repeated = 0;
 		while (videoURL.equals("") || videoURL == null) {
 			// driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
+			if (repeated++ >= 4) {
+				try {
+					Thread.sleep(7000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			try {
+				System.out.println(repeated + " times try");
 				driver.get("http://www.nicovideo.jp/watch/" + SMnumber);
 				System.out.println("website opened");
 				videoURL = driver.findElement(By.id("MainVideoPlayer")).findElement(By.cssSelector("video")).getAttribute("src");
@@ -82,14 +95,7 @@ public class VideoDownloader {
 				// TODO Auto-generated catch block
 				System.out.println(new TimeoutException("don't worry, CXwudi and miku are going to refrash the webpage and make it work!!"));
 			}
-			if (repeated++ >= 5) {
-				try {
-					Thread.sleep(7000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+			
 
 		}
 
@@ -102,6 +108,7 @@ public class VideoDownloader {
 	public void downloadVideo() {
 		try {
 			Process downloadingProcess = Runtime.getRuntime().exec("cmd /c C:\\ChromeAuto\\wget64.exe -P " + downloadDir + " --no-check-certificate -nv " + videoURL);
+			driver.get("about:blank");// save internet speed by prevent brower from downloading
 			System.out.println("start downloading");
 			downloadingProcess.waitFor();
 			System.out.println("done");
@@ -116,12 +123,12 @@ public class VideoDownloader {
 		String fileTile = videoTitle + "【" + producerName.substring(0, producerName.length() - 3) + "】";
 		
 		File dir = new File(downloadDir);
-		FilenameFilter filter = new FilenameFilter() {
+		String[] fileList = dir.list(new FilenameFilter() {
 			public boolean accept(File dir, String name) {
 				return name.startsWith("nicovideo");
 			}
-		};
-		String[] fileList = dir.list(filter);
+		});
+		
 		if (fileList.length == 0) {
 			System.out.println("video file is not found");
 		} else {
@@ -133,15 +140,22 @@ public class VideoDownloader {
 		
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		VideoDownloader aMain = new VideoDownloader();
+		ArrayList<String> smList = new ArrayList<>(
+				Arrays.asList(new String[] {"sm32047871", "sm32012728","sm31995557","sm31985113"}));
+		
 		aMain.openChrome();
 		aMain.login();
 		aMain.setupNicoNico();
-		aMain.getVideoInfo();
-		aMain.downloadVideo();
-		aMain.rename();
+		for (String string : smList) {
+			aMain.SMnumber = string;
+			aMain.getVideoInfo();
+			aMain.downloadVideo();
+			aMain.rename();
+		}
+		
 	}
 
 }
