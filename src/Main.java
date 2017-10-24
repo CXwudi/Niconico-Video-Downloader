@@ -12,8 +12,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 public class Main {
 	WebDriver driver;
 	String downloadDir = "D:\\11134\\Download\\Video";
-	String email = "1113421658@qq.com";
-	String password = "2010017980502";
+	String email = "";
+	String password = "";
 	String SMnumber = "sm31832794";
 	String videoURL;
 	String videoTitle;
