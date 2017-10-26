@@ -1,3 +1,5 @@
+
+import java.util.HashSet;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
@@ -13,14 +15,17 @@ public class MainModel {
 	WebDriver driver;
 	VideoDownloader downloader;
 	MyListGrabber listGrabber;
-	
-	String email = "";
-	String password = "";
-	
+	TaskManager taskManager;
+
+	String email = "1113421658@qq.com";
+	String password = "2010017980502";
+
+	HashSet<String> downloadDone;// record the video that just downloaded.
+
 	public MainModel() {
 		// TODO Auto-generated constructor stub
 		System.setProperty("webdriver.chrome.driver", "C:\\ChromeAuto\\chromedriver.exe");
-		
+
 		driver = new ChromeDriver();
 		driver.manage().deleteAllCookies();
 		driver.manage().window().maximize();
@@ -28,49 +33,59 @@ public class MainModel {
 		driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS);
 		downloader = new VideoDownloader(driver);
 		listGrabber = new MyListGrabber(driver);
-		
+		taskManager = new TaskManager();
+
 	}
-	
-	public void login() {
+
+	public boolean login() {
 		MainModel.loadWebPage(driver, "https://account.nicovideo.jp/login");
 		driver.findElement(By.id("input__mailtel")).sendKeys(email);
 		WebElement ps = driver.findElement(By.id("input__password"));
 		ps.sendKeys(password);
 		ps.submit();
 
-		if (driver.getCurrentUrl().equals("http://www.nicovideo.jp/")) System.out.println("login success");
-		else System.out.println("login fail");
+		if (driver.getCurrentUrl().equals("http://www.nicovideo.jp/")) {
+			System.out.println("login success");
+			return true;
+		} else {
+			System.out.println("login fail");
+			return false;
+		}
 	}
-	
+
 	public void setupNicoNico() {
 
 		// driver.findElements
 		try {
 			driver.findElement(By.id("areaTrigger")).click();
+			Thread.sleep(50);
 			driver.findElement(By.cssSelector("a.selectType.JP")).click();
 			System.out.println("change region success");
 
-		} catch (TimeoutException e) {
+		} catch (TimeoutException | InterruptedException e) {
 			// TODO Auto-generated catch block
-			System.out.println("change region fail");
+			System.err.println("change region may fail");
 			driver.navigate().refresh();
 		}
 
 		try {
 			driver.findElement(By.id("langTrigger")).click();
+			Thread.sleep(50);
 			driver.findElement(By.cssSelector("a.selectType.ja-jp")).click();
 			System.out.println("change language success");
 
-		} catch (TimeoutException e) {
+		} catch (TimeoutException | InterruptedException e) {
 			// TODO Auto-generated catch block
-			System.out.println("change language fail");
+			System.err.println("change language may fail");
 			driver.navigate().refresh();
 		}
 
 	}
-	
-	
-	
+
+	public void doTask() {
+		
+	}
+
 	public static void loadWebPage(WebDriver driver, String URL) {
 		while (true) {
 			// driver.findElements
@@ -81,17 +96,15 @@ public class MainModel {
 				break;
 			} catch (TimeoutException | InterruptedException e) {
 				// TODO Auto-generated catch block
-				System.out.println("load website timeout:( \ndon't worry, CXwudi and miku are going to refrash the webpage and make it work!!");
+				System.err.println("load website timeout:( ");
+				System.out.println("don't worry, CXwudi and miku are going to refrash the webpage and make it work!!\"");
 			}
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		MainModel main = new MainModel();
-		main.login();
-		
-		
+
 	}
 
 }

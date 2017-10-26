@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class testDownloading {
 	
@@ -7,21 +8,22 @@ public class testDownloading {
 		// TODO Auto-generated method stub
 		MainModel main = new MainModel();
 		
-		ArrayList<String> smList = new ArrayList<>(Arrays.asList(new String[] { "sm32047871", "sm32012728", "sm31995557", "sm31985113" }));
+		ArrayList<String> smList = new ArrayList<>(Arrays.asList(new String[] {
+				"sm31985113" }));
 
 		main.login();
 		main.setupNicoNico();
 		//testing downloading 4 videos
 		for (String string : smList) { 
-			 main.downloader.getVideoInfo(string);
-			 main.downloader.downloadVideo(); 
+			 main.downloader.getVideoInfoFrom(string);
+			 main.downloader.downloadVideoTo(""); 
 			 main.downloader.rename(); 
 		}
 		//test getting mylist
-		main.listGrabber.getMyList();
-		for (String string : main.listGrabber.myLists.keySet()) {
+		HashMap<String, String> hashMap = main.listGrabber.getMyList();
+		/*for (String string : hashMap.keySet()) {
 			main.listGrabber.fetchSMlists(string);
-		}
+		}*/
 		 
 	}
 

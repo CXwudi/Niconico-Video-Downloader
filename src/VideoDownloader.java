@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -10,6 +11,7 @@ import org.openqa.selenium.WebDriver;
 public class VideoDownloader {
 	WebDriver driver;
 	String downloadDir = "D:\\11134\\Download\\Video";
+	String downloadSubDir;
 
 	String SMnumber = "sm32128035";
 	String videoURL;
@@ -36,7 +38,7 @@ public class VideoDownloader {
 	}
 
 
-	public void getVideoInfo(String sm) {
+	public void getVideoInfoFrom(String sm) {
 		SMnumber = sm;
 		videoURL = "";
 		int repeated = 0;
@@ -74,13 +76,23 @@ public class VideoDownloader {
 
 	}
 
-	public void downloadVideo() {
+	public void downloadVideoTo(String subDir) {
 		try {
-			Process downloadingProcess = Runtime.getRuntime().exec("cmd /c C:\\ChromeAuto\\wget64.exe -P " + downloadDir + " --no-check-certificate -nv " + videoURL);
+			downloadSubDir = subDir.equals("")? "":"\\" + subDir ;
+			Process downloadingProcess = Runtime.getRuntime().exec("cmd /c C:\\ChromeAuto\\wget64.exe -P " + downloadDir + downloadSubDir + " --no-check-certificate -nv " + videoURL);
 			// driver.get("about:blank");// save internet speed by prevent brower from
-			// downloading
-
 			System.out.println("start downloading");
+			/*InputStream is = downloadingProcess.getInputStream();
+			InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+            
+			Thread.sleep(1000);
+			String line;
+			while(downloadingProcess.isAlive()) {
+				line = br.readLine();
+				System.out.println(line);
+			}*/
+
 			downloadingProcess.waitFor();
 			System.out.println("done");
 		} catch (IOException | InterruptedException e) {
@@ -104,8 +116,8 @@ public class VideoDownloader {
 			System.out.println("video file is not found");
 		} else {
 			System.out.println("file found, rename to");
-			File video = new File(downloadDir + "\\" + fileList[0]);
-			video.renameTo(new File(downloadDir + "\\" + fileTile + ".mp4"));
+			File video = new File(downloadDir  + downloadSubDir + "\\" + fileList[0]);
+			video.renameTo(new File(downloadDir + downloadSubDir + "\\" + fileTile + ".mp4"));
 		}
 		System.out.println(fileTile + ".mp4, done!");
 
