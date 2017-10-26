@@ -21,8 +21,8 @@ public class MainModel {
 	MyListGrabber listGrabber;
 	TaskManager taskManager;
 
-	String email = "1113421658@qq.com";
-	String password = "2010017980502";
+	String email = "";
+	String password = "";
 
 	HashSet<String> downloadDone;// record the video that just downloaded.
 
