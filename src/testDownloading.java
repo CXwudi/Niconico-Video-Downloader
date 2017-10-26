@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 public class testDownloading {
 	
@@ -9,21 +11,17 @@ public class testDownloading {
 		MainModel main = new MainModel();
 		
 		ArrayList<String> smList = new ArrayList<>(Arrays.asList(new String[] {
-				"sm31985113" }));
+				"sm32047871" }));
 
 		main.login();
 		main.setupNicoNico();
-		//testing downloading 4 videos
+		//testing downloading some videos
 		for (String string : smList) { 
 			 main.downloader.getVideoInfoFrom(string);
 			 main.downloader.downloadVideoTo(""); 
-			 main.downloader.rename(); 
+			 //main.downloader.rename(); 
 		}
-		//test getting mylist
-		HashMap<String, String> hashMap = main.listGrabber.getMyList();
-		/*for (String string : hashMap.keySet()) {
-			main.listGrabber.fetchSMlists(string);
-		}*/
+		
 		 
 	}
 

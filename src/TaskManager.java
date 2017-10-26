@@ -4,21 +4,34 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.swing.plaf.metal.MetalIconFactory.FolderIcon16;
+
+import java.util.TreeMap;
 
 public class TaskManager {
 	BufferedReader reader;
 	PrintWriter writer;
 	File listDownloadedTxt;
 
-	HashMap<String, String> listDownloaded; // same, sm number = song title
-	HashMap<String, String> toDownload; // same
+	TreeMap<String, String> alreadyDownloaded; // same, sm number = song title
+	TreeMap<String, String> toDownload; // same
+	Comparator<String> invereOrder;//the inverse order, from newer to older songs
 
 	public TaskManager() {
 		// TODO Auto-generated constructor stub
-		listDownloaded = new HashMap<>();
-		toDownload = new HashMap<>();
+		invereOrder = new Comparator<String>() {
+			@Override
+			public int compare(String o1, String o2) {
+				return o2.compareTo(o1);
+			}
+		};
+		alreadyDownloaded = new TreeMap<>(invereOrder);
+		toDownload = new TreeMap<>(invereOrder);
 		listDownloadedTxt = new File(new File("."), "downloaded.txt");
 
 		try {
@@ -32,58 +45,57 @@ public class TaskManager {
 
 	// read file from a txt file that records all smNumber of videos that have been
 	// downloaded before.
-	public HashMap<String, String> isDownloaded() {
-		boolean isSM = true;
-		String temp = "";
+	public TreeMap<String, String> getIsDownloaded() {
+
 		try {
 			for (String i = reader.readLine(); i != null; i = reader.readLine()) {
-				if (isSM) {
-					listDownloaded.put(i, "");
-					temp = i;
-				} else {
-					listDownloaded.put(temp, i);
-				}
-				isSM = !isSM;
-
+				alreadyDownloaded.put(i.substring(0, i.indexOf("\t")), i.substring(i.indexOf("\t")+1, i.length()));
 			}
 		} catch (IOException e) {
 			System.err.println(e);
 		}
-		return listDownloaded;
+		return alreadyDownloaded;
 	}
 
 	/**
 	 * return the list of video should be downloaded.
 	 * 
-	 * @param HashMap<sm
-	 *            number, song title> lists
+	 * @param HashMap<sm number, song title> lists
 	 * @return HashMap<sm number, song title>
 	 */
-	public HashMap<String, String> downloadList(HashMap<String, String> lists) {
-
-		return null;
+	public TreeMap<String, String> toDoList(TreeMap<String, String> lists) {
+		System.out.print("your folder has: " + lists);
+		TreeMap<String, String> toDoList = new TreeMap<>();
+		for (Entry<String, String> smNumber : lists.entrySet()) {
+			if (!alreadyDownloaded.containsKey(smNumber.getKey())) {
+				toDoList.put(smNumber.getKey(), smNumber.getValue());
+			}
+		}
+		System.out.println("video need to be downloaded: " + toDoList);
+		return toDoList;
 	}
 
-	// update the listDownloaded hashset, and write it into txt file.
-	public void updateDownloadedList(HashMap<String, String> merge) throws IOException {
-
-		writer = new PrintWriter(new FileWriter(listDownloadedTxt + ".out"));
-		listDownloaded.putAll(merge);
-		System.out.println(listDownloaded);
+	// update the alreadyDownloaded hashset, and write it into txt file.
+	public void updateDownloadedList(TreeMap<String, String> merge) {
+		try {
+			writer = new PrintWriter(new FileWriter(listDownloadedTxt));
+		} catch (IOException e) { }
+		alreadyDownloaded.putAll(merge);
+		System.out.println(alreadyDownloaded);
 		boolean flag = false;
-		for (Entry<String, String> entries : listDownloaded.entrySet()) {
-			writer.println((flag ? String.format("%n") : "") + entries.getKey());
-			writer.print(entries.getValue());
+		for (Entry<String, String> entries : alreadyDownloaded.entrySet()) {
+			writer.print((flag ? String.format("%n") : "") + entries.getKey() + "\t" + entries.getValue());
 			flag = true;
 		}
+		writer.close();
 
 	}
 
 	public static void main(String[] args) throws IOException {
 		TaskManager taskManager = new TaskManager();
-		HashMap<String, String> map = taskManager.isDownloaded();
+		Map<String, String> map = taskManager.getIsDownloaded();
 		System.out.println(map);
-		HashMap<String, String> map2 = new HashMap<>();
+		TreeMap<String, String> map2 = new TreeMap<>();
 		map2.put("sm333", "Koyori MV");
 		map2.put("sm444", "MARETU MV");
 		taskManager.updateDownloadedList(map2);

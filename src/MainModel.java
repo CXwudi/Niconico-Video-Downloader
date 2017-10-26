@@ -1,5 +1,8 @@
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.TreeMap;
+import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
@@ -17,8 +20,8 @@ public class MainModel {
 	MyListGrabber listGrabber;
 	TaskManager taskManager;
 
-	String email = "1113421658@qq.com";
-	String password = "2010017980502";
+	String email = "";
+	String password = "";
 
 	HashSet<String> downloadDone;// record the video that just downloaded.
 
@@ -82,8 +85,20 @@ public class MainModel {
 
 	}
 
-	public void doTask() {
+	public void doTask(String subDir, TreeMap<String, String> toDoList) {
+		for (String sm : toDoList.keySet()) {
+			downloader.getVideoInfoFrom(sm);
+			downloader.downloadVideoTo(subDir);
+		}
 		
+	}
+	
+	public void setAllDownloaded() {
+		HashMap<String, String> hashMap = listGrabber.getMyList();
+		for (Entry<String, String> list : hashMap.entrySet()) {
+			TreeMap<String, String> toDoList = listGrabber.fetchSMlists(list.getKey());
+			taskManager.updateDownloadedList(toDoList);
+		}
 	}
 
 	public static void loadWebPage(WebDriver driver, String URL) {
@@ -101,10 +116,14 @@ public class MainModel {
 			}
 		}
 	}
+	
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
+		MainModel main = new MainModel();
+		main.login();
+		main.setupNicoNico();
+		main.setAllDownloaded();
 	}
 
 }

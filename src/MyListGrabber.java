@@ -1,6 +1,8 @@
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -11,13 +13,19 @@ public class MyListGrabber {
 	WebDriver driver;
 	
 	HashMap<String, String> myLists; // list id = list name
-	HashMap<String, String> smNumberMap; // sm number = song title for one single folder!
+	TreeMap<String, String> smNumberMap; // sm number = song title, for one single folder!
 	
 	public MyListGrabber(WebDriver d) {
 		// TODO Auto-generated constructor stub
 		driver = d;
 		myLists = new HashMap<>();
-		smNumberMap = new HashMap<>();
+		smNumberMap = new TreeMap<>(new Comparator<String>() {
+
+			@Override
+			public int compare(String o1, String o2) {
+				return o2.compareTo(o1);
+			}
+		});
 		
 	}
 	
@@ -40,7 +48,7 @@ public class MyListGrabber {
 
 	}
 
-	public HashMap<String, String> fetchSMlists(String listNumber) {
+	public TreeMap<String, String> fetchSMlists(String listNumber) {
 		MainModel.loadWebPage(driver, "http://www.nicovideo.jp/my/mylist/#/" + listNumber);
 		
 		
