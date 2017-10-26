@@ -13,7 +13,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 /**
- * the model in MVC, it will contains many small model pieces.
+ * the model in MVC, it will contains 4 small model pieces and a toolkit.
  */
 public class MainModel {
 	WebDriver driver;
@@ -97,8 +97,8 @@ public class MainModel {
 	public void setAllDownloaded() {
 		HashMap<String, String> hashMap = listGrabber.getMyList();
 		for (Entry<String, String> list : hashMap.entrySet()) {
-			TreeMap<String, String> toDoList = listGrabber.fetchSMlists(list.getKey());
-			taskManager.updateDownloadedList(toDoList);
+			TreeMap<String, String> List = listGrabber.fetchSMlists(list.getKey());
+			taskManager.updateDownloadedList(List);
 		}
 	}
 

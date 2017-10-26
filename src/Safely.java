@@ -31,6 +31,8 @@ public class Safely {
 				return element;
 			} catch (TimeoutException | InterruptedException e) {
 				System.err.println("find element timeout:( ");
+				System.out.println("don't worry, CXwudi and miku are going to try again and make it work!!");
+				
 			}
 		}
 		
@@ -43,7 +45,8 @@ public class Safely {
 				return elementList;
 				
 			} catch (TimeoutException | InterruptedException e) {
-				
+				System.err.println("find elements timeout:( ");
+				System.out.println("don't worry, CXwudi and miku are going to try again and make it work!!");
 			}
 		}
 	}
@@ -56,6 +59,7 @@ public class Safely {
 				return element;
 			} catch (TimeoutException | InterruptedException e) {
 				System.err.println("find element timeout:( ");
+				System.out.println("don't worry, CXwudi and miku are going to try again and make it work!!");
 			}
 		}
 		
@@ -68,7 +72,8 @@ public class Safely {
 				return elementList;
 				
 			} catch (TimeoutException | InterruptedException e) {
-				
+				System.err.println("find elements timeout:( ");
+				System.out.println("don't worry, CXwudi and miku are going to try again and make it work!!");
 			}
 		}
 	}

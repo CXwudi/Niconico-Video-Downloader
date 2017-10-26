@@ -4,16 +4,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
+
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 
-public class VideoDownloader {
+public class VideoDownloader{
 	WebDriver driver;
 	String downloadDir = "D:\\11134\\Download\\Video";
 	String downloadSubDir;
@@ -75,7 +73,7 @@ public class VideoDownloader {
 
 		}
 
-		System.out.println("SEE!! CXwudi and miku get it, here we are. URL = " + videoURL);
+		System.out.println("SEE!! CXwudi and miku get it");
 		System.out.println("title = " + videoTitle);
 		System.out.println("producer = " + producerName);
 
@@ -126,7 +124,9 @@ public class VideoDownloader {
 			URL url = new URL(videoURL);
 			//ReadableByteChannel rbc = Channels.newChannel(url.openStream());
 			BufferedInputStream input = new BufferedInputStream(url.openStream());
-			FileOutputStream output = new FileOutputStream(new File(downloadDir + downloadSubDir +"\\"+ title +  ".mp4"));
+			File video = new File(downloadDir + downloadSubDir);
+			video.mkdirs();
+			FileOutputStream output = new FileOutputStream(video +"\\"+ title +  ".mp4");
 			System.out.println("start downloading");
 			byte[] buffer = new byte[1024];
 			//output.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
@@ -139,7 +139,8 @@ public class VideoDownloader {
 			input.close();
 			System.out.println("done");
 		} catch (IOException e) {
-			System.err.println(e);
+			e.printStackTrace();
+			
 		}
 	}
 

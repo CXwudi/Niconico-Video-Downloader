@@ -64,7 +64,7 @@ public class TaskManager {
 	 * @return HashMap<sm number, song title>
 	 */
 	public TreeMap<String, String> toDoList(TreeMap<String, String> lists) {
-		System.out.print("your folder has: " + lists);
+		//System.out.println("your folder has: " + lists);
 		TreeMap<String, String> toDoList = new TreeMap<>();
 		for (Entry<String, String> smNumber : lists.entrySet()) {
 			if (!alreadyDownloaded.containsKey(smNumber.getKey())) {
@@ -81,12 +81,11 @@ public class TaskManager {
 			writer = new PrintWriter(new FileWriter(listDownloadedTxt));
 		} catch (IOException e) { }
 		alreadyDownloaded.putAll(merge);
-		System.out.println(alreadyDownloaded);
-		boolean flag = false;
+
 		for (Entry<String, String> entries : alreadyDownloaded.entrySet()) {
-			writer.print((flag ? String.format("%n") : "") + entries.getKey() + "\t" + entries.getValue());
-			flag = true;
+			writer.println(entries.getKey() + "\t" + entries.getValue());//(flag ? String.format("%n") : "") + 
 		}
+		System.out.println("add videos' info to downloaded.txt success");
 		writer.close();
 
 	}

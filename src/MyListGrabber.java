@@ -6,6 +6,7 @@ import java.util.TreeMap;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -60,20 +61,23 @@ public class MyListGrabber {
 				sort.findElement(By.cssSelector("[value='1']")).click();
 				System.out.println("change sort order success");
 				Thread.sleep(700);
-				break;
-			} catch (StaleElementReferenceException | InterruptedException e) {} 
+				
+				System.out.println("start fetching lists");
+				List<WebElement> myFavorMusics = driver.findElements( By.cssSelector("li[id^=SYS_box_item_0_]"));
+				
+				smNumberMap.clear();
+				for (WebElement webElement : myFavorMusics) {
+					WebElement description = webElement.findElement(By.cssSelector("a[href^='/watch/']"));
+					String sm = description.getAttribute("href");// it gives us url like: http://www.nicovideo.jp/watch/sm31818521
+					String smNumber = sm.substring(sm.indexOf("sm"), sm.length());
+					String title = description.getText();// it gives us string like: ハチ MV「砂の惑星 feat.初音ミク」
+					smNumberMap.put(smNumber, title);
+				}
+				System.out.println(smNumberMap);
+				return smNumberMap;
+			} catch (StaleElementReferenceException | InterruptedException | TimeoutException e) {} 
 		}
-		System.out.println("start fetching lists");
-		List<WebElement> myFavorMusics = Safely.findElements(driver, By.cssSelector("li[id^=SYS_box_item_0_]"));
-		smNumberMap.clear();
-		for (WebElement webElement : myFavorMusics) {
-			WebElement description = webElement.findElement(By.cssSelector("a[href^='/watch/']"));
-			String sm = description.getAttribute("href");// it gives us url like: http://www.nicovideo.jp/watch/sm31818521
-			String smNumber = sm.substring(sm.indexOf("sm"), sm.length());
-			String title = description.getText();// it gives us string like: ハチ MV「砂の惑星 feat.初音ミク」
-			smNumberMap.put(smNumber,title);
-		}
-		System.out.println(smNumberMap);
-		return smNumberMap;
+		
+		
 	}
 }
