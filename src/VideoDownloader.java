@@ -56,7 +56,7 @@ public class VideoDownloader {
 			}*/
 
 			System.out.println(++repeated + " times try");
-			MainModel.loadWebPage(driver, "http://www.nicovideo.jp/watch/" + SMnumber);
+			Safely.loadWebPage(driver, "http://www.nicovideo.jp/watch/" + SMnumber);
 			try {
 				Thread.sleep(700);
 			} catch (InterruptedException e) { }

@@ -1,6 +1,7 @@
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
@@ -20,8 +21,8 @@ public class MainModel {
 	MyListGrabber listGrabber;
 	TaskManager taskManager;
 
-	String email = "";
-	String password = "";
+	String email = "1113421658@qq.com";
+	String password = "2010017980502";
 
 	HashSet<String> downloadDone;// record the video that just downloaded.
 
@@ -41,7 +42,7 @@ public class MainModel {
 	}
 
 	public boolean login() {
-		MainModel.loadWebPage(driver, "https://account.nicovideo.jp/login");
+		Safely.loadWebPage(driver, "https://account.nicovideo.jp/login");
 		driver.findElement(By.id("input__mailtel")).sendKeys(email);
 		WebElement ps = driver.findElement(By.id("input__password"));
 		ps.sendKeys(password);
@@ -101,21 +102,7 @@ public class MainModel {
 		}
 	}
 
-	public static void loadWebPage(WebDriver driver, String URL) {
-		while (true) {
-			// driver.findElements
-			try {
-				driver.get(URL);
-				System.out.println("load website " + URL + " success");
-				Thread.sleep(300);
-				break;
-			} catch (TimeoutException | InterruptedException e) {
-				// TODO Auto-generated catch block
-				System.err.println("load website timeout:( ");
-				System.out.println("don't worry, CXwudi and miku are going to refrash the webpage and make it work!!\"");
-			}
-		}
-	}
+	
 	
 
 	public static void main(String[] args) {

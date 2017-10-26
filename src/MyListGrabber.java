@@ -30,9 +30,9 @@ public class MyListGrabber {
 	}
 	
 	public HashMap<String, String> getMyList() {
-		MainModel.loadWebPage(driver, "http://www.nicovideo.jp/my/mylist/");
+		Safely.loadWebPage(driver, "http://www.nicovideo.jp/my/mylist/");
 		
-		WebElement myListContainer = driver.findElement(By.cssSelector("div.navInner"));
+		WebElement myListContainer = Safely.findElement(driver,By.cssSelector("div.navInner"));
 		List<WebElement> searchResults = myListContainer.findElements(By.cssSelector("li[id^=SYS_box_group_]"));
 
 		// ex: SYS_box_group_57925968
@@ -49,7 +49,7 @@ public class MyListGrabber {
 	}
 
 	public TreeMap<String, String> fetchSMlists(String listNumber) {
-		MainModel.loadWebPage(driver, "http://www.nicovideo.jp/my/mylist/#/" + listNumber);
+		Safely.loadWebPage(driver, "http://www.nicovideo.jp/my/mylist/#/" + listNumber);
 		
 		
 		while (true) {
@@ -58,13 +58,13 @@ public class MyListGrabber {
 				sort.click();
 				Thread.sleep(10);
 				sort.findElement(By.cssSelector("[value='1']")).click();
-				System.out.println("change sort order");
+				System.out.println("change sort order success");
 				Thread.sleep(700);
 				break;
 			} catch (StaleElementReferenceException | InterruptedException e) {} 
 		}
-		
-		List<WebElement> myFavorMusics = driver.findElements(By.cssSelector("li[id^=SYS_box_item_0_]"));
+		System.out.println("start fetching lists");
+		List<WebElement> myFavorMusics = Safely.findElements(driver, By.cssSelector("li[id^=SYS_box_item_0_]"));
 		smNumberMap.clear();
 		for (WebElement webElement : myFavorMusics) {
 			WebElement description = webElement.findElement(By.cssSelector("a[href^='/watch/']"));
@@ -76,6 +76,4 @@ public class MyListGrabber {
 		System.out.println(smNumberMap);
 		return smNumberMap;
 	}
-	
-
 }
