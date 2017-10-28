@@ -26,15 +26,14 @@ public class testWholeModel {
 			//compare two lists to determine the videos need to be download
 			TreeMap<String, String> toDoList = main.taskManager.toDoList(List);
 			
-			//download videos
-			main.doTask(folder.getValue(), toDoList);
-			
-			//update the list of videos that have already been download.
-			main.taskManager.updateDownloadedList(toDoList);
+			//download videos while update the list of videos that have already been download.
+			main.doTaskWhileUpdate(folder.getValue(), toDoList);
+			 
 			
 		}
 		main.driver.close();
-		System.out.println("CXWUDI SAFE YOUR LIVES FROM DOWNLOADING VIDEOS");
+		System.err.println("全部のドンロードを終わった，ありがとうございます。");
+		
 	}
 
 }

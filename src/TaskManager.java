@@ -5,11 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import javax.swing.plaf.metal.MetalIconFactory.FolderIcon16;
 
 import java.util.TreeMap;
 
@@ -74,6 +71,12 @@ public class TaskManager {
 		System.out.println("video need to be downloaded: " + toDoList);
 		return toDoList;
 	}
+	
+	public void updateDownloadedList(String key, String value) {
+		TreeMap<String, String> treeMap = new TreeMap<>();
+		treeMap.put(key, value);
+		updateDownloadedList(treeMap);
+	}
 
 	// update the alreadyDownloaded hashset, and write it into txt file.
 	public void updateDownloadedList(TreeMap<String, String> merge) {
@@ -89,6 +92,7 @@ public class TaskManager {
 		writer.close();
 
 	}
+	
 
 	public static void main(String[] args) throws IOException {
 		TaskManager taskManager = new TaskManager();

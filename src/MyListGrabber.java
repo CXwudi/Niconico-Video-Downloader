@@ -31,52 +31,60 @@ public class MyListGrabber {
 	}
 	
 	public HashMap<String, String> getMyList() {
-		Safely.loadWebPage(driver, "http://www.nicovideo.jp/my/mylist/");
-		
-		WebElement myListContainer = Safely.findElement(driver,By.cssSelector("div.navInner"));
-		List<WebElement> searchResults = myListContainer.findElements(By.cssSelector("li[id^=SYS_box_group_]"));
+		try {
+			Safely.loadWebPage(driver, "http://www.nicovideo.jp/my/mylist/");
+			
+			WebElement myListContainer = driver.findElement(By.cssSelector("div.navInner"));
+			List<WebElement> searchResults = myListContainer.findElements(By.cssSelector("li[id^=SYS_box_group_]"));
 
-		// ex: SYS_box_group_57925968
-		for (WebElement webElement : searchResults) {
+			// ex: SYS_box_group_57925968
+			for (WebElement webElement : searchResults) {
 
-			String id = webElement.getAttribute("id");
-			System.out.println("List id found: " + id);
-			myLists.put(id.substring(id.lastIndexOf("_") + 1, id.length()), webElement.findElement(By.cssSelector("span")).getText());
+				String id = webElement.getAttribute("id");
+				System.out.println("List id found: " + id);
+				myLists.put(id.substring(id.lastIndexOf("_") + 1, id.length()), webElement.findElement(By.cssSelector("span")).getText());
 
+			}
+			System.out.println(myLists);
+			return myLists;
+		} catch (TimeoutException | StaleElementReferenceException e) {
+			// TODO Auto-generated catch block
+			System.err.println("CXwudi and Miku failed to get collections info, we are trying again");
+			e.printStackTrace();
+			return getMyList();
 		}
-		System.out.println(myLists);
-		return myLists;
 
 	}
 
 	public TreeMap<String, String> fetchSMlists(String listNumber) {
-		Safely.loadWebPage(driver, "http://www.nicovideo.jp/my/mylist/#/" + listNumber);
-		
-		
-		while (true) {
-			try {
-				WebElement sort = driver.findElement(By.cssSelector("select.itemSort[name=sort]"));
-				sort.click();
-				Thread.sleep(10);
-				sort.findElement(By.cssSelector("[value='1']")).click();
-				System.out.println("change sort order success");
-				Thread.sleep(700);
-				
-				System.out.println("start fetching lists");
-				List<WebElement> myFavorMusics = driver.findElements( By.cssSelector("li[id^=SYS_box_item_0_]"));
-				
-				smNumberMap.clear();
-				for (WebElement webElement : myFavorMusics) {
-					WebElement description = webElement.findElement(By.cssSelector("a[href^='/watch/']"));
-					String sm = description.getAttribute("href");// it gives us url like: http://www.nicovideo.jp/watch/sm31818521
-					String smNumber = sm.substring(sm.indexOf("sm"), sm.length());
-					String title = description.getText();// it gives us string like: ハチ MV「砂の惑星 feat.初音ミク」
-					smNumberMap.put(smNumber, title);
-				}
-				System.out.println(smNumberMap);
-				return smNumberMap;
-			} catch (StaleElementReferenceException | InterruptedException | TimeoutException e) {} 
+		try {
+			Safely.loadWebPage(driver, "http://www.nicovideo.jp/my/mylist/#/" + listNumber);
+			WebElement sort = driver.findElement(By.cssSelector("select.itemSort[name=sort]"));
+			sort.click();
+			Thread.sleep(10);
+			sort.findElement(By.cssSelector("[value='1']")).click();
+			System.out.println("change sort order success");
+			Thread.sleep(700);
+
+			System.out.println("start fetching lists");
+			List<WebElement> myFavorMusics = driver.findElements(By.cssSelector("li[id^=SYS_box_item_0_]"));
+
+			smNumberMap.clear();
+			for (WebElement webElement : myFavorMusics) {
+				WebElement description = webElement.findElement(By.cssSelector("a[href^='/watch/']"));
+				String sm = description.getAttribute("href");// it gives us url like: http://www.nicovideo.jp/watch/sm31818521
+				String smNumber = sm.substring(sm.indexOf("sm"), sm.length());
+				String title = description.getText();// it gives us string like: ハチ MV「砂の惑星 feat.初音ミク」
+				smNumberMap.put(smNumber, title);
+			}
+			System.out.println(smNumberMap);
+			return smNumberMap;
+		} catch (StaleElementReferenceException | InterruptedException | TimeoutException e) {
+			System.err.println("CXwudi and Miku failed to get list info, we are trying again");
+			e.printStackTrace();
+			return fetchSMlists(listNumber);
 		}
+		 
 		
 		
 	}

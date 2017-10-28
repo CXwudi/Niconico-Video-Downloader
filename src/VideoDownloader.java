@@ -4,10 +4,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
-
+import java.net.URLConnection;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 
 
@@ -21,7 +23,7 @@ public class VideoDownloader{
 	String videoTitle;
 	String producerName;
 	
-
+	
 	// learn it by heart, there are 8 elements that can be searched by findElement()
 	// method.
 	// id, name, classname, tagname, cssSelector,
@@ -38,77 +40,48 @@ public class VideoDownloader{
 	public VideoDownloader(WebDriver d) {
 		// TODO Auto-generated constructor stub
 		driver = d;
+		
 	}
 
 
-	public void getVideoInfoFrom(String sm) {
-		SMnumber = sm;
+	public void getVideoInfoFrom(String SMnumber) {
 		videoURL = "";
 		int repeated = 0;
 		while (videoURL.equals("") || videoURL == null) {
-			// driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
-			/*if (repeated++ >= 4) {
-				try {
-					Thread.sleep(7000);
-				} catch (InterruptedException e) {}
-			}*/
 
-			System.out.println(++repeated + " times try");
-			Safely.loadWebPage(driver, "http://www.nicovideo.jp/watch/" + SMnumber);
 			try {
+				System.out.println(++repeated + " times try");
+				Safely.loadWebPage(driver, "http://www.nicovideo.jp/watch/" + SMnumber);
+				
 				Thread.sleep(700);
-			} catch (InterruptedException e) { }
-			System.out.println("website opened");
-			videoURL = driver.findElement(By.id("MainVideoPlayer")).findElement(By.cssSelector("video")).getAttribute("src");
-			System.out.println("url reached: " + videoURL);
-			videoTitle = driver.findElement(By.cssSelector("h1.VideoTitle")).getText();
-			// System.out.println(videoTitle);
-			producerName = driver.findElement(By.cssSelector("a.Link.VideoOwnerInfo-pageLink")).getAttribute("title");
-			// System.out.println(producerName);
-			// WebElement player = driver.findElement(By.id("MainVideoPlayer"));
-			// System.out.println(player);
-			// WebElement video = player.findElement(By.cssSelector("video"));
-			// System.out.println(video);
-			// videoURL = video.getAttribute("src");
+				
+				System.out.println("website opened");
+				videoURL = driver.findElement(By.id("MainVideoPlayer")).findElement(By.cssSelector("video")).getAttribute("src");
+				System.out.println("url reached: " + videoURL);
+				videoTitle = driver.findElement(By.cssSelector("h1.VideoTitle")).getText();
+				producerName = driver.findElement(By.cssSelector("a.Link.VideoOwnerInfo-pageLink")).getAttribute("title");
+
+			} catch (InterruptedException | TimeoutException e) {
+				// TODO Auto-generated catch block
+				System.err.println("CXwudi and Miku failed to get video info, we are trying again");
+				e.printStackTrace();
+			}
 
 		}
 
-		System.out.println("SEE!! CXwudi and miku get it");
+		System.out.println("SEE!! CXwudi and miku get the URL, here is video info:");
 		System.out.println("title = " + videoTitle);
 		System.out.println("producer = " + producerName);
 
 	}
 
-	public void OLDdownloadVideoTo(String subDir) {
-		try {
-			downloadSubDir = subDir.equals("")? "":"\\" + subDir ;
-			Process downloadingProcess = Runtime.getRuntime().exec("cmd /c C:\\ChromeAuto\\wget64.exe -P " + downloadDir + downloadSubDir + " --no-check-certificate -nv " + videoURL);
-			// driver.get("about:blank");// save internet speed by prevent brower from
-			System.out.println("start downloading");
-			/*InputStream is = downloadingProcess.getInputStream();
-			InputStreamReader isr = new InputStreamReader(is);
-            BufferedReader br = new BufferedReader(isr);
-            
-			Thread.sleep(1000);
-			String line;
-			while(downloadingProcess.isAlive()) {
-				line = br.readLine();
-				System.out.println(line);
-			}*/
-
-			downloadingProcess.waitFor();
-			System.out.println("done");
-		} catch (IOException | InterruptedException e) {
-			// TODO Auto-generated catch block
-			System.out.println(e);
-		}
-	}
 	/**
 	 *	download video and rename it by own generated title
 	 *@param subDir: the folder to save the video file
+	 * @throws IOException 
 	 *
 	 */
-	public void downloadVideoTo(String subDir) {
+	public void downloadVideoTo(String subDir) throws IOException {
 		String fileTile = videoTitle.contains(producerName) ? videoTitle
 				: videoTitle + "【" + producerName.substring(0, producerName.length() - 3) + "】";
 		downloadVideoTo(subDir, fileTile);
@@ -117,19 +90,24 @@ public class VideoDownloader{
 	 *	download video and rename it by specific title;
 	 *@param subDir: the folder to save the video file
 	 *@param title: the title of the video.
+	 * @throws IOException 
 	 */
-	public void downloadVideoTo(String subDir, String title) {
+	public void downloadVideoTo(String subDir, String title) throws IOException {
 		try {
 			downloadSubDir = subDir.equals("")? "":"\\" + subDir ;
+			//open connection
 			URL url = new URL(videoURL);
-			//ReadableByteChannel rbc = Channels.newChannel(url.openStream());
-			BufferedInputStream input = new BufferedInputStream(url.openStream());
+			HttpURLConnection  uc = (HttpURLConnection) url.openConnection();
+			uc.addRequestProperty("User-Agent", 
+					"Mozilla/4.76");//0 (compatible; MSIE 6.0; Windows NT 5.0)");
+			BufferedInputStream input = new BufferedInputStream(uc.getInputStream());
+			//create new file and directory 
 			File video = new File(downloadDir + downloadSubDir);
 			video.mkdirs();
-			FileOutputStream output = new FileOutputStream(video +"\\"+ title +  ".mp4");
+			FileOutputStream output = new FileOutputStream(video +"\\"+ title +  ".mp4");	
+			//download
 			System.out.println("start downloading");
 			byte[] buffer = new byte[1024];
-			//output.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
 			int count=0;
 	        while((count = input.read(buffer,0,1024)) != -1)
 	        {
@@ -137,24 +115,59 @@ public class VideoDownloader{
 	        }
 			output.close();
 			input.close();
-			System.out.println("done");
-		} catch (IOException e) {
-			e.printStackTrace();
 			
+			System.out.println(title + ".mp4 done, yeah!!");
+		} catch (IOException e) {
+			System.err.println("どうしよう!!!!, CXwudi and Miku failed to download " + title + " from " + videoURL);
+			e.printStackTrace();
+			throw e;
+		} 
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+	//Unused methods//
+	
+	public void OLDdownloadVideoTo(String subDir) {
+		try {
+			downloadSubDir = subDir.equals("")? "":"\\" + subDir ;
+			Process downloadingProcess = Runtime.getRuntime().exec("cmd /c C:\\ChromeAuto\\wget64.exe -P " + downloadDir + downloadSubDir + " --no-check-certificate -nv " + videoURL);
+			// driver.get("about:blank");// save internet speed by prevent brower from
+			System.out.println("start downloading");
+			/*InputStream is = downloadingProcess.getInputStream();
+			InputStreamReader isr = new InputStreamReader(is);
+	        BufferedReader br = new BufferedReader(isr);
+	        
+			Thread.sleep(1000);
+			String line;
+			while(downloadingProcess.isAlive()) {
+				line = br.readLine();
+				System.out.println(line);
+			}*/
+	
+			downloadingProcess.waitFor();
+			System.out.println("done");
+		} catch (IOException | InterruptedException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e);
 		}
 	}
 
+
 	public void rename() {
-
+	
 		String fileTile = videoTitle + "【" + producerName.substring(0, producerName.length() - 3) + "】";
-
+	
 		File dir = new File(downloadDir);
 		String[] fileList = dir.list(new FilenameFilter() {
 			public boolean accept(File dir, String name) {
 				return name.startsWith("nicovideo");
 			}
 		});
-
+	
 		if (fileList.length == 0) {
 			System.out.println("video file is not found");
 		} else {
@@ -163,15 +176,7 @@ public class VideoDownloader{
 			video.renameTo(new File(downloadDir + downloadSubDir + "\\" + fileTile + ".mp4"));
 		}
 		System.out.println(fileTile + ".mp4, done!");
-
-	}
-
 	
-
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

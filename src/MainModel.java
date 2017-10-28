@@ -1,7 +1,6 @@
 
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
@@ -23,8 +22,6 @@ public class MainModel {
 
 	String email = "";
 	String password = "";
-
-	HashSet<String> downloadDone;// record the video that just downloaded.
 
 	public MainModel() {
 		// TODO Auto-generated constructor stub
@@ -86,10 +83,15 @@ public class MainModel {
 
 	}
 
-	public void doTask(String subDir, TreeMap<String, String> toDoList) {
-		for (String sm : toDoList.keySet()) {
-			downloader.getVideoInfoFrom(sm);
-			downloader.downloadVideoTo(subDir);
+	public void doTaskWhileUpdate(String subDir, TreeMap<String, String> toDoList) {
+		for (Entry<String, String> sm : toDoList.entrySet()) {
+			downloader.getVideoInfoFrom(sm.getKey());
+			try {
+				downloader.downloadVideoTo(subDir);
+				taskManager.updateDownloadedList(sm.getKey(), sm.getValue());
+			} catch (IOException e) {
+				System.out.println(sm.getValue() + " is marked as undownload");
+			}
 		}
 		
 	}
