@@ -6,7 +6,6 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
@@ -84,6 +83,7 @@ public class VideoDownloader{
 	public void downloadVideoTo(String subDir) throws IOException {
 		String fileTile = videoTitle.contains(producerName) ? videoTitle
 				: videoTitle + "【" + producerName.substring(0, producerName.length() - 3) + "】";
+		
 		downloadVideoTo(subDir, fileTile);
 	}
 	/**
@@ -94,6 +94,8 @@ public class VideoDownloader{
 	 */
 	public void downloadVideoTo(String subDir, String title) throws IOException {
 		try {
+			title = title.replaceAll("/", "_");
+			title = title.replaceAll("\\\\", "_");
 			downloadSubDir = subDir.equals("")? "":"\\" + subDir ;
 			//open connection
 			URL url = new URL(videoURL);

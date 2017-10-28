@@ -31,26 +31,23 @@ public class TaskManager {
 		toDownload = new TreeMap<>(invereOrder);
 		listDownloadedTxt = new File(new File("."), "downloaded.txt");
 
-		try {
-			reader = new BufferedReader(new FileReader(listDownloadedTxt));
-
-		} catch (IOException e) {
-			System.err.println(e);
-		}
+		
 
 	}
 
 	// read file from a txt file that records all smNumber of videos that have been
 	// downloaded before.
 	public TreeMap<String, String> getIsDownloaded() {
-
 		try {
-			for (String i = reader.readLine(); i != null; i = reader.readLine()) {
+			reader = new BufferedReader(new FileReader(listDownloadedTxt));
+			for (String i = reader.readLine(); i != null && !i.equals(""); i = reader.readLine()) {
 				alreadyDownloaded.put(i.substring(0, i.indexOf("\t")), i.substring(i.indexOf("\t")+1, i.length()));
 			}
+			reader.close();
 		} catch (IOException e) {
 			System.err.println(e);
 		}
+		
 		return alreadyDownloaded;
 	}
 

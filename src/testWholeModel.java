@@ -20,10 +20,10 @@ public class testWholeModel {
 			//get the songs list from the folder
 			TreeMap<String, String> List = main.listGrabber.fetchSMlists(folder.getKey());
 			
-			//get list of videos that are already download from local txt file
+			//read downloaded.txt to generate a list of which videos are already download
 			main.taskManager.getIsDownloaded();
 			
-			//compare two lists to determine the videos need to be download
+			//compare two lists to determine new videos to be download
 			TreeMap<String, String> toDoList = main.taskManager.toDoList(List);
 			
 			//download videos while update the list of videos that have already been download.
