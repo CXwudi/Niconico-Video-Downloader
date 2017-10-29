@@ -49,8 +49,8 @@ public class MyListGrabber {
 			return myLists;
 		} catch (TimeoutException | StaleElementReferenceException e) {
 			// TODO Auto-generated catch block
-			System.err.println("CXwudi and Miku failed to get collections info, we are trying again");
 			e.printStackTrace();
+			System.out.println("CXwudi and Miku failed to get collections info, we are trying again");
 			return getMyList();
 		}
 
@@ -80,8 +80,9 @@ public class MyListGrabber {
 			System.out.println(smNumberMap);
 			return smNumberMap;
 		} catch (StaleElementReferenceException | InterruptedException | TimeoutException e) {
-			System.err.println("CXwudi and Miku failed to get list info, we are trying again");
+			// TODO Auto-generated catch block
 			e.printStackTrace();
+			System.out.println("CXwudi and Miku failed to get list info, we are trying again");
 			return fetchSMlists(listNumber);
 		}
 		 

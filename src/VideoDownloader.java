@@ -62,8 +62,9 @@ public class VideoDownloader{
 
 			} catch (InterruptedException | TimeoutException e) {
 				// TODO Auto-generated catch block
-				System.err.println("CXwudi and Miku failed to get video info, we are trying again");
 				e.printStackTrace();
+				System.out.println("CXwudi and Miku failed to get video info, we are trying again");
+				
 			}
 
 		}
@@ -94,14 +95,13 @@ public class VideoDownloader{
 	 */
 	public void downloadVideoTo(String subDir, String title) throws IOException {
 		try {
-			title = title.replaceAll("/", "_");
-			title = title.replaceAll("\\\\", "_");
+			title = title.replaceAll("/", "-").replaceAll("\\\\", "-").replaceAll("\\?", " ");
 			downloadSubDir = subDir.equals("")? "":"\\" + subDir ;
 			//open connection
 			URL url = new URL(videoURL);
 			HttpURLConnection  uc = (HttpURLConnection) url.openConnection();
-			uc.addRequestProperty("User-Agent", 
-					"Mozilla/4.76");//0 (compatible; MSIE 6.0; Windows NT 5.0)");
+			uc.setRequestProperty("User-Agent", 
+					"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3165.0 Safari/537.36");//0 (compatible; MSIE 6.0; Windows NT 5.0)");
 			BufferedInputStream input = new BufferedInputStream(uc.getInputStream());
 			//create new file and directory 
 			File video = new File(downloadDir + downloadSubDir);
@@ -120,8 +120,8 @@ public class VideoDownloader{
 			
 			System.out.println(title + ".mp4 done, yeah!!");
 		} catch (IOException e) {
-			System.err.println("どうしよう!!!!, CXwudi and Miku failed to download " + title + " from " + videoURL);
 			e.printStackTrace();
+			System.err.println("どうしよう!!!!, CXwudi and Miku failed to download " + title + " from " + videoURL);
 			throw e;
 		} 
 	}
@@ -132,14 +132,14 @@ public class VideoDownloader{
 	}
 
 	//Unused methods//
-	
+	/*
 	public void OLDdownloadVideoTo(String subDir) {
 		try {
 			downloadSubDir = subDir.equals("")? "":"\\" + subDir ;
 			Process downloadingProcess = Runtime.getRuntime().exec("cmd /c C:\\ChromeAuto\\wget64.exe -P " + downloadDir + downloadSubDir + " --no-check-certificate -nv " + videoURL);
 			// driver.get("about:blank");// save internet speed by prevent brower from
 			System.out.println("start downloading");
-			/*InputStream is = downloadingProcess.getInputStream();
+			InputStream is = downloadingProcess.getInputStream();
 			InputStreamReader isr = new InputStreamReader(is);
 	        BufferedReader br = new BufferedReader(isr);
 	        
@@ -148,7 +148,7 @@ public class VideoDownloader{
 			while(downloadingProcess.isAlive()) {
 				line = br.readLine();
 				System.out.println(line);
-			}*/
+			}
 	
 			downloadingProcess.waitFor();
 			System.out.println("done");
@@ -180,5 +180,5 @@ public class VideoDownloader{
 		System.out.println(fileTile + ".mp4, done!");
 	
 	}
-
+*/
 }
