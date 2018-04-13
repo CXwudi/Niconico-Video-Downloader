@@ -12,14 +12,14 @@ import org.openqa.selenium.WebElement;
 
 /**
  * the main model of Nico video downloader project, also is the main M part of MVC
- * it contains 4 small model pieces---Setup, Downloader, ListGrabber and TaskManager
+ * it contains 4 small model pieces---Setup, Downloader, ListGrabber and LocalRecorder
  * @author CX无敌
  */
 public class MainModel {
 	NicoDriver driver;
 	VideoDownloader downloader;
-	MyListGrabber listGrabber;
-	TaskManager taskManager;
+	ListGrabber listGrabber;
+	LocalRecorder localRecorder;
 
 	String email = "";
 	String password = "";
@@ -35,13 +35,13 @@ public class MainModel {
 		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 		driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
 		downloader = new VideoDownloader(driver);
-		listGrabber = new MyListGrabber(driver);
-		taskManager = new TaskManager();
+		listGrabber = new ListGrabber(driver);
+		localRecorder = new LocalRecorder();
 
 	}
 
 	public boolean login() {
-		Safely.loadWebPage(driver, "https://account.nicovideo.jp/login");
+		driver.get("https://account.nicovideo.jp/login");
 		driver.findElement(By.id("input__mailtel")).sendKeys(email);
 		WebElement ps = driver.findElement(By.id("input__password"));
 		ps.sendKeys(password);
@@ -93,7 +93,7 @@ public class MainModel {
 			downloader.getVideoInfoFrom(sm.getKey());
 			try {
 				downloader.downloadVideoTo(subDir);
-				taskManager.updateDownloadedList(sm.getKey(), sm.getValue());
+				localRecorder.updateDownloadedList(sm.getKey(), sm.getValue());
 			} catch (IOException e) {
 				System.out.println(sm.getValue() + " is marked as undownload");
 			}
@@ -105,7 +105,7 @@ public class MainModel {
 		HashMap<String, String> hashMap = listGrabber.getMyList();
 		for (Entry<String, String> list : hashMap.entrySet()) {
 			TreeMap<String, String> List = listGrabber.fetchSMlists(list.getKey());
-			taskManager.updateDownloadedList(List);
+			localRecorder.updateDownloadedList(List);
 		}
 	}
 

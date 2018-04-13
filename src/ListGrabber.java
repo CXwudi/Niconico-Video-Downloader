@@ -10,13 +10,13 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-public class MyListGrabber {
+public class ListGrabber {
 	WebDriver driver;
 	
 	HashMap<String, String> myLists; // list id = list name
 	TreeMap<String, String> smNumberMap; // sm number = song title, for one single folder!
 	
-	public MyListGrabber(WebDriver d) {
+	public ListGrabber(WebDriver d) {
 		// TODO Auto-generated constructor stub
 		driver = d;
 		myLists = new HashMap<>();

@@ -10,8 +10,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 /**
  * An specific ChromeDriver that is optimized for Niconico video website. More specifically, optimized for nicovideo.jp
  * Since the server of nicovideo.jp is in Japan region which is far from North America, 
- * so there is a high chance that loading a website or elements from nicovideo.jp can throw TimeoutException due to the far location network transaction
- * In order to deal with these random and unexpective TimeoutException,
+ * so there is a high chance that loading a website or elements from nicovideo.jp can throw TimeoutException due to the far location network transaction.
  * I override some functions from ChromeDriver so that the method would try again after an TimeoutException is thrown. 
  * However, this implementation can not guarantee to solve the timeout problem entirely. 
  * We still need to write try-catch block and re-do function outside these NicoDriver class.
@@ -37,10 +36,8 @@ public class NicoDriver extends ChromeDriver {
 
 	@Override
 	public void get(String url) {
-		// TODO Auto-generated method stub
-
+		
 		while (true) {
-			// driver.findElements
 			try {
 				super.get(url);
 				System.out.println("load website " + url + " success");

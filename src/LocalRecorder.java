@@ -10,7 +10,7 @@ import java.util.Map.Entry;
 
 import java.util.TreeMap;
 
-public class TaskManager {
+public class LocalRecorder {
 	BufferedReader reader;
 	PrintWriter writer;
 	File listDownloadedTxt;
@@ -19,7 +19,7 @@ public class TaskManager {
 	TreeMap<String, String> toDownload; // same
 	Comparator<String> invereOrder;//the inverse order, from newer to older songs
 
-	public TaskManager() {
+	public LocalRecorder() {
 		// TODO Auto-generated constructor stub
 		invereOrder = new Comparator<String>() {
 			@Override
@@ -92,13 +92,13 @@ public class TaskManager {
 	
 
 	public static void main(String[] args) throws IOException {
-		TaskManager taskManager = new TaskManager();
-		Map<String, String> map = taskManager.getIsDownloaded();
+		LocalRecorder localRecorder = new LocalRecorder();
+		Map<String, String> map = localRecorder.getIsDownloaded();
 		System.out.println(map);
 		TreeMap<String, String> map2 = new TreeMap<>();
 		map2.put("sm333", "Koyori MV");
 		map2.put("sm444", "MARETU MV");
-		taskManager.updateDownloadedList(map2);
+		localRecorder.updateDownloadedList(map2);
 
 	}
 }
