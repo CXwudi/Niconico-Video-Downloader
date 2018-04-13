@@ -7,15 +7,16 @@ import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
+
 
 /**
- * the model in MVC, it will contains 4 small model pieces and a toolkit.
+ * the main model of Nico video downloader project, also is the main M part of MVC
+ * it contains 4 small model pieces---Setup, Downloader, ListGrabber and TaskManager
+ * @author CX无敌
  */
 public class MainModel {
-	WebDriver driver;
+	NicoDriver driver;
 	VideoDownloader downloader;
 	MyListGrabber listGrabber;
 	TaskManager taskManager;
@@ -24,14 +25,15 @@ public class MainModel {
 	String password = "";
 
 	public MainModel() {
-		// TODO Auto-generated constructor stub
-		System.setProperty("webdriver.chrome.driver", "C:\\ChromeAuto\\chromedriver.exe");
+		
+		System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir") + "/chromedriver.exe");
 
-		driver = new ChromeDriver();
+		driver = new NicoDriver();
 		driver.manage().deleteAllCookies();
 		driver.manage().window().maximize();
-		driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
-		driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS);
+		//synchronization between this application and the website pages, so that my codes can wait for the web elements to come up, then do the work.
+		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+		driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
 		downloader = new VideoDownloader(driver);
 		listGrabber = new MyListGrabber(driver);
 		taskManager = new TaskManager();
@@ -53,10 +55,10 @@ public class MainModel {
 			return false;
 		}
 	}
-
-	public void setupNicoNico() {
-
-		// driver.findElements
+	// return true if both region change and language change are success.
+	public boolean setupNicoNico() {
+		boolean isSuccess = true;
+		
 		try {
 			driver.findElement(By.id("areaTrigger")).click();
 			Thread.sleep(50);
@@ -67,6 +69,7 @@ public class MainModel {
 			// TODO Auto-generated catch block
 			System.err.println("change region may fail");
 			driver.navigate().refresh();
+			isSuccess = false;
 		}
 
 		try {
@@ -79,7 +82,9 @@ public class MainModel {
 			// TODO Auto-generated catch block
 			System.err.println("change language may fail");
 			driver.navigate().refresh();
+			isSuccess = false;
 		}
+		return isSuccess;
 
 	}
 

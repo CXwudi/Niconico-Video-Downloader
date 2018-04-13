@@ -28,8 +28,7 @@ public class testWholeModel {
 			
 			//download videos while update the list of videos that have already been download.
 			main.doTaskWhileUpdate(folder.getValue(), toDoList);
-			 
-			
+				
 		}
 		main.driver.close();
 		System.err.println("全部のドンロードを終わった，ありがとうございます。");

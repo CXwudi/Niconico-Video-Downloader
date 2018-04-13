@@ -32,7 +32,7 @@ public class MyListGrabber {
 	
 	public HashMap<String, String> getMyList() {
 		try {
-			Safely.loadWebPage(driver, "http://www.nicovideo.jp/my/mylist/");
+			driver.get("http://www.nicovideo.jp/my/mylist/");
 			
 			WebElement myListContainer = driver.findElement(By.cssSelector("div.navInner"));
 			List<WebElement> searchResults = myListContainer.findElements(By.cssSelector("li[id^=SYS_box_group_]"));
@@ -58,7 +58,7 @@ public class MyListGrabber {
 
 	public TreeMap<String, String> fetchSMlists(String listNumber) {
 		try {
-			Safely.loadWebPage(driver, "http://www.nicovideo.jp/my/mylist/#/" + listNumber);
+			driver.get("http://www.nicovideo.jp/my/mylist/#/" + listNumber);
 			WebElement sort = driver.findElement(By.cssSelector("select.itemSort[name=sort]"));
 			sort.click();
 			Thread.sleep(10);

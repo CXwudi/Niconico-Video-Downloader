@@ -2,10 +2,11 @@
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
+import java.util.logging.StreamHandler;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
@@ -99,9 +100,12 @@ public class VideoDownloader{
 			downloadSubDir = subDir.equals("")? "":"\\" + subDir ;
 			//open connection
 			URL url = new URL(videoURL);
-			HttpURLConnection  uc = (HttpURLConnection) url.openConnection();
+			//url.setURLStreamHandlerFactory();
+			
+			URLConnection  uc = url.openConnection();
 			uc.setRequestProperty("User-Agent", 
-					"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3165.0 Safari/537.36");//0 (compatible; MSIE 6.0; Windows NT 5.0)");
+					"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36");//0 (compatible; MSIE 6.0; Windows NT 5.0)");
+			uc.connect();
 			BufferedInputStream input = new BufferedInputStream(uc.getInputStream());
 			//create new file and directory 
 			File video = new File(downloadDir + downloadSubDir);
