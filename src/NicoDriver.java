@@ -16,6 +16,16 @@ import org.openqa.selenium.chrome.ChromeOptions;
  * We still need to write try-catch block and re-do function outside these NicoDriver class.
  * @author CX无敌 
  */
+/*
+ * here is the note taken from Youtube Tutorial
+ * selenium get command for Webdriver:
+ * 	get("URL") visit website
+ *  getTitle() get website title
+ *  getPageSource() get source code of web page
+ *  getCurrentUrl() 
+ *  getWindowHandle() used for switching tab
+ *  getWindowHandles() used for switching tab as well
+ */
 public class NicoDriver extends ChromeDriver {
 
 	public NicoDriver() {
