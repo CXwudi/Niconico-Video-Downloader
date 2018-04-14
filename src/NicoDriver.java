@@ -52,7 +52,7 @@ public class NicoDriver extends ChromeDriver {
 				super.get(url);
 				System.out.println("load website " + url + " success");
 				Thread.sleep(200);
-				break;
+				return;
 			} catch (TimeoutException e) {
 				System.err.println("load website " + url + " timeout:( ");
 				System.out.println("don't worry, CXwudi and miku are going to refrash the webpage and make it work!!\"");
@@ -60,6 +60,10 @@ public class NicoDriver extends ChromeDriver {
 				System.err.println(e + "\nthis shouldn't happen");
 			}
 		}
+	}
+	
+	public void originGet(String url) {
+		super.get(url);
 	}
 
 	@Override

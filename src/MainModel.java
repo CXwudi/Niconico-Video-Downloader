@@ -2,6 +2,7 @@
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
@@ -16,27 +17,35 @@ import org.openqa.selenium.WebElement;
  * @author CX无敌
  */
 public class MainModel {
-	NicoDriver driver;
+	//TODO add private modifier
+	
+	private NicoDriver driver;
+	private TaskManager taskManager;
+	private LocalRecorder localRecorder;
 	VideoDownloader downloader;
 	ListGrabber listGrabber;
-	LocalRecorder localRecorder;
+	
 
-	String email = "";
-	String password = "";
+	String email = "1113421658@qq.com";
+	String password = "2010017980502";
+	
+	private TreeSet<Vsong> task;
 
 	public MainModel() {
-		
 		System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir") + "/chromedriver.exe");
-
 		driver = new NicoDriver();
 		driver.manage().deleteAllCookies();
 		driver.manage().window().maximize();
 		//synchronization between this application and the website pages, so that my codes can wait for the web elements to come up, then do the work.
 		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 		driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
+		
+		taskManager = new TaskManager(driver, task);
 		downloader = new VideoDownloader(driver);
 		listGrabber = new ListGrabber(driver);
 		localRecorder = new LocalRecorder();
+		
+		task = new TreeSet<>();
 
 	}
 
@@ -109,8 +118,12 @@ public class MainModel {
 		}
 	}
 
-	
-	
+	/**
+	 * @return the driver
+	 */
+	public NicoDriver driver() {
+		return driver;
+	}
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub

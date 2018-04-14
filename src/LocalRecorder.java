@@ -7,14 +7,16 @@ import java.io.PrintWriter;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Map.Entry;
-
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class LocalRecorder {
-	BufferedReader reader;
-	PrintWriter writer;
-	File listDownloadedTxt;
+	private BufferedReader reader;
+	private PrintWriter writer;
+	private File listDownloadedTxt;
 
+	private TreeSet<Vsong> update;			//the set of finished task that need to be recorded
 	TreeMap<String, String> alreadyDownloaded; // same, sm number = song title
 	TreeMap<String, String> toDownload; // same
 	Comparator<String> invereOrder;//the inverse order, from newer to older songs
@@ -27,6 +29,7 @@ public class LocalRecorder {
 				return o2.compareTo(o1);
 			}
 		};
+		update = new TreeSet<>();
 		alreadyDownloaded = new TreeMap<>(invereOrder);
 		toDownload = new TreeMap<>(invereOrder);
 		listDownloadedTxt = new File(new File("."), "downloaded.txt");
@@ -37,18 +40,43 @@ public class LocalRecorder {
 
 	// read file from a txt file that records all smNumber of videos that have been
 	// downloaded before.
+	/**
+	 * @deprecated Use {@link #getIsDownloaded(TreeSet)} instead
+	 */
 	public TreeMap<String, String> getIsDownloaded() {
 		try {
+			//convert into a smarter line-by-line reader from a char-by-char reader.
 			reader = new BufferedReader(new FileReader(listDownloadedTxt));
 			for (String i = reader.readLine(); i != null && !i.equals(""); i = reader.readLine()) {
 				alreadyDownloaded.put(i.substring(0, i.indexOf("\t")), i.substring(i.indexOf("\t")+1, i.length()));
 			}
 			reader.close();
 		} catch (IOException e) {
-			System.err.println(e);
+			System.err.println("this shouldn't happen");
+			e.printStackTrace();
 		}
 		
 		return alreadyDownloaded;
+	}
+
+	// read file from a txt file that records all smNumber of videos that have been
+	// downloaded before.
+	public boolean getIsDownloaded(TreeSet<Vsong> newSet) {
+		try {
+			//convert into a smarter line-by-line reader from a char-by-char reader.
+			reader = new BufferedReader(new FileReader(listDownloadedTxt));
+			for (String i = reader.readLine(); i != null && !i.equals(""); i = reader.readLine()) {
+				String[] detialArray = i.split("\t");
+				newSet.add(new Vsong(Integer.parseInt(detialArray[0].substring(2, detialArray[0].length())),detialArray[1],true));
+			}
+			reader.close();
+			return true;
+		} catch (IOException e) {
+			System.err.println("this shouldn't happen");
+			e.printStackTrace();
+			return false;
+		}
+		
 	}
 
 	/**
@@ -78,6 +106,7 @@ public class LocalRecorder {
 	// update the alreadyDownloaded hashset, and write it into txt file.
 	public void updateDownloadedList(TreeMap<String, String> merge) {
 		try {
+			//convert into a smarter line-by-line writer from a char-by-char writer
 			writer = new PrintWriter(new FileWriter(listDownloadedTxt));
 		} catch (IOException e) { }
 		alreadyDownloaded.putAll(merge);
@@ -89,16 +118,23 @@ public class LocalRecorder {
 		writer.close();
 
 	}
-	
-
-	public static void main(String[] args) throws IOException {
+	public static void testReading() {
 		LocalRecorder localRecorder = new LocalRecorder();
-		Map<String, String> map = localRecorder.getIsDownloaded();
-		System.out.println(map);
+		TreeSet<Vsong> set = new TreeSet<Vsong>();
+		//Map<String, String> map = localRecorder.getIsDownloaded();
+		localRecorder.getIsDownloaded(set);
+		System.out.println(set);
+	}
+	public static void testWriting() {
+		LocalRecorder localRecorder = new LocalRecorder();
 		TreeMap<String, String> map2 = new TreeMap<>();
 		map2.put("sm333", "Koyori MV");
 		map2.put("sm444", "MARETU MV");
 		localRecorder.updateDownloadedList(map2);
+	}
+
+	public static void main(String[] args) throws IOException {
+		testReading();
 
 	}
 }
