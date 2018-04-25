@@ -12,16 +12,16 @@ public class testWholeModel {
 		main.setupNicoNico();
 		
 		//get all my music collections
-		HashMap<String, String> hashMap = main.listGrabber.getMyList();
+		HashMap<String, String> hashMap = main.oldListGrabber.getMyList();
 		
 		//for each folder in collections
 		for (Entry<String, String> folder : hashMap.entrySet()) {
 			
 			//get the songs list from the folder
-			TreeMap<String, String> List = main.listGrabber.fetchSMlists(folder.getKey());
+			TreeMap<String, String> List = main.oldListGrabber.fetchSMlists(folder.getKey());
 			
 			//read downloaded.txt to generate a list of which videos are already download
-			main.localRecorder.getIsDownloaded();
+			main.localRecorder.getIsDownloaded(null);
 			
 			//compare two lists to determine new videos to be download
 			TreeMap<String, String> toDoList = main.localRecorder.toDoList(List);
@@ -30,7 +30,7 @@ public class testWholeModel {
 			main.doTaskWhileUpdate(folder.getValue(), toDoList);
 				
 		}
-		main.driver.close();
+		main.driver().quit();
 		System.err.println("全部のドンロードを終わった，ありがとうございます。");
 		
 	}

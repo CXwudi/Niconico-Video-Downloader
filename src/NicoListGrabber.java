@@ -1,39 +1,40 @@
-
-import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.TreeMap;
+import java.util.Map.Entry;
+import java.util.TreeSet;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-public class ListGrabber {
-	WebDriver driver;
-	
-	HashMap<String, String> myLists; // list id = list name
-	TreeMap<String, String> smNumberMap; // sm number = song title, for one single folder!
-	
-	public ListGrabber(WebDriver d) {
-		// TODO Auto-generated constructor stub
-		driver = d;
-		myLists = new HashMap<>();
-		smNumberMap = new TreeMap<>(new Comparator<String>() {
 
-			@Override
-			public int compare(String o1, String o2) {
-				return o2.compareTo(o1);
-			}
-		});
-		
+public class NicoListGrabber extends CollectionReader{
+	private NicoDriver driver;
+
+	
+	public NicoListGrabber(NicoDriver d) {
+		super();
+		driver = d;
 	}
 	
-	public HashMap<String, String> getMyList() {
+	@Override
+	public boolean readRecord() {
+		HashMap<String, String> mylists = getMyListsIdAndName();
+		for (Iterator<Entry<String, String>> iterator = mylists.entrySet().iterator(); iterator.hasNext();) {
+			Entry<String, String> list = iterator.next();
+			collection.addAll(getOneFolderCollection(list.getKey(), list.getValue()));
+		}
+		isDone = true;
+		return isDone;
+	}
+	
+	private HashMap<String, String> getMyListsIdAndName() {
 		try {
+			HashMap<String, String> myLists = new HashMap<>();
 			driver.get("http://www.nicovideo.jp/my/mylist/");
-			
+
 			WebElement myListContainer = driver.findElement(By.cssSelector("div.navInner"));
 			List<WebElement> searchResults = myListContainer.findElements(By.cssSelector("li[id^=SYS_box_group_]"));
 
@@ -48,45 +49,46 @@ public class ListGrabber {
 			System.out.println(myLists);
 			return myLists;
 		} catch (TimeoutException | StaleElementReferenceException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println("CXwudi and Miku failed to get collections info, we are trying again");
-			return getMyList();
+			return getMyListsIdAndName();
 		}
-
 	}
 
-	public TreeMap<String, String> fetchSMlists(String listNumber) {
+	private TreeSet<Vsong> getOneFolderCollection(String id, String folderName) {
+		TreeSet<Vsong> folder = new TreeSet<>();
 		try {
-			driver.get("http://www.nicovideo.jp/my/mylist/#/" + listNumber);
+			
+			driver.get("http://www.nicovideo.jp/my/mylist/#/" + id);
 			WebElement sort = driver.findElement(By.cssSelector("select.itemSort[name=sort]"));
 			sort.click();
 			Thread.sleep(10);
 			sort.findElement(By.cssSelector("[value='1']")).click();
 			System.out.println("change sort order success");
 			Thread.sleep(700);
-
+	
 			System.out.println("start fetching lists");
 			List<WebElement> myFavorMusics = driver.findElements(By.cssSelector("li[id^=SYS_box_item_0_]"));
-
-			smNumberMap.clear();
+	
+			
 			for (WebElement webElement : myFavorMusics) {
 				WebElement description = webElement.findElement(By.cssSelector("a[href^='/watch/']"));
-				String sm = description.getAttribute("href");// it gives us url like: http://www.nicovideo.jp/watch/sm31818521
-				String smNumber = sm.substring(sm.indexOf("sm"), sm.length());
+				String videoLink = description.getAttribute("href");// it gives us url like: http://www.nicovideo.jp/watch/sm31818521
+				int smId = Integer.parseInt(videoLink.substring(videoLink.indexOf("sm"), videoLink.length()));
 				String title = description.getText();// it gives us string like: ハチ MV「砂の惑星 feat.初音ミク」
-				smNumberMap.put(smNumber, title);
+				folder.add(new Vsong(smId, title, folderName));
 			}
-			System.out.println(smNumberMap);
-			return smNumberMap;
-		} catch (StaleElementReferenceException | InterruptedException | TimeoutException e) {
+			System.out.println(folder);
+			
+		} catch (StaleElementReferenceException | TimeoutException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println("CXwudi and Miku failed to get list info, we are trying again");
-			return fetchSMlists(listNumber);
+			return getOneFolderCollection(id, folderName);
+		} catch (InterruptedException e) {
+			System.err.println(e + "\nthis shouldn't happen");
 		}
-		 
-		
-		
+		return folder;
 	}
+
 }

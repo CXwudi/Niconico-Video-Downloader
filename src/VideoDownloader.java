@@ -33,9 +33,9 @@ public class VideoDownloader{
 	// secondly, to replace space with .
 	// use [attribute=value] to search webelement by specific attributes,
 	// if the value contains non-character (1!/...) plz put ''
-	// 1. '^' symbol, represents the starting text in a string.
-	// 2. '$' symbol represents the ending text in a string.
-	// 3. '*' symbol represents contains text in a string.
+	// 1. '^=' symbol, represents the starting text in a string.
+	// 2. '$=' symbol represents the ending text in a string.
+	// 3. '*=' symbol represents contains text in a string.
 
 	public VideoDownloader(WebDriver d) {
 		// TODO Auto-generated constructor stub

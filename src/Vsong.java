@@ -1,6 +1,6 @@
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.List;
+
 
 
 /**
@@ -14,29 +14,29 @@ public class Vsong implements Comparable<Vsong>{
 	private String videoTitle;		//the title of the song
 	private String producerName;	//the name of producer
 	private String subDir;			//the name of folder that contains this song
-	private boolean isDownloaded;	//have the video been downloaded or not
+	//private boolean isDownloaded;	//have the video been downloaded or not
 
-	private Set<String> vocals;		//Singers who sing this song
-	private Set<String> tags;		//Tags of this song
+	private List<String> vocals;	//Singers who sing this song
+	private List<String> tags;		//Tags of this song
 
 	/**
 	 * create Vocaloid Song object using sm-number and song title
 	 */
-	public Vsong(int id, String title, boolean done) {
+	public Vsong(int id, String title) {
 		smId = id;
 		videoTitle = title;
 		subDir = videoURL =  producerName = "";
-		vocals = tags = new HashSet<>(0);
-		isDownloaded = done;
+		vocals = new ArrayList<>(3);
+		tags = new ArrayList<>();
 	}
 	
-	public Vsong(int id, String title, String folder, boolean done) {
+	public Vsong(int id, String title, String folder) {
 		smId = id;
 		videoTitle = title;
 		subDir = folder;
 		videoURL =  producerName = "";
-		vocals = tags = new HashSet<>(0);
-		isDownloaded = done;
+		vocals = new ArrayList<>(3);
+		tags = new ArrayList<>();
 	}
 
 	/* (non-Javadoc)
@@ -59,16 +59,16 @@ public class Vsong implements Comparable<Vsong>{
 	}
 
 	/**
-	 * return the string representation of this Vsong as [Song: xxxxxx, sm-number: smxxxxxxxxx, Producer: xxxxxxxx]
+	 * return the string representation of this Vsong as [Song: xxxxxx, sm-id: smxxxxxxxxx, Producer: xxxxxxxx]
 	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("[Song: ").append(videoTitle)
-		.append(", sm-number: sm").append(smId)
+		.append(", SM-id: sm").append(smId)
 		.append(producerName == "" ? "" :", Producer: ").append(producerName)
 		.append(subDir == "" ? "": ", folder: ").append(subDir)
-		.append(", status: ").append(isDownloaded ? "downloaded" : "to be downloaded")
+		//.append(", status: ").append(isDownloaded ? "done" : "to be downloaded")
 		.append("]\n");
 		return sb.toString();
 	}
@@ -113,29 +113,29 @@ public class Vsong implements Comparable<Vsong>{
 	/**
 	 * @return the vocals
 	 */
-	public Set<String> getVocals() {
+	public List<String> getVocalsList() {
 		return vocals;
 	}
 
 	/**
 	 * @param vocals the vocals to set
 	 */
-	public void setVocals(Set<String> vocals) {
+	public void setVocalsList(List<String> vocals) {
 		this.vocals = vocals;
 	}
 
 	/**
 	 * @return the tags
 	 */
-	public Set<String> getTagSet() {
+	public List<String> getTagsList() {
 		return tags;
 	}
 
 	/**
 	 * @param tags the tags to set
 	 */
-	public void setTagSet(Set<String> tagSet) {
-		this.tags = tagSet;
+	public void setTagsList(List<String> tags) {
+		this.tags = tags;
 	}
 
 	/**
@@ -156,12 +156,19 @@ public class Vsong implements Comparable<Vsong>{
 		testVsong();
 	}
 	private static void testVsong() {
-		TreeSet<Vsong> set = new TreeSet<>();
-		System.out.println("add first song: " + set.add(new Vsong(27384957, "40mP MV",true)));
-		System.out.println("add duplicated song: " + set.add(new Vsong(27384957, "40mP duplicate",false)));
-		System.out.println("add second song: " + set.add(new Vsong(30772034, "LamazeP MV",true)));
-		System.out.println("add third song: " + set.add(new Vsong(25446788, "MARETU MV",true)));
-		System.out.println("the set is " + set);
+		java.util.TreeSet<Vsong> set = new java.util.TreeSet<>(), set2 = new java.util.TreeSet<>(), pointer = null;
+		System.out.println("add first song: " + set.add(new Vsong(27384957, "40mP MV")));
+		System.out.println("add duplicated song: " + set.add(new Vsong(27384957, "40mP duplicate")));
+		System.out.println("add second song: " + set.add(new Vsong(30772034, "LamazeP MV")));
+		System.out.println("add third song: " + set.add(new Vsong(25446788, "MARETU MV")));
+		System.out.println("the set is \n" + set);
+		set2.add(new Vsong(27384957, "40mP MV"));
+		set2.add(new Vsong(29987635, "Hachi PV"));
+		set2.addAll(set);
+		System.out.println("merge two set that contains same songs with different status: \n" + set2);
+		pointer = set2;
+		pointer.add(new Vsong(29882986, "Deco*27 PV"));
+		System.out.println("pointer and reference theory applied in Java: \n" + set2);
 	}
 	
 

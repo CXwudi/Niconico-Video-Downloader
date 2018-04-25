@@ -10,10 +10,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 
+import Old.OldListGrabber;
+
 
 /**
  * the main model of Nico video downloader project, also is the main M part of MVC
- * it contains 4 small model pieces---Setup, Downloader, ListGrabber and LocalRecorder
+ * it contains 4 small model pieces---Setup, Downloader, OldListGrabber and LocalRecorder
  * @author CX无敌
  */
 public class MainModel {
@@ -21,15 +23,16 @@ public class MainModel {
 	
 	private NicoDriver driver;
 	private TaskManager taskManager;
+	
 	private LocalRecorder localRecorder;
 	VideoDownloader downloader;
-	ListGrabber listGrabber;
+	OldListGrabber oldListGrabber;
 	
 
 	String email = "1113421658@qq.com";
 	String password = "2010017980502";
 	
-	private TreeSet<Vsong> task;
+	private TreeSet<Vsong> task, update;
 
 	public MainModel() {
 		System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir") + "/chromedriver.exe");
@@ -40,9 +43,9 @@ public class MainModel {
 		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 		driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
 		
-		taskManager = new TaskManager(driver, task);
+		taskManager = new TaskManager(driver, task, update);
 		downloader = new VideoDownloader(driver);
-		listGrabber = new ListGrabber(driver);
+		oldListGrabber = new OldListGrabber(driver);
 		localRecorder = new LocalRecorder();
 		
 		task = new TreeSet<>();
@@ -109,14 +112,6 @@ public class MainModel {
 		}
 		
 	}
-	
-	public void setAllDownloaded() {
-		HashMap<String, String> hashMap = listGrabber.getMyList();
-		for (Entry<String, String> list : hashMap.entrySet()) {
-			TreeMap<String, String> List = listGrabber.fetchSMlists(list.getKey());
-			localRecorder.updateDownloadedList(List);
-		}
-	}
 
 	/**
 	 * @return the driver
@@ -130,7 +125,7 @@ public class MainModel {
 		MainModel main = new MainModel();
 		main.login();
 		main.setupNicoNico();
-		main.setAllDownloaded();
+		
 	}
 
 }
