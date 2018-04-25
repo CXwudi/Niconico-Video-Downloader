@@ -74,11 +74,11 @@ public class NicoListGrabber extends CollectionReader{
 			for (WebElement webElement : myFavorMusics) {
 				WebElement description = webElement.findElement(By.cssSelector("a[href^='/watch/']"));
 				String videoLink = description.getAttribute("href");// it gives us url like: http://www.nicovideo.jp/watch/sm31818521
-				int smId = Integer.parseInt(videoLink.substring(videoLink.indexOf("sm"), videoLink.length()));
+				int smId = Integer.parseInt(videoLink.substring(videoLink.indexOf("sm") + 2, videoLink.length()));
 				String title = description.getText();// it gives us string like: ハチ MV「砂の惑星 feat.初音ミク」
 				folder.add(new Vsong(smId, title, folderName));
 			}
-			System.out.println(folder);
+			System.out.println("Collection \"" + folderName + "\" has following songs: " + folder);
 			
 		} catch (StaleElementReferenceException | TimeoutException e) {
 			// TODO Auto-generated catch block

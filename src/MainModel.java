@@ -43,12 +43,14 @@ public class MainModel {
 		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 		driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
 		
+		update = task = new TreeSet<>();
+		
 		taskManager = new TaskManager(driver, task, update);
 		downloader = new VideoDownloader(driver);
 		oldListGrabber = new OldListGrabber(driver);
 		localRecorder = new LocalRecorder();
 		
-		task = new TreeSet<>();
+		
 
 	}
 
@@ -120,12 +122,48 @@ public class MainModel {
 		return driver;
 	}
 
+	/**
+	 * @return the taskManager
+	 */
+	public TaskManager taskManager() {
+		return taskManager;
+	}
+
+	/**
+	 * @return the task
+	 */
+	public TreeSet<Vsong> getTask() {
+		return task;
+	}
+
+	/**
+	 * @param task the task to set
+	 */
+	public void setTask(TreeSet<Vsong> task) {
+		this.task = task;
+	}
+
+	/**
+	 * @return the update
+	 */
+	public TreeSet<Vsong> getUpdate() {
+		return update;
+	}
+
+	/**
+	 * @param update the update to set
+	 */
+	public void setUpdate(TreeSet<Vsong> update) {
+		this.update = update;
+	}
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		MainModel main = new MainModel();
 		main.login();
 		main.setupNicoNico();
-		
+		main.taskManager().readRecord();
+		main.taskManager().getTaskAndUpdate();
 		
 	}
 

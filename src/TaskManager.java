@@ -30,7 +30,7 @@ public class TaskManager{
 	}
 	/**
 	 * Grab localRecord and NicoListGrabber's songs collection to determine the task for downloading Vocaloid Songs,
-	 * and the list of downloaded songs for record. Be careful that the parameters are both input and output parameters
+	 * and the list of downloaded songs for record.
 	 * @param task the collection of video that needed to be downloaded
 	 * @param update the collection of video that already been downloaded
 	 * @return true if the function fulfills both task and update.

@@ -12,6 +12,7 @@ public class LocalRecorder extends CollectionReader{
 
 	public LocalRecorder() {
 		super();
+		listDownloadedTxt = new File(new File("."), "downloaded.txt");
 	}
 	
 	
