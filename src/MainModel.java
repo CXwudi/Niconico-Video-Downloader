@@ -43,7 +43,9 @@ public class MainModel {
 		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 		driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
 		
-		update = task = new TreeSet<>();
+		//WARNING don't write update = task = new TreeSet<>(); this gonna make two pointers point to the same one TreeSet, which is bad.
+		update = new TreeSet<>();
+		task = new TreeSet<>();
 		
 		taskManager = new TaskManager(driver, task, update);
 		downloader = new VideoDownloader(driver);

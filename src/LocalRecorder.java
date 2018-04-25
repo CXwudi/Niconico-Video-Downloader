@@ -25,6 +25,7 @@ public class LocalRecorder extends CollectionReader{
 				String[] detialArray = i.split("\t");
 				collection.add(new Vsong(Integer.parseInt(detialArray[0].substring(2, detialArray[0].length())),detialArray[1]));
 			}
+			System.out.println("local record is: " + collection);
 			reader.close();
 			isDone = true;
 		} catch (IOException e) {
