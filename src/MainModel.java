@@ -126,6 +126,7 @@ public class MainModel {
 		main.login();
 		main.setupNicoNico();
 		
+		
 	}
 
 }
