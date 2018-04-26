@@ -5,19 +5,21 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 
-public class LocalRecorder extends CollectionReader{
+public class LocalListGrabber extends CollectionReader{
 	private BufferedReader reader;
 	private PrintWriter writer;
 	private File listDownloadedTxt;
 
-	public LocalRecorder() {
+	public LocalListGrabber() {
 		super();
 		listDownloadedTxt = new File(new File("."), "downloaded.txt");
 	}
 	
-	
+
+
+
 	@Override
-	public boolean readRecord() {
+	public void readRecord() {
 		try {
 			//convert into a smarter line-by-line reader from a char-by-char reader.
 			reader = new BufferedReader(new FileReader(listDownloadedTxt));
@@ -27,22 +29,20 @@ public class LocalRecorder extends CollectionReader{
 			}
 			System.out.println("local record is: " + collection);
 			reader.close();
-			isDone = true;
+			super.readRecord();
 		} catch (IOException e) {
 			System.err.println("this shouldn't happen");
 			e.printStackTrace();
 			isDone = false;
-			
 		}
-		return isDone;
 		
 	}
-	public static boolean testReading() {
-		LocalRecorder localRecorder = new LocalRecorder();
+	public static void testReading() {
+		LocalListGrabber localListGrabber = new LocalListGrabber();
 		//Map<String, String> map = localRecorder.getIsDownloaded();
-		boolean done = localRecorder.readRecord();
-		System.out.println(localRecorder.getCollection());
-		return done;
+		localListGrabber.readRecord();
+		System.out.println(localListGrabber.getCollection());
+		
 	}
 
 	public static void main(String[] args) throws IOException {

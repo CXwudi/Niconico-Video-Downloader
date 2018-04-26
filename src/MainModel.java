@@ -48,11 +48,10 @@ public class MainModel {
 		task = new TreeSet<>();
 		
 		taskManager = new TaskManager(driver, task, update);
-		downloader = new VideoDownloader(driver);
-		oldListGrabber = new OldListGrabber(driver);
 		localRecorder = new LocalRecorder();
 		
-		
+		downloader = new VideoDownloader(driver);
+		oldListGrabber = new OldListGrabber(driver);
 
 	}
 
@@ -166,6 +165,7 @@ public class MainModel {
 		main.setupNicoNico();
 		main.taskManager().readRecord();
 		main.taskManager().getTaskAndUpdate();
+		
 		
 	}
 

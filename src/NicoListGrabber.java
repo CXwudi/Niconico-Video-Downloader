@@ -18,22 +18,22 @@ public class NicoListGrabber extends CollectionReader{
 		super();
 		driver = d;
 	}
-	
+
 	@Override
-	public boolean readRecord() {
+	public void readRecord() {
 		HashMap<String, String> mylists = getMyListsIdAndName();
 		for (Iterator<Entry<String, String>> iterator = mylists.entrySet().iterator(); iterator.hasNext();) {
 			Entry<String, String> list = iterator.next();
 			collection.addAll(getOneFolderCollection(list.getKey(), list.getValue()));
 		}
-		isDone = true;
-		return isDone;
+		super.readRecord();
 	}
 	
 	private HashMap<String, String> getMyListsIdAndName() {
 		try {
 			HashMap<String, String> myLists = new HashMap<>();
 			driver.get("http://www.nicovideo.jp/my/mylist/");
+			driver.navigate().refresh();
 
 			WebElement myListContainer = driver.findElement(By.cssSelector("div.navInner"));
 			List<WebElement> searchResults = myListContainer.findElements(By.cssSelector("li[id^=SYS_box_group_]"));
@@ -62,7 +62,6 @@ public class NicoListGrabber extends CollectionReader{
 			driver.get("http://www.nicovideo.jp/my/mylist/#/" + id);
 			WebElement sort = driver.findElement(By.cssSelector("select.itemSort[name=sort]"));
 			sort.click();
-			Thread.sleep(10);
 			sort.findElement(By.cssSelector("[value='1']")).click();
 			System.out.println("change sort order success");
 			Thread.sleep(700);

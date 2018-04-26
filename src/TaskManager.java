@@ -10,13 +10,13 @@ import java.util.TreeSet;
  */
 public class TaskManager{
 	
-	private LocalRecorder localRecorder;
+	private LocalListGrabber localListGrabber;
 	private NicoListGrabber nicoListGrabber;
 	
 	private TreeSet<Vsong> task, update;
 
 	public TaskManager(NicoDriver d, TreeSet<Vsong> task, TreeSet<Vsong> update) {	
-		localRecorder = new LocalRecorder();
+		localListGrabber = new LocalListGrabber();
 		nicoListGrabber = new NicoListGrabber(d);
 		this.task = task;
 		this.update = update;
@@ -25,8 +25,25 @@ public class TaskManager{
 	 * Assign localRecord and NicoListGrabber to read their own Vocaloid Songs Collection
 	 * @return true if both successfully done.
 	 */
-	public boolean readRecord() {
-		return localRecorder.readRecord() && nicoListGrabber.readRecord();
+	public void readRecord() {
+		Thread a = new Thread(new Runnable() {
+			public void run() {
+				localListGrabber.readRecord();
+			}
+		});
+		Thread b = new Thread(new Runnable() {
+			public void run() {
+				nicoListGrabber.readRecord();
+			}
+		});
+		a.start();
+		b.start();
+		try {
+			a.join();
+			b.join();
+		} catch (InterruptedException e) {
+			System.err.println(e + "\nthis shouldn't happen");
+		}
 	}
 	/**
 	 * Grab localRecord and NicoListGrabber's songs collection to determine the task for downloading Vocaloid Songs,
@@ -36,7 +53,7 @@ public class TaskManager{
 	 * @return true if the function fulfills both task and update.
 	 */
 	public boolean getTaskAndUpdate() {
-		if (!localRecorder.isDone() || !nicoListGrabber.isDone()) 
+		if (!localListGrabber.isDone() || !nicoListGrabber.isDone()) 
 			return false;
 		TreeSet<Vsong> local = getLocalCollection(), online = getOnlineCollection();
 		for (Iterator<Vsong> iterator = online.iterator(); iterator.hasNext();) {
@@ -61,7 +78,7 @@ public class TaskManager{
 	 * @return the local record of downloaded PV
 	 */
 	public TreeSet<Vsong> getLocalCollection() {
-		return localRecorder.getCollection();
+		return localListGrabber.getCollection();
 	}
 
 	/**

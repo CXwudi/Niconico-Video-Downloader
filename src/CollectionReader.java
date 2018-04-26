@@ -13,11 +13,9 @@ public abstract class CollectionReader {
 	 * Concrete classes that inheritances this class have to override this function.
 	 * read the collection and record it into a TreeSet.
 	 * call {@code getCollection()} to get the reference of record.
-	 * 
-	 * @return boolean that indicate the reading process is done or not
 	 */
-	public boolean readRecord() {
-		return false;
+	public void readRecord() {
+		isDone = true;
 	}
 	/**
 	 * @return the collection of Vocaloid Songs in TreeSet<Vsong>.
