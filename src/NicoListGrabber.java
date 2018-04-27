@@ -26,7 +26,7 @@ public class NicoListGrabber extends CollectionReader{
 			Entry<String, String> list = iterator.next();
 			collection.addAll(getOneFolderCollection(list.getKey(), list.getValue()));
 		}
-		super.readRecord();
+		isDone = true;
 	}
 	
 	private HashMap<String, String> getMyListsIdAndName() {

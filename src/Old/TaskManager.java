@@ -7,20 +7,21 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Comparator;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.Map;
 import java.util.Map.Entry;
 
-public class OldLocalRecorder{
-	private BufferedReader reader;
-	private PrintWriter writer;
-	private File listDownloadedTxt;
+import java.util.TreeMap;
+
+public class TaskManager {
+	BufferedReader reader;
+	PrintWriter writer;
+	File listDownloadedTxt;
 
 	TreeMap<String, String> alreadyDownloaded; // same, sm number = song title
 	TreeMap<String, String> toDownload; // same
 	Comparator<String> invereOrder;//the inverse order, from newer to older songs
 
-	public OldLocalRecorder() {
+	public TaskManager() {
 		// TODO Auto-generated constructor stub
 		invereOrder = new Comparator<String>() {
 			@Override
@@ -28,7 +29,6 @@ public class OldLocalRecorder{
 				return o2.compareTo(o1);
 			}
 		};
-		
 		alreadyDownloaded = new TreeMap<>(invereOrder);
 		toDownload = new TreeMap<>(invereOrder);
 		listDownloadedTxt = new File(new File("."), "downloaded.txt");
@@ -41,22 +41,17 @@ public class OldLocalRecorder{
 	// downloaded before.
 	public TreeMap<String, String> getIsDownloaded() {
 		try {
-			//convert into a smarter line-by-line reader from a char-by-char reader.
 			reader = new BufferedReader(new FileReader(listDownloadedTxt));
 			for (String i = reader.readLine(); i != null && !i.equals(""); i = reader.readLine()) {
 				alreadyDownloaded.put(i.substring(0, i.indexOf("\t")), i.substring(i.indexOf("\t")+1, i.length()));
 			}
 			reader.close();
 		} catch (IOException e) {
-			System.err.println("this shouldn't happen");
-			e.printStackTrace();
+			System.err.println(e);
 		}
 		
 		return alreadyDownloaded;
 	}
-
-	// read file from a txt file that records all smNumber of videos that have been
-	// downloaded before.
 
 	/**
 	 * return the list of video should be downloaded.
@@ -85,7 +80,6 @@ public class OldLocalRecorder{
 	// update the alreadyDownloaded hashset, and write it into txt file.
 	public void updateDownloadedList(TreeMap<String, String> merge) {
 		try {
-			//convert into a smarter line-by-line writer from a char-by-char writer
 			writer = new PrintWriter(new FileWriter(listDownloadedTxt));
 		} catch (IOException e) { }
 		alreadyDownloaded.putAll(merge);
@@ -97,22 +91,16 @@ public class OldLocalRecorder{
 		writer.close();
 
 	}
-	public static void testReading() {
-		OldLocalRecorder localRecorder = new OldLocalRecorder();
-		//Map<String, String> map = localRecorder.getIsDownloaded();
-		localRecorder.getIsDownloaded();
-		System.out.println(localRecorder.alreadyDownloaded);
-	}
-	public static void testWriting() {
-		OldLocalRecorder localRecorder = new OldLocalRecorder();
+	
+
+	public static void main(String[] args) throws IOException {
+		TaskManager taskManager = new TaskManager();
+		Map<String, String> map = taskManager.getIsDownloaded();
+		System.out.println(map);
 		TreeMap<String, String> map2 = new TreeMap<>();
 		map2.put("sm333", "Koyori MV");
 		map2.put("sm444", "MARETU MV");
-		localRecorder.updateDownloadedList(map2);
-	}
-
-	public static void main(String[] args) throws IOException {
-		testReading();
+		taskManager.updateDownloadedList(map2);
 
 	}
 }

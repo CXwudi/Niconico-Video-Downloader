@@ -5,12 +5,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 
-public class LocalListGrabber extends CollectionReader{
+public class LocalReader extends CollectionReader{
 	private BufferedReader reader;
 	private PrintWriter writer;
 	private File listDownloadedTxt;
 
-	public LocalListGrabber() {
+	public LocalReader() {
 		super();
 		listDownloadedTxt = new File(new File("."), "downloaded.txt");
 	}
@@ -29,7 +29,7 @@ public class LocalListGrabber extends CollectionReader{
 			}
 			System.out.println("local record is: " + collection);
 			reader.close();
-			super.readRecord();
+			isDone = true;
 		} catch (IOException e) {
 			System.err.println("this shouldn't happen");
 			e.printStackTrace();
@@ -38,10 +38,10 @@ public class LocalListGrabber extends CollectionReader{
 		
 	}
 	public static void testReading() {
-		LocalListGrabber localListGrabber = new LocalListGrabber();
+		LocalReader localReader = new LocalReader();
 		//Map<String, String> map = localRecorder.getIsDownloaded();
-		localListGrabber.readRecord();
-		System.out.println(localListGrabber.getCollection());
+		localReader.readRecord();
+		System.out.println(localReader.getCollection());
 		
 	}
 

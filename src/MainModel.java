@@ -1,21 +1,14 @@
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 
-import Old.OldListGrabber;
-
-
 /**
  * the main model of Nico video downloader project, also is the main M part of MVC
- * it contains 4 small model pieces---Setup, Downloader, OldListGrabber and LocalRecorder
+ * it contains 4 small model pieces---Setup, Downloader, OldListGrabber and LocalReader
  * @author CX无敌
  */
 public class MainModel {
@@ -23,14 +16,10 @@ public class MainModel {
 	
 	private NicoDriver driver;
 	private TaskManager taskManager;
+	private DownloadManager downloadManager;
 	
-	private LocalRecorder localRecorder;
-	VideoDownloader downloader;
-	OldListGrabber oldListGrabber;
-	
-
-	String email = "1113421658@qq.com";
-	String password = "2010017980502";
+	private String email = "1113421658@qq.com";
+	private String password = "2010017980502";
 	
 	private TreeSet<Vsong> task, update;
 
@@ -48,10 +37,8 @@ public class MainModel {
 		task = new TreeSet<>();
 		
 		taskManager = new TaskManager(driver, task, update);
-		localRecorder = new LocalRecorder();
+		downloadManager = new DownloadManager(driver, task, update);
 		
-		downloader = new VideoDownloader(driver);
-		oldListGrabber = new OldListGrabber(driver);
 
 	}
 
@@ -103,19 +90,6 @@ public class MainModel {
 
 	}
 
-	public void doTaskWhileUpdate(String subDir, TreeMap<String, String> toDoList) {
-		for (Entry<String, String> sm : toDoList.entrySet()) {
-			downloader.getVideoInfoFrom(sm.getKey());
-			try {
-				downloader.downloadVideoTo(subDir);
-				localRecorder.updateDownloadedList(sm.getKey(), sm.getValue());
-			} catch (IOException e) {
-				System.out.println(sm.getValue() + " is marked as undownload");
-			}
-		}
-		
-	}
-
 	/**
 	 * @return the driver
 	 */
@@ -128,6 +102,13 @@ public class MainModel {
 	 */
 	public TaskManager taskManager() {
 		return taskManager;
+	}
+
+	/**
+	 * @return the downloadManager
+	 */
+	public DownloadManager downloadManager() {
+		return downloadManager;
 	}
 
 	/**
@@ -165,8 +146,7 @@ public class MainModel {
 		main.setupNicoNico();
 		main.taskManager().readRecord();
 		main.taskManager().getTaskAndUpdate();
-		
-		
+		Vsong first = main.getTask().first();
 	}
 
 }

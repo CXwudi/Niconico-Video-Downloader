@@ -10,33 +10,34 @@ import java.util.List;
 public class Vsong implements Comparable<Vsong>{
 
 	private int smId;				//the sm-number of the song
-	private String videoURL;		//the url that contains video file for download
-	private String videoTitle;		//the title of the song
+	private String URL;		//the url that contains video file for download
+	private String title;		//the title of the song
 	private String producerName;	//the name of producer
 	private String subDir;			//the name of folder that contains this song
-	//private boolean isDownloaded;	//have the video been downloaded or not
-
 	private List<String> vocals;	//Singers who sing this song
 	private List<String> tags;		//Tags of this song
-
+	
 	/**
-	 * create Vocaloid Song object using sm-number and song title
+	 * create Vocaloid Song object using
+	 * @param id the sm-number of the song
+	 * @param title the title of the song
 	 */
 	public Vsong(int id, String title) {
-		smId = id;
-		videoTitle = title;
-		subDir = videoURL =  producerName = "";
-		vocals = new ArrayList<>(3);
-		tags = new ArrayList<>();
+		this(id, title, "");
 	}
-	
+	/**
+	 * create Vocaloid Song object using
+	 * @param id the sm-number of the song
+	 * @param title the title of the song
+	 * @param folder the folder where the song is stored.
+	 */
 	public Vsong(int id, String title, String folder) {
-		smId = id;
-		videoTitle = title;
-		subDir = folder;
-		videoURL =  producerName = "";
-		vocals = new ArrayList<>(3);
-		tags = new ArrayList<>();
+		this.smId = id;
+		this.title = title;
+		this.subDir = folder;
+		this.URL =  this.producerName = "";
+		this.vocals = new ArrayList<>(3);
+		this.tags = new ArrayList<>();
 	}
 
 	/* (non-Javadoc)
@@ -64,7 +65,7 @@ public class Vsong implements Comparable<Vsong>{
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("[Song: ").append(videoTitle)
+		sb.append("[Song: ").append(title)
 		.append(", SM-id: sm").append(smId)
 		.append(producerName == "" ? "" :", Producer: ").append(producerName)
 		.append(subDir == "" ? "": ", folder: ").append(subDir)
@@ -83,17 +84,17 @@ public class Vsong implements Comparable<Vsong>{
 	}
 
 	/**
-	 * @return the videoURL
+	 * @return the URL
 	 */
-	public String getVideoURL() {
-		return videoURL;
+	public String getURL() {
+		return URL;
 	}
 
 	/**
-	 * @param videoURL the videoURL to set
+	 * @param URL the URL to set
 	 */
-	public void setVideoURL(String videoURL) {
-		this.videoURL = videoURL;
+	public void setURL(String URL) {
+		this.URL = URL;
 	}
 
 	/**
@@ -110,6 +111,20 @@ public class Vsong implements Comparable<Vsong>{
 		this.producerName = producerName;
 	}
 
+	//private boolean isDownloaded;	//have the video been downloaded or not
+	
+	/**
+	 * @return the subDir
+	 */
+	public String getSubDir() {
+		return subDir;
+	}
+	/**
+	 * @param subDir the subDir to set
+	 */
+	public void setSubDir(String subDir) {
+		this.subDir = subDir;
+	}
 	/**
 	 * @return the vocals
 	 */
@@ -146,14 +161,22 @@ public class Vsong implements Comparable<Vsong>{
 	}
 
 	/**
-	 * @return the videoTitle
+	 * @return the title
 	 */
-	public String getVideoTitle() {
-		return videoTitle;
+	public String getTitle() {
+		return title;
 	}
 	
 	public static void main(String[] args) {
 		testVsong();
+		testString();
+	}
+	private static void testString() {
+		String a, b;
+		a = b = "aaa";
+		b = "bbb";
+		System.out.println(a);
+		
 	}
 	private static void testVsong() {
 		java.util.TreeSet<Vsong> set = new java.util.TreeSet<>(), set2 = new java.util.TreeSet<>(), pointer = null;

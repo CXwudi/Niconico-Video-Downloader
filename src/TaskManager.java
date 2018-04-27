@@ -10,13 +10,13 @@ import java.util.TreeSet;
  */
 public class TaskManager{
 	
-	private LocalListGrabber localListGrabber;
+	private LocalReader localReader;
 	private NicoListGrabber nicoListGrabber;
 	
 	private TreeSet<Vsong> task, update;
 
 	public TaskManager(NicoDriver d, TreeSet<Vsong> task, TreeSet<Vsong> update) {	
-		localListGrabber = new LocalListGrabber();
+		localReader = new LocalReader();
 		nicoListGrabber = new NicoListGrabber(d);
 		this.task = task;
 		this.update = update;
@@ -28,7 +28,7 @@ public class TaskManager{
 	public void readRecord() {
 		Thread a = new Thread(new Runnable() {
 			public void run() {
-				localListGrabber.readRecord();
+				localReader.readRecord();
 			}
 		});
 		Thread b = new Thread(new Runnable() {
@@ -53,7 +53,7 @@ public class TaskManager{
 	 * @return true if the function fulfills both task and update.
 	 */
 	public boolean getTaskAndUpdate() {
-		if (!localListGrabber.isDone() || !nicoListGrabber.isDone()) 
+		if (!localReader.isDone() || !nicoListGrabber.isDone()) 
 			return false;
 		TreeSet<Vsong> local = getLocalCollection(), online = getOnlineCollection();
 		for (Iterator<Vsong> iterator = online.iterator(); iterator.hasNext();) {
@@ -78,7 +78,7 @@ public class TaskManager{
 	 * @return the local record of downloaded PV
 	 */
 	public TreeSet<Vsong> getLocalCollection() {
-		return localListGrabber.getCollection();
+		return localReader.getCollection();
 	}
 
 	/**

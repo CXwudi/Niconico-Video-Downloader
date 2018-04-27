@@ -11,12 +11,10 @@ public abstract class CollectionReader {
 
 	/** 
 	 * Concrete classes that inheritances this class have to override this function.
-	 * read the collection and record it into a TreeSet.
+	 * read the collection and record it into a TreeSet, then set attribute isDone to true
 	 * call {@code getCollection()} to get the reference of record.
 	 */
-	public void readRecord() {
-		isDone = true;
-	}
+	public abstract void readRecord();
 	/**
 	 * @return the collection of Vocaloid Songs in TreeSet<Vsong>.
 	 *  if the reading process has not finished yet, a Null will be returned

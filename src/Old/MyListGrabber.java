@@ -1,5 +1,4 @@
 package Old;
-
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -11,13 +10,13 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-public class OldListGrabber {
+public class MyListGrabber {
 	WebDriver driver;
-
+	
 	HashMap<String, String> myLists; // list id = list name
 	TreeMap<String, String> smNumberMap; // sm number = song title, for one single folder!
-
-	public OldListGrabber(WebDriver d) {
+	
+	public MyListGrabber(WebDriver d) {
 		// TODO Auto-generated constructor stub
 		driver = d;
 		myLists = new HashMap<>();
@@ -28,13 +27,13 @@ public class OldListGrabber {
 				return o2.compareTo(o1);
 			}
 		});
-
+		
 	}
-
+	
 	public HashMap<String, String> getMyList() {
 		try {
-			driver.get("http://www.nicovideo.jp/my/mylist/");
-
+			Safely.loadWebPage(driver, "http://www.nicovideo.jp/my/mylist/");
+			
 			WebElement myListContainer = driver.findElement(By.cssSelector("div.navInner"));
 			List<WebElement> searchResults = myListContainer.findElements(By.cssSelector("li[id^=SYS_box_group_]"));
 
@@ -59,7 +58,7 @@ public class OldListGrabber {
 
 	public TreeMap<String, String> fetchSMlists(String listNumber) {
 		try {
-			driver.get("http://www.nicovideo.jp/my/mylist/#/" + listNumber);
+			Safely.loadWebPage(driver, "http://www.nicovideo.jp/my/mylist/#/" + listNumber);
 			WebElement sort = driver.findElement(By.cssSelector("select.itemSort[name=sort]"));
 			sort.click();
 			Thread.sleep(10);
@@ -86,6 +85,8 @@ public class OldListGrabber {
 			System.out.println("CXwudi and Miku failed to get list info, we are trying again");
 			return fetchSMlists(listNumber);
 		}
-
+		 
+		
+		
 	}
 }
