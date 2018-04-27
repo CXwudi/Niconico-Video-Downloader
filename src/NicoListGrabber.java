@@ -8,8 +8,13 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
-
-
+/**
+ * the collection reader that control Chrome browser to navigate Niconico douga mylist page,
+ *  and read my Volcaoid collection from it
+ * @see CollectionReader
+ * @author CX无敌
+ *
+ */
 public class NicoListGrabber extends CollectionReader{
 	private NicoDriver driver;
 

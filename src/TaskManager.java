@@ -1,17 +1,16 @@
 import java.util.Iterator;
 import java.util.TreeSet;
 /**
- * The manager that can generate a set of new videos that need to be downloaded, 
- * by operates two small model---local recorder and list grabber
+ * The manager that can generate a set of new videos that need to be downloaded 
+ * by operates two small model---local recorder and list grabber. 
  * 
  * Details of these two small models will be discuss in their class description. 
- * 
  * @author CX无敌
  */
 public class TaskManager{
 	
-	private LocalReader localReader;
-	private NicoListGrabber nicoListGrabber;
+	private LocalReader localReader;			//manage to read collection of downloaded video
+	private NicoListGrabber nicoListGrabber;	//manage to get collection from Niconico douga favorite lists
 	
 	private TreeSet<Vsong> task, update;
 
@@ -21,9 +20,9 @@ public class TaskManager{
 		this.task = task;
 		this.update = update;
 	}
+	
 	/**
-	 * Assign localRecord and NicoListGrabber to read their own Vocaloid Songs Collection
-	 * @return true if both successfully done.
+	 * Assign localRecord and NicoListGrabber to read their own Vocaloid Songs Collection.
 	 */
 	public void readRecord() {
 		Thread a = new Thread(new Runnable() {
@@ -45,12 +44,11 @@ public class TaskManager{
 			System.err.println(e + "\nthis shouldn't happen");
 		}
 	}
+	
 	/**
 	 * Grab localRecord and NicoListGrabber's songs collection to determine the task for downloading Vocaloid Songs,
 	 * and the list of downloaded songs for record.
-	 * @param task the collection of video that needed to be downloaded
-	 * @param update the collection of video that already been downloaded
-	 * @return true if the function fulfills both task and update.
+	 * @return {@code true} if the function fulfills both task and update.
 	 */
 	public boolean getTaskAndUpdate() {
 		if (!localReader.isDone() || !nicoListGrabber.isDone()) 
@@ -67,7 +65,7 @@ public class TaskManager{
 	}
 	/**
 	 * mark all PV in niconico collections as downloaded
-	 * @return true if success
+	 * @return {@code true} if success
 	 */
 	public boolean setAllDownload() {
 		if(!nicoListGrabber.isDone()) return false;

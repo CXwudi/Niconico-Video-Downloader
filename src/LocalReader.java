@@ -3,11 +3,15 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-
+/**
+ * the collection reader that read a local fileto get a collection of downloaded Vocaloid videos list
+ * @see CollectionReader
+ * @author CX无敌
+ *
+ */
 
 public class LocalReader extends CollectionReader{
 	private BufferedReader reader;
-	private PrintWriter writer;
 	private File listDownloadedTxt;
 
 	public LocalReader() {
@@ -15,9 +19,6 @@ public class LocalReader extends CollectionReader{
 		listDownloadedTxt = new File(new File("."), "downloaded.txt");
 	}
 	
-
-
-
 	@Override
 	public void readRecord() {
 		try {
@@ -37,17 +38,16 @@ public class LocalReader extends CollectionReader{
 		}
 		
 	}
+
+	public static void main(String[] args) throws IOException {
+		testReading();
+	}
 	public static void testReading() {
 		LocalReader localReader = new LocalReader();
 		//Map<String, String> map = localRecorder.getIsDownloaded();
 		localReader.readRecord();
 		System.out.println(localReader.getCollection());
 		
-	}
-
-	public static void main(String[] args) throws IOException {
-		testReading();
-
 	}
 	
 }
