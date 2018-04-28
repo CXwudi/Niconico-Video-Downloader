@@ -4,7 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 /**
- * the collection reader that read a local fileto get a collection of downloaded Vocaloid videos list
+ * the collection reader that read a local file to get a collection of downloaded Vocaloid videos list
  * @see CollectionReader
  * @author CX无敌
  *

@@ -4,7 +4,11 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.TreeSet;
-
+/**
+ *TODO add comment
+ * @author CX无敌
+ *
+ */
 public class LocalRecorder {
 	private PrintWriter writer;
 	private File listDownloadedTxt;
@@ -19,9 +23,13 @@ public class LocalRecorder {
 			e.printStackTrace();
 		}
 	}
-	//TODO: add functions updating local record.
-	public boolean markDone(Vsong... song) {
-		return update.addAll(Arrays.asList(song));
+	/**
+	 * 
+	 * @param songs Vocaloid Songs that have been downloaded
+	 * @return @{@code true} if {@code treeSet.addAll()} return true;
+	 */
+	public boolean markDone(Vsong... songs) {
+		return update.addAll(Arrays.asList(songs));
 	}
 	
 	public void writeRecord() {

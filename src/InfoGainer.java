@@ -7,7 +7,11 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.http.HttpResponse;
-
+/**
+ * TODO add comments
+ * @author CX无敌
+ *
+ */
 public class InfoGainer {
 	private NicoDriver driver;
 

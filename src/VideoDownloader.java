@@ -3,7 +3,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-
+/**
+ * The video downloader is the main class of downloading Vocaloid PV,
+ * it also takes in charge of making mp4 file in the corespond folder.
+ * @author CX无敌
+ *
+ */
 public class VideoDownloader {
 	private final static File defaultDir = new File("D:\\11134\\Download\\Video");
 	private File downloadDir;
@@ -21,7 +26,11 @@ public class VideoDownloader {
 		defaultDir.mkdirs();
 		this.downloadDir = new File(downloadDir);
 	}
-	
+	/**
+	 * Download the Vocaloid Song.
+	 * @param song the song to be download.
+	 * @return {@code true} if the Vocaloid PV file is downloaded and ready to be watched.
+	 */
 	public boolean downloadVocaloidPV(Vsong song) {
 		if (song.getURL().equals("")) return false;
 		try {
@@ -68,7 +77,7 @@ public class VideoDownloader {
 				throw new SecurityException("Such path name is not a directory");
 		} catch (SecurityException e) {
 			e.printStackTrace();
-			System.err.println("CXwudi and miku found that this directory" + dir + "is not avaliable, video file is now made on default directory as " + new File(dir, fileName.toString()));
+			System.err.println("CXwudi and miku found that this directory" + dir + "is not avaliable, video file is now made on default directory as " + new File(defaultDir, fileName.toString()));
 			dir = defaultDir;
 		}
 		

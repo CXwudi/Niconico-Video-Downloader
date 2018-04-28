@@ -4,7 +4,7 @@ import java.util.TreeSet;
  * The manager that can generate a set of new videos that need to be downloaded 
  * by operates two small model---local recorder and list grabber. 
  * 
- * Details of these two small models will be discuss in their class description. 
+ * Details of these two small models will be discussed in their class description. 
  * @author CX无敌
  */
 public class TaskManager{

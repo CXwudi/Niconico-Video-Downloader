@@ -1,6 +1,14 @@
 import java.util.Iterator;
 import java.util.TreeSet;
-
+/**
+ * The main manager for downloading videos and recording them into a file. It will loop through the TreeSet task,
+ * for each Vocaloid Song in this Treeset, the manager will assign InfoGainer, VideoDownloader, and LocalRecorder 
+ * to do the whole process for each Vocaloid song.
+ * 
+ * Details of VideoDownloader, InfoGainer, and LocalRecorder will be discussed in their class description. 
+ * @author CX无敌
+ *
+ */
 public class DownloadManager {
 	private VideoDownloader downloader;
 	private InfoGainer infoGainer;
