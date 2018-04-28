@@ -27,9 +27,9 @@ public abstract class CollectionReader {
 	 *  if the reading process has not finished yet, a Null will be returned
 	 */
 	public TreeSet<Vsong> getCollection() {
-		return collection;
+		if (isDone) return collection;
+		else return null;
 	}
-
 	/**
 	 * @return {@code true} if reading process is done 
 	 */

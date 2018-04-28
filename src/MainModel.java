@@ -146,7 +146,7 @@ public class MainModel {
 		main.setupNicoNico();
 		main.taskManager().readRecord();
 		main.taskManager().getTaskAndUpdate();
-		Vsong first = main.getTask().first();
+		main.downloadManager().downloadVocaloidPVs();
 	}
 
 }

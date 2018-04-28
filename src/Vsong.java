@@ -3,6 +3,7 @@ import java.util.List;
 
 
 
+
 /**
  * The Vocaloid Song Object that contains information of sm-number, title, url, producer, tags and etc.
  * @author CX无敌
@@ -16,7 +17,13 @@ public class Vsong implements Comparable<Vsong>{
 	private String subDir;			//the name of folder that contains this song
 	private List<String> vocals;	//Singers who sing this song
 	private List<String> tags;		//Tags of this song
-	
+	/**
+	 * create Vocaloid Song object using only
+	 * @param id the sm-number of the song
+	 */
+	public Vsong(int id) {
+		this(id, "");
+	}
 	/**
 	 * create Vocaloid Song object using
 	 * @param id the sm-number of the song
@@ -92,9 +99,11 @@ public class Vsong implements Comparable<Vsong>{
 
 	/**
 	 * @param URL the URL to set
+	 * @return a reference to this Vocaloid Song object.
 	 */
-	public void setURL(String URL) {
+	public Vsong setURL(String URL) {
 		this.URL = URL;
+		return this;
 	}
 
 	/**
@@ -106,9 +115,11 @@ public class Vsong implements Comparable<Vsong>{
 
 	/**
 	 * @param producerName the producerName to set
+	 * @return a reference to this Vocaloid Song object.
 	 */
-	public void setProducerName(String producerName) {
+	public Vsong setProducerName(String producerName) {
 		this.producerName = producerName;
+		return this;
 	}
 
 	//private boolean isDownloaded;	//have the video been downloaded or not
@@ -119,11 +130,14 @@ public class Vsong implements Comparable<Vsong>{
 	public String getSubDir() {
 		return subDir;
 	}
-	/**
+	
+	/** 
 	 * @param subDir the subDir to set
+	 * @return a reference to this Vocaloid Song object. 
 	 */
-	public void setSubDir(String subDir) {
+	public Vsong setSubDir(String subDir) {
 		this.subDir = subDir;
+		return this;
 	}
 	/**
 	 * @return the vocals
@@ -134,9 +148,11 @@ public class Vsong implements Comparable<Vsong>{
 
 	/**
 	 * @param vocals the vocals to set
+	 * @return a reference to this Vocaloid Song object.
 	 */
-	public void setVocalsList(List<String> vocals) {
+	public Vsong setVocalsList(List<String> vocals) {
 		this.vocals = vocals;
+		return this;
 	}
 
 	/**
@@ -148,9 +164,11 @@ public class Vsong implements Comparable<Vsong>{
 
 	/**
 	 * @param tags the tags to set
+	 * @return a reference to this Vocaloid Song object.
 	 */
-	public void setTagsList(List<String> tags) {
+	public Vsong setTagsList(List<String> tags) {
 		this.tags = tags;
+		return this;
 	}
 
 	/**
@@ -170,12 +188,24 @@ public class Vsong implements Comparable<Vsong>{
 	public static void main(String[] args) {
 		testVsong();
 		testString();
+		Vsong vsong = new Vsong(23379461, "My PV");
+		testVsongAtt(vsong);
+		System.out.println(vsong);
+	}
+	private static void testVsongAtt(Vsong song) {
+		String a = song.getSubDir();
+		a = "asdasd";
+		song.setSubDir(a);
+		
 	}
 	private static void testString() {
 		String a, b;
-		a = b = "aaa";
+		a = b = new String("aaa");
 		b = "bbb";
 		System.out.println(a);
+		String c = new String("aaa");
+		System.out.println("c == a : " + (c == a));
+		System.out.println("c == \"aaa\": " + (c == "aaa"));
 		
 	}
 	private static void testVsong() {
@@ -192,6 +222,7 @@ public class Vsong implements Comparable<Vsong>{
 		pointer = set2;
 		pointer.add(new Vsong(29882986, "Deco*27 PV"));
 		System.out.println("pointer and reference theory applied in Java: \n" + set2);
+		
 	}
 	
 

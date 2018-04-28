@@ -17,6 +17,11 @@ public class LocalReader extends CollectionReader{
 	public LocalReader() {
 		super();
 		listDownloadedTxt = new File(new File("."), "downloaded.txt");
+		try {
+			listDownloadedTxt.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
