@@ -30,7 +30,7 @@ public class InfoGainer {
 			
 			videoTitle = driver.findElement(By.cssSelector("h1")).getText();
 			if (videoTitle.equals("お探しの動画は再生できません")) {
-				System.err.println("fake video, function exits :(");
+				System.err.println("fake video, CXwudi and Miku are very ANGRY and wanna exits :(");
 				return;
 			}
 			videoURL = driver.findElement(By.id("MainVideoPlayer")).findElement(By.cssSelector("video")).getAttribute("src");
@@ -49,11 +49,11 @@ public class InfoGainer {
 		} catch (InterruptedException e) {
 			System.err.println(e + "\nthis shouldn't happen");
 		}
-		if (videoURL.equals("") || videoURL == null || producerName.equals("") || tags.isEmpty() /* || videoTitle.equals("") */) {
+		if (videoURL.equals("") || videoURL == null || producerName.equals("") || tags.isEmpty() || videoTitle.equals("")) {
 			System.out.println("CXwudi and Miku failed to get video info, we are trying again");
 			fetchInfo(song);
 		} else {
-			song.setProducerName(producerName).setURL(videoURL).setTagsList(tags);
+			song.setProducerName(producerName).setURL(videoURL).setTagsList(tags).setTitle(videoTitle);
 		}
 
 		System.out.println("SEE!! CXwudi and miku get the URL, here is video info:\n" + song);

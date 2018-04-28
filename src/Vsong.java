@@ -185,6 +185,15 @@ public class Vsong implements Comparable<Vsong>{
 		return title;
 	}
 	
+	/**
+	 * @param title the title to set
+	 * @return a reference to this Vocaloid Song object.
+	 */
+	public Vsong setTitle(String title) {
+		this.title = title;
+		return this;
+	}
+	
 	public static void main(String[] args) {
 		testVsong();
 		testString();

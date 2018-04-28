@@ -39,7 +39,7 @@ public class VideoDownloader {
 			output.close();
 			input.close();
 			
-			System.out.println(file.getName() + ".mp4 done, yeah!!");
+			System.out.println(file.getName() + " done, yeah!!");
 			
 			return true;
 		} catch (IOException e) {
@@ -56,19 +56,20 @@ public class VideoDownloader {
 			fileName.append("【")
 					.append(song.getProducerName())
 					.delete(fileName.length()-3, fileName.length())
-					.append("】");
+					.append("】.mp4");
 		}
 		
 		//Create the folder that associate to song's folder.
 		File dir = new File(downloadDir, song.getSubDir());
 		try {
-			if (dir.isDirectory()) 
-				if (!dir.mkdirs()) throw new SecurityException("fail to make directory");
-			else throw new SecurityException("Such path name is not a directory");
+			if (!dir.exists()) 
+				dir.mkdirs();
+			if (!dir.isDirectory()) 
+				throw new SecurityException("Such path name is not a directory");
 		} catch (SecurityException e) {
 			e.printStackTrace();
-			dir = defaultDir;
 			System.err.println("CXwudi and miku found that this directory" + dir + "is not avaliable, video file is now made on default directory as " + new File(dir, fileName.toString()));
+			dir = defaultDir;
 		}
 		
 		return new File(dir, fileName.toString());

@@ -7,6 +7,7 @@ import java.util.TreeSet;
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebElement;
 /**
  * the collection reader that control Chrome browser to navigate Niconico douga mylist page,
@@ -56,6 +57,9 @@ public class NicoListGrabber extends CollectionReader{
 		} catch (TimeoutException | StaleElementReferenceException e) {
 			e.printStackTrace();
 			System.out.println("CXwudi and Miku failed to get collections info, we are trying again");
+			return getMyListsIdAndName();
+		} catch (UnhandledAlertException e) {
+			driver.switchTo().alert().accept();
 			return getMyListsIdAndName();
 		}
 	}

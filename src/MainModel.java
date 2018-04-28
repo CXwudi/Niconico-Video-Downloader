@@ -147,6 +147,7 @@ public class MainModel {
 		main.taskManager().readRecord();
 		main.taskManager().getTaskAndUpdate();
 		main.downloadManager().downloadVocaloidPVs();
+		
 	}
 
 }
