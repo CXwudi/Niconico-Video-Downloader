@@ -12,7 +12,6 @@ import org.openqa.selenium.WebElement;
  * @author CX无敌
  */
 public class MainModel {
-	//TODO add private modifier
 	
 	private NicoDriver driver;
 	private TaskManager taskManager;
@@ -68,21 +67,20 @@ public class MainModel {
 			System.out.println("change region success");
 
 		} catch (TimeoutException | InterruptedException e) {
-			// TODO Auto-generated catch block
 			System.err.println("change region may fail");
 			driver.navigate().refresh();
 			isSuccess = false;
 		}
-
+		
+		//TODO: some new changes are added here, need to update
 		try {
-			//TODO: some new changes are added here, need to update
-			driver.findElement(By.cssSelector("div.CountrySelector-items")).click();
+			WebElement lanElement = driver.findElement(By.cssSelector("span.CountrySelector-item.CountrySelector-currentItem[data-value='en-us']"));
+			lanElement.click();
 			Thread.sleep(50);
-			driver.findElement(By.cssSelector("a.selectType.ja-jp")).click();
+			driver.findElement(By.cssSelector("li.CountrySelector-item[data-type='language'][data-value='ja-jp']")).click();
 			System.out.println("change language success");
 
 		} catch (TimeoutException | InterruptedException e) {
-			// TODO Auto-generated catch block
 			System.err.println("change language may fail");
 			driver.navigate().refresh();
 			isSuccess = false;
@@ -141,7 +139,6 @@ public class MainModel {
 	}
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		MainModel main = new MainModel();
 		main.login();
 		main.setupNicoNico();
