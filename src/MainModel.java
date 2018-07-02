@@ -75,7 +75,8 @@ public class MainModel {
 		}
 
 		try {
-			driver.findElement(By.id("langTrigger")).click();
+			//TODO: some new changes are added here, need to update
+			driver.findElement(By.cssSelector("div.CountrySelector-items")).click();
 			Thread.sleep(50);
 			driver.findElement(By.cssSelector("a.selectType.ja-jp")).click();
 			System.out.println("change language success");
