@@ -11,7 +11,6 @@ import java.io.PrintWriter;
  */
 
 public class LocalReader extends CollectionReader{
-	private BufferedReader reader;
 	private File listDownloadedTxt;
 
 	public LocalReader() {
@@ -26,9 +25,9 @@ public class LocalReader extends CollectionReader{
 	
 	@Override
 	public void readRecord() {
-		try {
-			//convert into a smarter line-by-line reader from a char-by-char reader.
-			reader = new BufferedReader(new FileReader(listDownloadedTxt));
+		//convert into a smarter line-by-line reader from a char-by-char reader.
+		try (BufferedReader reader = new BufferedReader(new FileReader(listDownloadedTxt));){
+			
 			for (String i = reader.readLine(); i != null && !i.equals(""); i = reader.readLine()) {
 				String[] detialArray = i.split("\t");
 				collection.add(new Vsong(Integer.parseInt(detialArray[0].substring(2, detialArray[0].length())),detialArray[1]));

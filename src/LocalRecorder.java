@@ -9,7 +9,6 @@ import java.util.TreeSet;
  *
  */
 public class LocalRecorder {
-	private PrintWriter writer;
 	private File listDownloadedTxt;
 	private TreeSet<Vsong> update;
 	
@@ -32,8 +31,8 @@ public class LocalRecorder {
 	}
 	
 	public void writeRecord() {
-		try {
-			writer = new PrintWriter(listDownloadedTxt);
+		try (PrintWriter writer = new PrintWriter(listDownloadedTxt)){
+			
 			for (Iterator<Vsong> iterator = update.iterator(); iterator.hasNext();) {
 				Vsong vsong = iterator.next();
 				StringBuilder sb = new StringBuilder();
