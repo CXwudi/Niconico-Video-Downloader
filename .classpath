@@ -6,7 +6,11 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+<<<<<<< HEAD
 	<classpathentry kind="lib" path="C:/Program Files/selenium-java-3.13.0/client-combined-3.13.0.jar"/>
+=======
+	<classpathentry kind="lib" path="C:/Program Files/selenium-java-3.13.0/client-combined-3.13.0.jar" sourcepath="C:/Program Files/selenium-java-3.13.0/client-combined-3.13.0-sources.jar"/>
+>>>>>>> branch 'main' of https://github.com/CXwudi/Niconico-Video-Downloader
 	<classpathentry kind="lib" path="C:/Program Files/selenium-java-3.13.0/client-combined-3.13.0-sources.jar"/>
 	<classpathentry kind="lib" path="C:/Program Files/selenium-java-3.13.0/libs/byte-buddy-1.8.3.jar"/>
 	<classpathentry kind="lib" path="C:/Program Files/selenium-java-3.13.0/libs/commons-codec-1.10.jar"/>

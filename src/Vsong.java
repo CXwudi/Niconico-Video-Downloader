@@ -2,8 +2,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
-
 /**
  * The Vocaloid Song Object that contains information of sm-number, title, url, producer, tags and etc.
  * @author CX无敌
