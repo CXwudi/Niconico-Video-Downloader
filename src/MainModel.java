@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 /**
  * the main model of Nico video downloader project, also is the main M part of MVC
@@ -20,23 +21,20 @@ public class MainModel {
 	private String email = "1113421658@qq.com";
 	private String password = "2010017980502";
 	
-	private TreeSet<Vsong> task, update;
+	private TreeSet<Vsong> task, done;
 
 	public MainModel() {
 		System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir") + "/chromedriver.exe");
 		driver = new NicoDriver();
-		driver.manage().deleteAllCookies();
-		driver.manage().window().maximize();
-		//synchronization between this application and the website pages, so that my codes can wait for the web elements to come up, then do the work.
-		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-		driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
 		
-		//WARNING don't write update = task = new TreeSet<>(); this gonna make two pointers point to the same one TreeSet, which is bad.
-		update = new TreeSet<>();
+		
+		//WARNING don't write done = task = new TreeSet<>(); 
+		//this gonna make two pointers point to the same one TreeSet, which is bad.
+		done = new TreeSet<>();
 		task = new TreeSet<>();
 		
-		taskManager = new TaskManager(driver, task, update);
-		downloadManager = new DownloadManager(driver, task, update);
+		taskManager = new TaskManager(driver, task, done);
+		downloadManager = new DownloadManager(driver, task, done);
 		
 
 	}
@@ -72,7 +70,7 @@ public class MainModel {
 			isSuccess = false;
 		}
 		
-		//TODO: some new changes are added here, need to update
+		//TODO: some new changes are added here, need to done
 		try {
 			WebElement lanElement = driver.findElement(By.cssSelector("span.CountrySelector-item.CountrySelector-currentItem[data-value='en-us']"));
 			lanElement.click();
@@ -125,27 +123,33 @@ public class MainModel {
 	}
 
 	/**
-	 * @return the update
+	 * @return the done
 	 */
 	public TreeSet<Vsong> getUpdate() {
-		return update;
+		return done;
 	}
 
 	/**
-	 * @param update the update to set
+	 * @param done the done to set
 	 */
 	public void setUpdate(TreeSet<Vsong> update) {
-		this.update = update;
+		this.done = update;
 	}
 
 	public static void main(String[] args) {
 		MainModel main = new MainModel();
+		main.driver().setupDriver();
 		main.login();
 		main.setupNicoNico();
 		main.taskManager().readRecord();
 		main.taskManager().getTaskAndUpdate();
 		main.downloadManager().downloadVocaloidPVs();
-		
+	   /* ChromeDriver d = new ChromeDriver();
+	    d.manage().deleteAllCookies();
+        d.manage().window().maximize();
+        //synchronization between this application and the website pages, so that my codes can wait for the web elements to come up, then do the work.
+        d.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+        d.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);*/
 	}
 
 }

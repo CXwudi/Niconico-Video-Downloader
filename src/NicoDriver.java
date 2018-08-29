@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
@@ -42,6 +43,14 @@ public class NicoDriver extends ChromeDriver {
 
 	public NicoDriver(ChromeDriverService service, ChromeOptions options) {
 		super(service, options);
+	}
+	
+	public void setupDriver() {
+	    this.manage().deleteAllCookies();
+	    this.manage().window().maximize();
+        //synchronization between this application and the website pages, so that my codes can wait for the web elements to come up, then do the work.
+	    this.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+	    this.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
 	}
 
 	@Override
@@ -111,6 +120,12 @@ public class NicoDriver extends ChromeDriver {
 
 			}
 		}
+	}
+	
+	@Override
+	public void quit() {
+	    manage().deleteAllCookies();
+	    super.quit();
 	}
 
 }

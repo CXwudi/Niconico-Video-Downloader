@@ -1,5 +1,7 @@
 import java.util.Iterator;
 import java.util.TreeSet;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 /**
  * The manager that can generate a set of new videos that need to be downloaded 
  * by operates two small model---local recorder and list grabber. 
@@ -12,29 +14,21 @@ public class TaskManager{
 	private LocalReader localReader;			//manage to read collection of downloaded video
 	private NicoListGrabber nicoListGrabber;	//manage to get collection from Niconico douga favorite lists
 	
-	private TreeSet<Vsong> task, update;
+	private TreeSet<Vsong> task, done;
 
-	public TaskManager(NicoDriver d, TreeSet<Vsong> task, TreeSet<Vsong> update) {	
+	public TaskManager(NicoDriver d, TreeSet<Vsong> task, TreeSet<Vsong> done) {	
 		localReader = new LocalReader();
 		nicoListGrabber = new NicoListGrabber(d);
 		this.task = task;
-		this.update = update;
+		this.done = done;
 	}
 	
 	/**
 	 * Assign localRecord and NicoListGrabber to read their own Vocaloid Songs Collection.
 	 */
 	public void readRecord() {
-		Thread a = new Thread(new Runnable() {
-			public void run() {
-				localReader.readRecord();
-			}
-		});
-		Thread b = new Thread(new Runnable() {
-			public void run() {
-				nicoListGrabber.readRecord();
-			}
-		});
+		Thread a = new Thread(localReader::readRecord);
+		Thread b = new Thread(nicoListGrabber::readRecord);
 		a.start();
 		b.start();
 		try {
@@ -48,19 +42,29 @@ public class TaskManager{
 	/**
 	 * Grab localRecord and NicoListGrabber's songs collection to determine the task for downloading Vocaloid Songs,
 	 * and the list of downloaded songs for record.
-	 * @return {@code true} if the function fulfills both task and update.
+	 * @return {@code true} if the function fulfills both task and done.
 	 */
 	public boolean getTaskAndUpdate() {
 		if (!localReader.isDone() || !nicoListGrabber.isDone()) 
 			return false;
 		TreeSet<Vsong> local = getLocalCollection(), online = getOnlineCollection();
-		for (Iterator<Vsong> iterator = online.iterator(); iterator.hasNext();) {
+		/*for (Iterator<Vsong> iterator = online.iterator(); iterator.hasNext();) {
 			Vsong vsong = iterator.next();
-			TreeSet<Vsong> pointer = local.contains(vsong)? update : task;
+			TreeSet<Vsong> pointer = local.contains(vsong)? done : task;
 			pointer.add(vsong);
-		}
+		}*/
+		Thread a = new Thread(() -> online.parallelStream().filter(local::contains).collect(Collectors.toCollection(() -> done)));
+		Thread b = new Thread(() -> online.parallelStream().filter(vsong -> !local.contains(vsong)).collect(Collectors.toCollection(() -> task)));
+		a.start();
+        b.start();
+        try {
+            a.join();
+            b.join();
+        } catch (InterruptedException e) {
+            System.err.println(e + "\nthis shouldn't happen");
+        }
 		System.out.println("PV that needed to be downloaded: \n" + task);
-		System.out.println("PV that already been downloaded: \n" + update);
+		System.out.println("PV that already been downloaded: \n" + done);
 		return true;
 	}
 	/**
@@ -69,7 +73,7 @@ public class TaskManager{
 	 */
 	public boolean setAllDownload() {
 		if(!nicoListGrabber.isDone()) return false;
-		update.addAll(getOnlineCollection());
+		done.addAll(getOnlineCollection());
 		return true;
 	}
 	/**
@@ -92,10 +96,10 @@ public class TaskManager{
 		return task;
 	}
 	/**
-	 * @return the update
+	 * @return the done
 	 */
 	public TreeSet<Vsong> getUpdate() {
-		return update;
+		return done;
 	}
 	
 }
