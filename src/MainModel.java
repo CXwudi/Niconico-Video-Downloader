@@ -27,7 +27,6 @@ public class MainModel {
 		System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir") + "/chromedriver.exe");
 		driver = new NicoDriver();
 		
-		
 		//WARNING don't write done = task = new TreeSet<>(); 
 		//this gonna make two pointers point to the same one TreeSet, which is bad.
 		done = new TreeSet<>();
@@ -38,6 +37,7 @@ public class MainModel {
 		
 
 	}
+	
 
 	public boolean login() {
 		driver.get("https://account.nicovideo.jp/login");
@@ -138,18 +138,15 @@ public class MainModel {
 
 	public static void main(String[] args) {
 		MainModel main = new MainModel();
-		main.driver().setupDriver();
-		main.login();
+		/*main.login();
 		main.setupNicoNico();
 		main.taskManager().readRecord();
 		main.taskManager().getTaskAndUpdate();
-		main.downloadManager().downloadVocaloidPVs();
-	   /* ChromeDriver d = new ChromeDriver();
-	    d.manage().deleteAllCookies();
-        d.manage().window().maximize();
-        //synchronization between this application and the website pages, so that my codes can wait for the web elements to come up, then do the work.
-        d.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-        d.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);*/
+		main.downloadManager().downloadVocaloidPVs();*/
+		
+	    /*NicoDriver d = new NicoDriver();
+	    new TaskManager(d, new TreeSet<Vsong>(), new TreeSet<Vsong>());
+	    d.get("https://account.nicovideo.jp/login");*/
 	}
 
 }

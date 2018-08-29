@@ -31,28 +31,31 @@ public class NicoDriver extends ChromeDriver {
 
 	public NicoDriver() {
 		super();
+		setupDriver();
 	}
 
 	public NicoDriver(ChromeDriverService service) {
 		super(service);
+		setupDriver();
 	}
 
 	public NicoDriver(ChromeOptions options) {
 		super(options);
+		setupDriver();
 	}
 
 	public NicoDriver(ChromeDriverService service, ChromeOptions options) {
 		super(service, options);
-	}
-	
-	public void setupDriver() {
-	    this.manage().deleteAllCookies();
-	    this.manage().window().maximize();
-        //synchronization between this application and the website pages, so that my codes can wait for the web elements to come up, then do the work.
-	    this.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-	    this.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
+		setupDriver();
 	}
 
+	private void setupDriver() {
+        manage().deleteAllCookies();
+        manage().window().maximize();
+        //synchronization between this application and the website pages, so that my codes can wait for the web elements to come up, then do the work.
+        manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+        manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
+    }
 	@Override
 	public void get(String url) {
 		
