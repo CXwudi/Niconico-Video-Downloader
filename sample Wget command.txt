@@ -1,0 +1,2 @@
+cmd /c C:\ChromeAuto\wget64.exe -P D:\11134\Download\Video --no-check-certificate -nv --user-agent "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:11.0) Gecko/20100101 Firefox/11.0" http://smile-fnl30.nicovideo.jp/smile?m=21113426.39583
+http://pa03.dmc.nico:2811/vod/ht2_nicovideo/nicovideo-sm32128035_34b96311cc11ac8e237396e1f318fefeeca997e6017f9c25b762f4cee267b6dd?ht2_nicovideo=40205520.om1v25_oyb9e9_32iste61pmf6e
