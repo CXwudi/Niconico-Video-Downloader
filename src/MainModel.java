@@ -18,9 +18,6 @@ public class MainModel {
 	private TaskManager taskManager;
 	private DownloadManager downloadManager;
 	
-	private String email = "1113421658@qq.com";
-	private String password = "2010017980502";
-	
 	private TreeSet<Vsong> task, done;
 
 	public MainModel() {
@@ -37,7 +34,7 @@ public class MainModel {
 	}
 	
 
-	public boolean login() {
+	public boolean login(String email, String password) {
 		driver.get("https://account.nicovideo.jp/login");
 		driver.findElement(By.id("input__mailtel")).sendKeys(email);
 		WebElement ps = driver.findElement(By.id("input__password"));
@@ -145,7 +142,7 @@ public class MainModel {
 
 	public static void main(String[] args) {
 		MainModel main = new MainModel();
-		main.login();
+		main.login("1113421658@qq.com", "2010017980502");
 		main.setupNicoNico();
 		main.taskManager().readRecord();
 		main.taskManager().getTaskAndUpdate();
