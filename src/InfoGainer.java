@@ -61,20 +61,20 @@ public class InfoGainer {
 	}
 
 	public static void main(String[] args) {
-		MainModel main = new MainModel();
+		/*MainModel main = new MainModel(new NicoDriver());
 		main.login();
 		main.setupNicoNico();
-		/*
-		 * Object ret = ((JavascriptExecutor)main.driver()).executeAsyncScript(
-		 * "var request = new XMLHttpRequest();" +
-		 * "request.onreadystatechange = function() {" +
-		 * "		if (request.readyState === 4) {" +
-		 * "			return request.status;" + "		}" + "};" +
-		 * "request.open(\"GET\", \"http://www.nicovideo.jp/watch/sm" + 123123123 +
-		 * "\", true);" + "request.send();" );
-		 */
+		
+		  Object ret = ((JavascriptExecutor)main.driver()).executeAsyncScript(
+		  "var request = new XMLHttpRequest();" +
+		  "request.onreadystatechange = function() {" +
+		  "		if (request.readyState === 4) {" +
+		  "			return request.status;" + "		}" + "};" +
+		  "request.open(\"GET\", \"http://www.nicovideo.jp/watch/sm" + 123123123 +
+		  "\", true);" + "request.send();" );
+		 
 		main.downloadManager().fetchInfo(new Vsong(123123123, ""));
-		main.downloadManager().fetchInfo(new Vsong(32461412, ""));
+		main.downloadManager().fetchInfo(new Vsong(32461412, ""));*/
 	}
 
 }

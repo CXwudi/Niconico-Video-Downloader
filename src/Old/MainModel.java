@@ -25,7 +25,7 @@ public class MainModel {
 
 	public MainModel() {
 		// TODO Auto-generated constructor stub
-		System.setProperty("webdriver.chrome.driver", "C:\\ChromeAuto\\chromedriver.exe");
+		System.setProperty("webdriver.chrome.driver",  System.getProperty("user.dir") + "/chromedriver.exe");
 
 		driver = new ChromeDriver();
 		driver.manage().deleteAllCookies();

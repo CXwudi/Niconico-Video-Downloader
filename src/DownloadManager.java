@@ -19,8 +19,6 @@ public class DownloadManager {
 	public DownloadManager(NicoDriver d, TreeSet<Vsong> task, TreeSet<Vsong> update) {
 		this.task = task;
 		this.downloader = new VideoDownloader();
-		d.close();
-		d = new NicoDriver();
 		this.infoGainer = new InfoGainer(d);
 		this.localRecorder = new LocalRecorder(update);
 	}

@@ -25,7 +25,7 @@ public class MainModel {
 
 	public MainModel() {
 		System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir") + "/chromedriver.exe");
-		driver = new NicoDriver();
+		driver  = new NicoDriver();
 		
 		//WARNING don't write done = task = new TreeSet<>(); 
 		//this gonna make two pointers point to the same one TreeSet, which is bad.
@@ -57,7 +57,8 @@ public class MainModel {
 	// return true if both region change and language change are success.
 	public boolean setupNicoNico() {
 		boolean isSuccess = true;
-		
+		if (!driver.getCurrentUrl().equals("http://www.nicovideo.jp/"))
+		    driver.get("https://account.nicovideo.jp/login");
 		try {
 			driver.findElement(By.id("areaTrigger")).click();
 			Thread.sleep(50);
@@ -95,6 +96,14 @@ public class MainModel {
 	}
 
 	/**
+     * @param driver the driver to set
+     */
+    public void setDriver(NicoDriver driver) {
+        this.driver = driver;
+    }
+
+
+    /**
 	 * @return the taskManager
 	 */
 	public TaskManager taskManager() {
@@ -139,8 +148,8 @@ public class MainModel {
 	public static void main(String[] args) {
 		MainModel main = new MainModel();
 		/*main.login();
-		main.setupNicoNico();
-		main.taskManager().readRecord();
+		main.setupNicoNico();*/
+		/*main.taskManager().readRecord();
 		main.taskManager().getTaskAndUpdate();
 		main.downloadManager().downloadVocaloidPVs();*/
 		
