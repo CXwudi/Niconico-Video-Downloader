@@ -53,8 +53,8 @@ public class TaskManager{
 			TreeSet<Vsong> pointer = local.contains(vsong)? done : task;
 			pointer.add(vsong);
 		}*/
-		Thread a = new Thread(() -> online.parallelStream().filter(local::contains).collect(Collectors.toCollection(() -> done)));
-		Thread b = new Thread(() -> online.parallelStream().filter(vsong -> !local.contains(vsong)).collect(Collectors.toCollection(() -> task)));
+		Thread a = new Thread(() -> online.stream().filter(local::contains).collect(Collectors.toCollection(() -> done)));
+		Thread b = new Thread(() -> online.stream().filter(vsong -> !local.contains(vsong)).collect(Collectors.toCollection(() -> task)));
 		a.start();
         b.start();
         try {
@@ -75,6 +75,10 @@ public class TaskManager{
 		if(!nicoListGrabber.isDone()) return false;
 		done.addAll(getOnlineCollection());
 		return true;
+	}
+	
+	public void setDriver(NicoDriver driver) {
+		nicoListGrabber.setDriver(driver);
 	}
 	/**
 	 * @return the local record of downloaded PV

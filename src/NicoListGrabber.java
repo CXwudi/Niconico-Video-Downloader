@@ -25,6 +25,10 @@ public class NicoListGrabber extends CollectionReader{
 		driver = d;
 	}
 
+	public void setDriver(NicoDriver driver) {
+		this.driver = driver;
+	}
+
 	@Override
 	public void readRecord() {
 		HashMap<String, String> mylists = getMyListsIdAndName();

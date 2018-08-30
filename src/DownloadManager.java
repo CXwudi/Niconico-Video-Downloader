@@ -1,5 +1,7 @@
 import java.util.Iterator;
 import java.util.TreeSet;
+import java.util.function.Consumer;
+import java.util.function.Function;
 /**
  * The main manager for downloading videos and recording them into a file. It will loop through the TreeSet task,
  * for each Vocaloid Song in this Treeset, the manager will assign InfoGainer, VideoDownloader, and LocalRecorder 
@@ -23,6 +25,11 @@ public class DownloadManager {
 		this.localRecorder = new LocalRecorder(update);
 	}
 	
+	public void forEachVsong(Consumer<Vsong> c) {
+		for (Iterator<Vsong> iterator = task.iterator(); iterator.hasNext();) {
+			c.accept(iterator.next());
+		}
+	}
 	public void downloadVocaloidPVs() {
 		for (Iterator<Vsong> iterator = task.iterator(); iterator.hasNext();) {
 			Vsong vsong = iterator.next();
@@ -61,6 +68,10 @@ public class DownloadManager {
 	 */
 	public void triggerRecord() {
 		localRecorder.writeRecord();
+	}
+
+	public void setDriver(NicoDriver driver) {
+		infoGainer.setDriver(driver);
 	}
 	
 	

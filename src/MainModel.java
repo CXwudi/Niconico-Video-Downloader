@@ -8,8 +8,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 /**
- * the main model of Nico video downloader project, also is the main M part of MVC
- * it contains 4 small model pieces---Setup, Downloader, OldListGrabber and LocalReader
+ * the main model of Nico video downloader project, Manage the NicoDriver,
+ * it also is the main M part of MVC, contains 2 subsections---{@link TaskManager}, and {@link DownloadManager}
  * @author CX无敌
  */
 public class MainModel {
@@ -34,8 +34,6 @@ public class MainModel {
 		
 		taskManager = new TaskManager(driver, task, done);
 		downloadManager = new DownloadManager(driver, task, done);
-		
-
 	}
 	
 
@@ -57,8 +55,9 @@ public class MainModel {
 	// return true if both region change and language change are success.
 	public boolean setupNicoNico() {
 		boolean isSuccess = true;
-		if (!driver.getCurrentUrl().equals("http://www.nicovideo.jp/"))
-		    driver.get("https://account.nicovideo.jp/login");
+		if (!driver.getCurrentUrl().equals("http://www.nicovideo.jp/")) {
+			driver.get("http://www.nicovideo.jp/");
+		}
 		try {
 			driver.findElement(By.id("areaTrigger")).click();
 			Thread.sleep(50);
@@ -88,20 +87,19 @@ public class MainModel {
 
 	}
 
+	public void reset() {
+		driver.quit();
+		driver = new NicoDriver();
+		taskManager.setDriver(driver);
+		downloadManager.setDriver(driver);
+	}
+
 	/**
 	 * @return the driver
 	 */
 	public NicoDriver driver() {
 		return driver;
 	}
-
-	/**
-     * @param driver the driver to set
-     */
-    public void setDriver(NicoDriver driver) {
-        this.driver = driver;
-    }
-
 
     /**
 	 * @return the taskManager
@@ -147,15 +145,20 @@ public class MainModel {
 
 	public static void main(String[] args) {
 		MainModel main = new MainModel();
-		/*main.login();
-		main.setupNicoNico();*/
-		/*main.taskManager().readRecord();
+		main.login();
+		main.setupNicoNico();
+		main.taskManager().readRecord();
 		main.taskManager().getTaskAndUpdate();
-		main.downloadManager().downloadVocaloidPVs();*/
-		
-	    /*NicoDriver d = new NicoDriver();
-	    new TaskManager(d, new TreeSet<Vsong>(), new TreeSet<Vsong>());
-	    d.get("https://account.nicovideo.jp/login");*/
+		main.reset();
+		main.setupNicoNico();
+		main.downloadManager().forEachVsong(vsong -> {
+			DownloadManager manager = main.downloadManager();
+			manager.fetchInfo(vsong);
+			if (manager.downloadOneVocaloidPV(vsong))
+				manager.markDone(vsong);
+			manager.triggerRecord();//we add this line for now
+			}
+		);
 	}
 
 }

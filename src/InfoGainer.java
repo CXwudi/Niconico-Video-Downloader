@@ -15,6 +15,10 @@ public class InfoGainer {
 	public InfoGainer(NicoDriver d) {
 		this.driver = d;
 	}
+	
+	public void setDriver(NicoDriver driver) {
+		this.driver = driver;
+	}
 
 	public void fetchInfo(Vsong song) {
 		String videoURL = "";
