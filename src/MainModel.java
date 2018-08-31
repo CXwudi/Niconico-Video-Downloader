@@ -3,6 +3,8 @@ import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -49,38 +51,57 @@ public class MainModel {
 			return false;
 		}
 	}
-	// return true if both region change and language change are success.
-	public boolean setupNicoNico() {
+
+	public void setupNicoNico() {
 		boolean isSuccess = true;
 		if (!driver.getCurrentUrl().equals("http://www.nicovideo.jp/")) {
 			driver.get("http://www.nicovideo.jp/");
 		}
+		
+		//change area
 		try {
-			driver.findElement(By.id("areaTrigger")).click();
-			Thread.sleep(50);
-			driver.findElement(By.cssSelector("a.selectType.JP")).click();
-			System.out.println("change region success");
-
+			var areaElement = driver.findElement(By.id("areaTrigger"));
+			//if element exists, mean we are currently in US or Taiwan city, since they are using old niconico web page.
+			if (areaElement != null) {
+				areaElement.click();
+				Thread.sleep(50);
+				driver.findElement(By.cssSelector("a.selectType.JP")).click();
+				System.out.println("change region success");
+			} else {
+				System.out.println("already in Japan region");
+			}
 		} catch (TimeoutException | InterruptedException e) {
 			System.err.println("change region may fail");
+			/*((JavascriptExecutor) driver).executeScript("return window.stop");
 			driver.navigate().refresh();
+			*/
 			isSuccess = false;
 		}
 		
-		//TODO: some new changes are added here, need to done
+		//change language under Japan region.
 		try {
-			WebElement lanElement = driver.findElement(By.cssSelector("span.CountrySelector-item.CountrySelector-currentItem[data-value='en-us']"));
-			lanElement.click();
-			Thread.sleep(50);
-			driver.findElement(By.cssSelector("li.CountrySelector-item[data-type='language'][data-value='ja-jp']")).click();
-			System.out.println("change language success");
+			var lanElement = driver.findElement(By.cssSelector("span.CountrySelector-item.CountrySelector-currentItem[data-value='en-us']"));
+			if (lanElement == null) lanElement = driver.findElement(By.cssSelector("span.CountrySelector-item.CountrySelector-currentItem[data-value='zh-tw']"));
+			((JavascriptExecutor) driver).executeScript("return window.stop");
+			//if element exists, means we are in either English or Chinese language, change it to Japanese
+			if (lanElement != null) {
+				lanElement.click();
+				Thread.sleep(50);
+				driver.findElement(By.cssSelector("li.CountrySelector-item[data-type='language'][data-value='ja-jp']")).click();
+				System.out.println("change language success");
+			} else {
+				System.out.println("already in Japanese");
+			}
+			
 
 		} catch (TimeoutException | InterruptedException e) {
 			System.err.println("change language may fail");
-			driver.navigate().refresh();
+			//driver.navigate().refresh();
 			isSuccess = false;
 		}
-		return isSuccess;
+		if (!isSuccess) {
+            setupNicoNico();
+        }
 
 	}
 

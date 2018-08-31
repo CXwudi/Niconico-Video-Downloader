@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 import java.util.TreeSet;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.UnhandledAlertException;
@@ -74,6 +75,10 @@ public class NicoListGrabber extends CollectionReader{
 			
 			driver.get("http://www.nicovideo.jp/my/mylist/#/" + id);
 			WebElement sort = driver.findElement(By.cssSelector("select.itemSort[name=sort]"));
+			if (sort == null) {//means this folder is empty.
+				System.out.println("This folder, " + folderName + ",  is currently empty ╮(╯▽╰)╭");
+				return folder;
+			}
 			sort.click();
 			sort.findElement(By.cssSelector("[value='1']")).click();
 			System.out.println("change sort order success");
@@ -93,9 +98,7 @@ public class NicoListGrabber extends CollectionReader{
 			System.out.println("Collection \"" + folderName + "\" has following songs: " + folder);
 			
 		} catch (StaleElementReferenceException | TimeoutException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println("CXwudi and Miku failed to get list info, we are trying again");
+			System.err.println(e + "\nCXwudi and Miku failed to get list info, we are trying again");
 			return getOneFolderCollection(id, folderName);
 		} catch (InterruptedException e) {
 			System.err.println(e + "\nthis shouldn't happen");

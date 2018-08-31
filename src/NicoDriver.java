@@ -2,6 +2,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -97,8 +98,11 @@ public class NicoDriver extends ChromeDriver {
 					System.err.println(e + "\nthis shouldn't happen");
 				}
 
+			} catch (NoSuchElementException e) {
+				System.err.println("Oh NO, we can't find this element, (maybe) get perpared for NullPointerException 😂");
+				return null;
 			}
-		}
+		} 
 
 	}
 

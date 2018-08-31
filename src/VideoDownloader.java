@@ -10,7 +10,7 @@ import java.net.URL;
  *
  */
 public class VideoDownloader {
-	private final static File defaultDir = new File("D:\\11134\\Download\\Video");
+	private final static File defaultDir = new File("D:\\11134\\Download\\Video");//TODO: use System video directory
 	private File downloadDir;
 	/**
 	 * create video downloader with default downloading folder D:\\11134\\Download\\Video

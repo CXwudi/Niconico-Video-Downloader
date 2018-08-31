@@ -1,5 +1,7 @@
 import java.util.Iterator;
 import java.util.TreeSet;
+import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 /**
@@ -53,16 +55,20 @@ public class TaskManager{
 			TreeSet<Vsong> pointer = local.contains(vsong)? done : task;
 			pointer.add(vsong);
 		}*/
-		Thread a = new Thread(() -> online.stream().filter(local::contains).collect(Collectors.toCollection(() -> done)));
-		Thread b = new Thread(() -> online.stream().filter(vsong -> !local.contains(vsong)).collect(Collectors.toCollection(() -> task)));
-		a.start();
-        b.start();
-        try {
-            a.join();
-            b.join();
-        } catch (InterruptedException e) {
-            System.err.println(e + "\nthis shouldn't happen");
-        }
+		var map = online.parallelStream().collect(
+		        Collectors.groupingByConcurrent(
+		                local::contains,
+		                Collectors.mapping(//Learning Java: in fact, you don't need mapping function here, but this is a good way to learn collectors.mapping
+		                        Function.identity(),
+		                        Collectors.toCollection(ConcurrentSkipListSet<Vsong>::new)
+		                        )
+		                )
+		        );
+		
+		//var b = new Thread(() -> online.parallelStream().filter(vsong -> !local.contains(vsong)).forEach(concurrentTask::add));
+		
+		done.addAll(map.get(true));
+		task.addAll(map.get(false));
 		System.out.println("PV that needed to be downloaded: \n" + task);
 		System.out.println("PV that already been downloaded: \n" + done);
 		return true;
