@@ -35,6 +35,8 @@ public class VideoDownloader {
 	public boolean downloadVocaloidPV(Vsong song) {
 		Objects.requireNonNull(song);
 		if (song.getURL().equals("")) return false;
+		//WARNING: don't try to use try-on-resource for now, broken video file detected when using try-on-resource
+		//need further investigation on why this is happen, is it my bad or a problem from niconico's server.
 		try {
 			BufferedInputStream input = new BufferedInputStream(new URL(song.getURL()).openStream()); //get the input stream from video url
 			File file = makeVideoFile(song);						//make a file to receive data from above input stream.
