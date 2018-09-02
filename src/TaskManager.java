@@ -67,8 +67,8 @@ public class TaskManager{
 		
 		//var b = new Thread(() -> online.parallelStream().filter(vsong -> !local.contains(vsong)).forEach(concurrentTask::add));
 		
-		done.addAll(map.get(true));
-		task.addAll(map.get(false));
+		if (map.get(true) != null) done.addAll(map.get(true));
+		if (map.get(false) != null) task.addAll(map.get(false));
 		System.out.println("PV that needed to be downloaded: \n" + task);
 		System.out.println("PV that already been downloaded: \n" + done);
 		return true;

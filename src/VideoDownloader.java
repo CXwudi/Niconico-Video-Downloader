@@ -3,28 +3,29 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 /**
  * The video downloader is the main class of downloading Vocaloid PV,
- * it also takes in charge of making mp4 file in the corespond folder.
+ * and stores them in the correspond folder.
  * @author CX无敌
  *
  */
 public class VideoDownloader {
-	private final static File defaultDir = new File("D:\\11134\\Download\\Video");//TODO: use System video directory
-	private File downloadDir;
+	private final static File defaultDir = new File(System.getProperty("user.home") + "\\Videos");
+	private File rootDLdir;  //user defined download dir
 	/**
-	 * create video downloader with default downloading folder D:\\11134\\Download\\Video
+	 * create video downloader with default downloading folder 
 	 */
 	public VideoDownloader() {
 		this(defaultDir.toString());
 	}
 	/**
-	 * create video downloader with defined downloading folder
-	 * @param downloadDir the root directory of downloaded video.
+	 * create video downloader with user defined downloading folder
+	 * @param rootDLdir the root directory of downloaded video.
 	 */
 	public VideoDownloader(String downloadDir) {
-		defaultDir.mkdirs();
-		this.downloadDir = new File(downloadDir);
+		defaultDir.mkdirs(); //this step should not 
+		this.rootDLdir = new File(downloadDir);
 	}
 	/**
 	 * Download the Vocaloid Song.
@@ -32,12 +33,14 @@ public class VideoDownloader {
 	 * @return {@code true} if the Vocaloid PV file is downloaded and ready to be watched.
 	 */
 	public boolean downloadVocaloidPV(Vsong song) {
+		Objects.requireNonNull(song);
 		if (song.getURL().equals("")) return false;
-		try {
-			BufferedInputStream input = new BufferedInputStream(new URL(song.getURL()).openStream()); //get the input stream from video url
-			File file = makeAFile(song); 							//make a file to receive data from above input stream.
-			FileOutputStream output = new FileOutputStream(file); 	//create FileOutputStream for the above file.
-			
+		//make a file to receive data from following input stream.
+		File file = makeVideoFile(song);
+		//get the input stream from video url
+		//create FileOutputStream for the above file.
+		try (BufferedInputStream input = new BufferedInputStream(new URL(song.getURL()).openStream());
+				FileOutputStream output = new FileOutputStream(file)){
 			//start downloading process
 			System.out.println("start downloading");
 			byte[] buffer = new byte[1024*1024];
@@ -45,10 +48,8 @@ public class VideoDownloader {
 	        while((count = input.read(buffer,0,1024*1024)) != -1){
 	            output.write(buffer, 0, count);
 	        }
-			output.close();
-			input.close();
 			
-			System.out.println(file.getName() + " done, yeah!!");
+			System.out.println(file.getName() + "is done, yeah!!");
 			
 			return true;
 		} catch (IOException e) {
@@ -58,26 +59,27 @@ public class VideoDownloader {
 		}
 	}
 	
-	private File makeAFile(Vsong song) {
-		String properTitle = song.getTitle().replaceAll("/", "-").replaceAll("\\\\", "-").replaceAll("\\?", " ");
+	private File makeVideoFile(Vsong song) {
+		String properTitle = NicoStringTool.fixFileName(song.getTitle());
+		String subDir = NicoStringTool.fixFileName(song.getSubDir());
 		StringBuilder fileName = new StringBuilder(properTitle);
+		
 		if (!song.getProducerName().equals("")) {
 			fileName.append("【")
-					.append(song.getProducerName())
+					.append(NicoStringTool.fixFileName(song.getProducerName()))
 					.delete(fileName.length()-3, fileName.length())
-					.append("】.mp4");
+					.append("】");
 		}
-		
-		//Create the folder that associate to song's folder.
-		File dir = new File(downloadDir, song.getSubDir());
+		fileName.append(".mp4");
+		//make sure the subfolder is created, otherwise downloading PV might cause problem
+		File dir = new File(rootDLdir, subDir);
 		try {
 			if (!dir.exists()) 
-				dir.mkdirs();
+				dir.mkdirs();//Learn java: even enough your File is xxx/xxx.mp4, mkdirs() will still create folders, but folder is named as "xxx.mp4"
 			if (!dir.isDirectory()) 
-				throw new SecurityException("Such path name is not a directory");
+				throw new SecurityException("Such path name is not a directory");//a fake exception
 		} catch (SecurityException e) {
-			e.printStackTrace();
-			System.err.println("CXwudi and miku found that this directory" + dir + "is not avaliable, video file is now made on default directory as " + new File(defaultDir, fileName.toString()));
+			System.err.println(e + "\nCXwudi and miku found that this directory" + dir + "is not avaliable, video file is now made on default directory as " + new File(defaultDir, fileName.toString()));
 			dir = defaultDir;
 		}
 		
@@ -85,13 +87,13 @@ public class VideoDownloader {
 	}
 	
 	/**
-	 * @return the downloadDir
+	 * @return the current root directory that set to download
 	 */
 	public File getDownloadDir() {
-		return downloadDir;
+		return rootDLdir;
 	}
 	/**
-	 * @param downloadDir the downloadDir to set. if error happens, then default dir will be used instead.
+	 * @param rootDLdir the rootDLdir to set. if error happens, then default dir will be used instead.
 	 */
 	public void setDownloadDir(String downloadDir) {
 		File dir = new File(downloadDir);
@@ -99,11 +101,11 @@ public class VideoDownloader {
 			if (dir.isDirectory()) 
 				if (!dir.mkdirs()) throw new SecurityException("fail to make directory");
 			else throw new SecurityException("Such path name is not a directory");
-			this.downloadDir = dir;
+			this.rootDLdir = dir;
 		} catch (SecurityException e) {
 			e.printStackTrace();
 			System.err.println("CXwudi and miku found that this directory " + dir + " is not avaliable, plz try again.\nA default directroy D:\\11134\\Download\\Video has been set instead.");
-			this.downloadDir = defaultDir;
+			this.rootDLdir = defaultDir;
 		}
 		
 	}
@@ -112,10 +114,10 @@ public class VideoDownloader {
 	}
 	private static void testFile() {
 		VideoDownloader v = new VideoDownloader();
-		File video = new File(v.downloadDir + "\\" + "resume upload.mp4");
+		File video = new File(v.rootDLdir + "\\" + "resume upload.mp4");
 		System.out.println(video.isFile());
 		System.out.println(video);
-		video = new File(v.downloadDir, "");
+		video = new File(v.rootDLdir, "");
 		System.out.println(video);
 	}
 

@@ -86,7 +86,7 @@ public class NicoDriver extends ChromeDriver {
 			try {
 				return super.findElement(by);
 			} catch (TimeoutException e) {
-				System.err.println("find element" + by.toString() + " timeout:( ");
+				System.err.println("find element timeout:( ");
 				if (i++ < 2) System.out.println("don't worry, CXwudi and miku are going to try again and make it work!!");
 				else {
 					System.err.println("Oh NO, we really failed :(");
