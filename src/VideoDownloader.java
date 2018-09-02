@@ -35,12 +35,11 @@ public class VideoDownloader {
 	public boolean downloadVocaloidPV(Vsong song) {
 		Objects.requireNonNull(song);
 		if (song.getURL().equals("")) return false;
-		//make a file to receive data from following input stream.
-		File file = makeVideoFile(song);
-		//get the input stream from video url
-		//create FileOutputStream for the above file.
-		try (BufferedInputStream input = new BufferedInputStream(new URL(song.getURL()).openStream());
-				FileOutputStream output = new FileOutputStream(file)){
+		try {
+			BufferedInputStream input = new BufferedInputStream(new URL(song.getURL()).openStream()); //get the input stream from video url
+			File file = makeVideoFile(song);						//make a file to receive data from above input stream.
+			FileOutputStream output = new FileOutputStream(file); 	//create FileOutputStream for the above file.
+			
 			//start downloading process
 			System.out.println("start downloading");
 			byte[] buffer = new byte[1024*1024];
@@ -48,11 +47,13 @@ public class VideoDownloader {
 	        while((count = input.read(buffer,0,1024*1024)) != -1){
 	            output.write(buffer, 0, count);
 	        }
+			output.close();
+			input.close();
 			
-			System.out.println(file.getName() + " is done, yeah!!");
+			System.out.println(file.getName() + " done, yeah!!");
 			
 			return true;
-		} catch (IOException e) {
+		}  catch (IOException e) {
 			e.printStackTrace();
 			System.err.println("どうしよう!!!!, CXwudi and Miku failed to download " + song.getTitle() + " from " + song.getURL());
 			return false;
