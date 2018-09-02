@@ -10,6 +10,10 @@ public interface NicoStringTool {
 	 * @return the proper string that all illegal characters were removed or replaced.
 	 */
 	public static String fixFileName(String target) {
-		return target.replaceAll("/", "-").replaceAll("\\\\", "-").replaceAll("\\?", " ");
+		return target
+				.replaceAll("/", "-")
+				.replaceAll("\\\\", "-")
+				.replaceAll("\\?", " ")
+				.replaceAll("\\*", " ");
 	}
 }

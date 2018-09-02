@@ -69,14 +69,14 @@ public class Vsong implements Comparable<Vsong>{
 	 */
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("[Song: ").append(title)
-		.append(", SM-id: sm").append(smId)
-		.append(producerName == "" ? "" :", Producer: ").append(producerName)
-		.append(subDir == "" ? "": ", folder: ").append(subDir)
-		//.append(", status: ").append(isDownloaded ? "done" : "to be downloaded")
-		.append("]\n");
-		return sb.toString();
+		return new StringBuilder()
+				.append("\n[Song: ").append(title)
+				.append(", smID: sm").append(smId)
+				.append(producerName == "" ? "" : ", Producer: ").append(producerName)
+				.append(subDir == "" ? "" : ", Folder: ").append(subDir)
+				// .append(", status: ").append(isDownloaded ? "done" : "to be downloaded")
+				.append("]")
+				.toString();
 	}
 
 	/**

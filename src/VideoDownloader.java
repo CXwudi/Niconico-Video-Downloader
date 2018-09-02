@@ -49,7 +49,7 @@ public class VideoDownloader {
 	            output.write(buffer, 0, count);
 	        }
 			
-			System.out.println(file.getName() + "is done, yeah!!");
+			System.out.println(file.getName() + " is done, yeah!!");
 			
 			return true;
 		} catch (IOException e) {
@@ -60,13 +60,13 @@ public class VideoDownloader {
 	}
 	
 	private File makeVideoFile(Vsong song) {
-		String properTitle = NicoStringTool.fixFileName(song.getTitle());
+		String title = song.getTitle();
 		String subDir = NicoStringTool.fixFileName(song.getSubDir());
-		StringBuilder fileName = new StringBuilder(properTitle);
+		var fileName = new StringBuilder(title);
 		
-		if (!song.getProducerName().equals("")) {
+		if (!song.getProducerName().equals("") && !title.contains(song.getProducerName())) {
 			fileName.append("【")
-					.append(NicoStringTool.fixFileName(song.getProducerName()))
+					.append(song.getProducerName())
 					.delete(fileName.length()-3, fileName.length())
 					.append("】");
 		}
@@ -83,7 +83,7 @@ public class VideoDownloader {
 			dir = defaultDir;
 		}
 		
-		return new File(dir, fileName.toString());
+		return new File(dir, NicoStringTool.fixFileName(fileName.toString()));
 	}
 	
 	/**
