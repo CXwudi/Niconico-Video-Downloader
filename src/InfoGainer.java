@@ -59,9 +59,10 @@ public class InfoGainer {
 			fetchInfo(song);
 		} else {
 			song.setProducerName(producerName).setURL(videoURL).setTagsList(tags).setTitle(videoTitle);
+			System.out.println("SEE!! CXwudi and miku get the URL, here is video info:\n" + song);
 		}
 
-		System.out.println("SEE!! CXwudi and miku get the URL, here is video info:\n" + song);
+		
 	}
 
 	public static void main(String[] args) {

@@ -12,7 +12,7 @@ import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebElement;
 /**
  * the collection reader that control Chrome browser to navigate Niconico douga mylist page,
- *  and read my Volcaoid collection from it
+ *  and read my Vocaloid collection from it
  * @see CollectionReader
  * @author CX无敌
  *
@@ -64,6 +64,8 @@ public class NicoListGrabber extends CollectionReader{
 			System.out.println("CXwudi and Miku failed to get collections info, we are trying again");
 			return getMyListsIdAndName();
 		} catch (UnhandledAlertException e) {
+			//there was a time where an alert window was pop up and broke the code,
+			//so this catch statement is applied to handle this
 			driver.switchTo().alert().accept();
 			return getMyListsIdAndName();
 		}
@@ -74,6 +76,10 @@ public class NicoListGrabber extends CollectionReader{
 		try {
 			
 			driver.get("http://www.nicovideo.jp/my/mylist/#/" + id);
+			//without this refrash, we'll get StaleElementReferenceException
+			//this is because simply changing the list id on browser url box doesn't load a new page, but changing the content on current page
+			driver.navigate().refresh();
+			Thread.sleep(300);
 			WebElement sort = driver.findElement(By.cssSelector("select.itemSort[name=sort]"));
 			if (sort == null) {//means this folder is empty.
 				System.out.println("This folder, " + folderName + ",  is currently empty ╮(╯▽╰)╭");

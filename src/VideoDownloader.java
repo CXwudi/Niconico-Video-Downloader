@@ -40,6 +40,9 @@ public class VideoDownloader {
 		try {
 			BufferedInputStream input = new BufferedInputStream(new URL(song.getURL()).openStream()); //get the input stream from video url
 			File file = makeVideoFile(song);						//make a file to receive data from above input stream.
+			if (file.isFile()) {
+				file.delete();										//we'll see if this can fix the broken file issue
+			}
 			FileOutputStream output = new FileOutputStream(file); 	//create FileOutputStream for the above file.
 			
 			//start downloading process
