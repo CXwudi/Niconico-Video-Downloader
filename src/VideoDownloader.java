@@ -57,8 +57,8 @@ public class VideoDownloader {
 		}
 	}
 	private void downloadUsingStream(Vsong song, File file) throws IOException, MalformedURLException, FileNotFoundException {
-		BufferedInputStream input = new BufferedInputStream(new URL(song.getURL()).openStream()); //get the input stream from video url
-		FileOutputStream output = new FileOutputStream(file); 	//create FileOutputStream for the above file.
+		var input = new BufferedInputStream(new URL(song.getURL()).openStream()); //get the input stream from video url
+		var output = new FileOutputStream(file); 	//create FileOutputStream for the above file.
 		
 		//start downloading process
 		System.out.println("start downloading");
@@ -77,8 +77,9 @@ public class VideoDownloader {
 	}
 	
 	private void downloadUsingNIO(Vsong song, File file) throws MalformedURLException, IOException {
-		 ReadableByteChannel rbc = Channels.newChannel(new URL(song.getURL()).openStream());
-		 FileOutputStream output = new FileOutputStream(file);
+		 var rbc = Channels.newChannel(new URL(song.getURL()).openStream());
+		 var output = new FileOutputStream(file);
+		 System.out.println("start downloading");
 		 output.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
 		 output.close();
 	     rbc.close();
