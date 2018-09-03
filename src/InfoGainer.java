@@ -27,8 +27,9 @@ public class InfoGainer {
 		List<String> tags = new ArrayList<>();
 
 		try {
-
+			//driver.get("http://www.nicovideo.jp/");//give program a break, to see broken video or not
 			driver.get("http://www.nicovideo.jp/watch/sm" + song.getSmId());
+			driver.navigate().refresh();
 			Thread.sleep(700);
 			System.out.println("website opened");
 
@@ -42,11 +43,13 @@ public class InfoGainer {
 			System.out.println("url reached: " + videoURL);
 			
 			producerName = driver.findElement(By.cssSelector("a.Link.VideoOwnerInfo-pageLink")).getAttribute("title");
+			producerName = producerName.substring(0, producerName.length() - 3);
 			List<WebElement> tagElements = driver.findElements(By.cssSelector("a.Link.TagItem-name"));
 			for (WebElement tagElement : tagElements) {
 				tags.add(tagElement.getText());
 			}
 			System.out.println("the tags are: " + tags);
+			driver.findElement(By.cssSelector("div.ControllerButton-inner")).click();
 		} catch (TimeoutException e) {
 			e.printStackTrace();
 			System.out.println("CXwudi and Miku failed to get video info, we are trying again");

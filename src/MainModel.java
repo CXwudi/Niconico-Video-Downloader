@@ -3,11 +3,15 @@ import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.UnexpectedAlertBehaviour;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.CapabilityType;
 
 /**
  * the main model of Nico video downloader project, Manage the NicoDriver,
@@ -24,8 +28,10 @@ public class MainModel {
 
 	public MainModel() {
 		System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir") + "/chromedriver.exe");
-		driver  = new NicoDriver();
-		
+		ChromeOptions co = new ChromeOptions();
+		co.addArguments("--mute-audio");
+		//co.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.ACCEPT);
+		driver  = new NicoDriver(co);
 		//WARNING don't write done = task = new TreeSet<>(); 
 		//this gonna make two pointers point to the same one TreeSet, which is bad.
 		done = new TreeSet<>();
@@ -167,9 +173,10 @@ public class MainModel {
 		main.setupNicoNico();
 		main.taskManager().readRecord();
 		main.taskManager().getTaskAndUpdate();
-		main.reset();
-		main.setupNicoNico();
+		
 		main.downloadManager().forEachVsong(vsong -> {
+			main.reset();
+			main.setupNicoNico();
 			DownloadManager manager = main.downloadManager();
 			manager.fetchInfo(vsong);
 			if (manager.downloadOneVocaloidPV(vsong))

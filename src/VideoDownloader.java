@@ -1,8 +1,12 @@
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.util.Objects;
 /**
  * The video downloader is the main class of downloading Vocaloid PV,
@@ -35,28 +39,16 @@ public class VideoDownloader {
 	public boolean downloadVocaloidPV(Vsong song) {
 		Objects.requireNonNull(song);
 		if (song.getURL().equals("")) return false;
+		
+		File file = makeVideoFile(song);//make a file to receive data from above input stream.
+		if (file.isFile()) {
+			file.delete();	//we'll see if this can fix the broken file issue
+		}
 		//WARNING: don't try to use try-on-resource for now, broken video file detected when using try-on-resource
 		//need further investigation on why this is happen, is it my bad or a problem from niconico's server.
 		try {
-			BufferedInputStream input = new BufferedInputStream(new URL(song.getURL()).openStream()); //get the input stream from video url
-			File file = makeVideoFile(song);						//make a file to receive data from above input stream.
-			if (file.isFile()) {
-				file.delete();										//we'll see if this can fix the broken file issue
-			}
-			FileOutputStream output = new FileOutputStream(file); 	//create FileOutputStream for the above file.
-			
-			//start downloading process
-			System.out.println("start downloading");
-			byte[] buffer = new byte[1024*1024];
-			int count=0;
-	        while((count = input.read(buffer,0,1024*1024)) != -1){
-	            output.write(buffer, 0, count);
-	        }
-			output.close();
-			input.close();
-			
-			System.out.println(file.getName() + " done, yeah!!");
-			
+			//downloadUsingStream(song, file);
+			downloadUsingNIO(song, file);
 			return true;
 		}  catch (IOException e) {
 			e.printStackTrace();
@@ -64,19 +56,42 @@ public class VideoDownloader {
 			return false;
 		}
 	}
+	private void downloadUsingStream(Vsong song, File file) throws IOException, MalformedURLException, FileNotFoundException {
+		BufferedInputStream input = new BufferedInputStream(new URL(song.getURL()).openStream()); //get the input stream from video url
+		FileOutputStream output = new FileOutputStream(file); 	//create FileOutputStream for the above file.
+		
+		//start downloading process
+		System.out.println("start downloading");
+		byte[] buffer = new byte[1024];
+		int count=0;
+		while((count = input.read(buffer,0,1024)) != -1){
+		    output.write(buffer, 0, count);
+		}
+		output.close();
+		input.close();
+		if (file.renameTo(new File(file.getParentFile(), generateFileName(song)))) {
+			System.out.println(file.getName() + " done, yeah!!");
+		} else {
+			System.out.println(file.getName() + " done, but rename fail :(");
+		}
+	}
+	
+	private void downloadUsingNIO(Vsong song, File file) throws MalformedURLException, IOException {
+		 ReadableByteChannel rbc = Channels.newChannel(new URL(song.getURL()).openStream());
+		 FileOutputStream output = new FileOutputStream(file);
+		 output.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+		 output.close();
+	     rbc.close();
+		if (file.renameTo(new File(file.getParentFile(), generateFileName(song)))) {
+			System.out.println(file.getName() + " done, yeah!!");
+		} else {
+			System.out.println(file.getName() + " done, but rename fail :(");
+		}
+	}
 	
 	private File makeVideoFile(Vsong song) {
-		String title = song.getTitle();
 		String subDir = NicoStringTool.fixFileName(song.getSubDir());
-		var fileName = new StringBuilder(title);
-		
-		if (!song.getProducerName().equals("") && !title.contains(song.getProducerName())) {
-			fileName.append("【")
-					.append(song.getProducerName())
-					.delete(fileName.length()-3, fileName.length())
-					.append("】");
-		}
-		fileName.append(".mp4");
+		var fileName = generateFileName(song);
 		//make sure the subfolder is created, otherwise downloading PV might cause problem
 		File dir = new File(rootDLdir, subDir);
 		try {
@@ -90,6 +105,18 @@ public class VideoDownloader {
 		}
 		
 		return new File(dir, NicoStringTool.fixFileName(fileName.toString()));
+	}
+	private String generateFileName(Vsong song) {
+		String title = song.getTitle();
+		var fileName = new StringBuilder(title);
+		
+		if (!song.getProducerName().equals("") && !title.contains(song.getProducerName())) {
+			fileName.append("【")
+					.append(song.getProducerName())
+					.append("】");
+		}
+		fileName.append(".mp4");
+		return fileName.toString();
 	}
 	
 	/**

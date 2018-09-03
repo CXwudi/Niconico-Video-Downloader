@@ -108,6 +108,12 @@ public class NicoListGrabber extends CollectionReader{
 			return getOneFolderCollection(id, folderName);
 		} catch (InterruptedException e) {
 			System.err.println(e + "\nthis shouldn't happen");
+		} catch (UnhandledAlertException e) {
+			//there was a time where an alert window was pop up and broke the code,
+			//so this catch statement is applied to handle this
+			System.err.println(e + "\nA popup stops CXwudi and Miku to get list info, we are trying again");
+			driver.switchTo().alert().accept();
+			return getOneFolderCollection(id, folderName);
 		}
 		return folder;
 	}

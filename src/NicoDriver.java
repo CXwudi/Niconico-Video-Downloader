@@ -131,7 +131,12 @@ public class NicoDriver extends ChromeDriver {
 	
 	@Override
 	public void quit() {
-	    manage().deleteAllCookies();
+	    try {
+			manage().deleteAllCookies();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	    super.quit();
 	}
 
