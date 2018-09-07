@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
@@ -64,7 +65,7 @@ public class NicoDriver extends ChromeDriver {
 			try {
 				super.get(url);
 				System.out.println("load website " + url + " success");
-				Thread.sleep(200);
+				Thread.sleep(100 + new Random().nextInt(400));
 				return;
 			} catch (TimeoutException e) {
 				System.err.println("load website " + url + " timeout:( ");
@@ -93,7 +94,7 @@ public class NicoDriver extends ChromeDriver {
 					throw e;
 				}
 				try {
-					Thread.sleep(100);
+					Thread.sleep(100 + new Random().nextInt(100));
 				} catch (InterruptedException e1) {
 					System.err.println(e + "\nthis shouldn't happen");
 				}

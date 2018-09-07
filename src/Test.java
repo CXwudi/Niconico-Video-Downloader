@@ -1,6 +1,8 @@
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.Random;
+import java.util.Scanner;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.stream.IntStream;
 
@@ -21,9 +23,24 @@ class Test {
 	}
 
 	public static void main(String[] args) {
-		testStream();
-		testCreateFile(new Vsong(3456, "asdasd", "testFolder"));
-		testReplaceAll("as\\cbhjsdbc/ash?cjsd");
+		//testStream();
+		//testCreateFile(new Vsong(3456, "asdasd", "testFolder"));
+		//testReplaceAll("as\\cbhjsdbc/ash?cjsd");
+		testRandom();
+		testScanner();
+	}
+
+	private static void testScanner() {
+		System.out.print("Input something: ");
+		var scanner = new Scanner(System.in);
+		System.out.println(scanner.nextLine());
+		
+	}
+
+	private static void testRandom() {
+		System.out.println(20000 + new Random().nextInt(5000));
+		System.out.println(new Random(20000).nextInt(5000));
+		
 	}
 
 	private static void testReplaceAll(String string) {

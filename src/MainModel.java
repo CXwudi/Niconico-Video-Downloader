@@ -1,4 +1,6 @@
 
+import java.util.Random;
+import java.util.Scanner;
 import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 
@@ -173,17 +175,35 @@ public class MainModel {
 		main.setupNicoNico();
 		main.taskManager().readRecord();
 		main.taskManager().getTaskAndUpdate();
-		
+		main.reset();
+		main.setupNicoNico();
 		main.downloadManager().forEachVsong(vsong -> {
-			main.reset();
-			main.setupNicoNico();
 			DownloadManager manager = main.downloadManager();
-			manager.fetchInfo(vsong);
-			if (manager.downloadOneVocaloidPV(vsong))
-				manager.markDone(vsong);
-			manager.triggerRecord();//we add this line for now
+			while (true) {
+				manager.fetchInfo(vsong);
+				manager.downloadOneVocaloidPV(vsong);
+				var scanner = new Scanner(System.in);
+				String answer = "";
+				while (!answer.equalsIgnoreCase("y") && !answer.equalsIgnoreCase("n")) {
+					System.err.print("PLZ check the video file, is it integrite? y/n: ");
+					answer = scanner.nextLine();
+				}
+				if (answer.equalsIgnoreCase("y")) {
+					System.out.println("Good, CXwudi and Miku are moving to next file");
+					manager.markDone(vsong);
+					manager.triggerRecord();// we add this line for now
+					break;
+				} else {
+					System.out.println("Okay, CXwudi and Miku will re-download this song :/");
+				}
 			}
-		);
+			try {
+				Thread.sleep(4000L + new Random().nextInt(5000));// does 20 seconds help?
+			} catch (InterruptedException e) {
+				System.err.println(e + "\n this should not happen");
+			}
+			
+		});
 	}
 
 }

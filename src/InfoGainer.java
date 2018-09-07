@@ -27,7 +27,7 @@ public class InfoGainer {
 		List<String> tags = new ArrayList<>();
 
 		try {
-			//driver.get("http://www.nicovideo.jp/");//give program a break, to see broken video or not
+			driver.get("http://www.nicovideo.jp/");//give program a break, to see broken video or not
 			driver.get("http://www.nicovideo.jp/watch/sm" + song.getSmId());
 			driver.navigate().refresh();
 			Thread.sleep(700);
@@ -49,7 +49,7 @@ public class InfoGainer {
 				tags.add(tagElement.getText());
 			}
 			System.out.println("the tags are: " + tags);
-			driver.findElement(By.cssSelector("div.ControllerButton-inner")).click();
+			//driver.findElement(By.cssSelector("div.ControllerButton-inner")).click();//start the video, fake the server
 		} catch (TimeoutException e) {
 			e.printStackTrace();
 			System.out.println("CXwudi and Miku failed to get video info, we are trying again");

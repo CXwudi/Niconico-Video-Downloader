@@ -47,8 +47,8 @@ public class VideoDownloader {
 		//WARNING: don't try to use try-on-resource for now, broken video file detected when using try-on-resource
 		//need further investigation on why this is happen, is it my bad or a problem from niconico's server.
 		try {
-			//downloadUsingStream(song, file);
-			downloadUsingNIO(song, file);
+			downloadUsingStream(song, file);
+			//downloadUsingNIO(song, file);
 			return true;
 		}  catch (IOException e) {
 			e.printStackTrace();
@@ -56,7 +56,7 @@ public class VideoDownloader {
 			return false;
 		}
 	}
-	private void downloadUsingStream(Vsong song, File file) throws IOException, MalformedURLException, FileNotFoundException {
+	private void downloadUsingStream(Vsong song, File file) throws IOException{
 		var input = new BufferedInputStream(new URL(song.getURL()).openStream()); //get the input stream from video url
 		var output = new FileOutputStream(file); 	//create FileOutputStream for the above file.
 		
@@ -76,7 +76,7 @@ public class VideoDownloader {
 		}
 	}
 	
-	private void downloadUsingNIO(Vsong song, File file) throws MalformedURLException, IOException {
+	private void downloadUsingNIO(Vsong song, File file) throws IOException {
 		 var rbc = Channels.newChannel(new URL(song.getURL()).openStream());
 		 var output = new FileOutputStream(file);
 		 System.out.println("start downloading");
