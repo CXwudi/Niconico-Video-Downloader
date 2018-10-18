@@ -32,13 +32,13 @@ public class InfoGainer {
 			driver.navigate().refresh();
 			Thread.sleep(700);
 			System.out.println("website opened");
-
+			if (driver.findElement(By.cssSelector("p.messageTitle")) != null) {
+    			System.err.println("fake video, CXwudi and Miku are very ANGRY and wanna exits :(");
+    			return;
+    		}
 			
 			videoTitle = driver.findElement(By.cssSelector("h1")).getText();
-			if (videoTitle.equals("お探しの動画は再生できません")) {
-				System.err.println("fake video, CXwudi and Miku are very ANGRY and wanna exits :(");
-				return;
-			}
+			
 			videoURL = driver.findElement(By.id("MainVideoPlayer")).findElement(By.cssSelector("video")).getAttribute("src");
 			System.out.println("url reached: " + videoURL);
 			

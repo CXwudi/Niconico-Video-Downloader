@@ -181,7 +181,7 @@ public class MainModel {
 			DownloadManager manager = main.downloadManager();
 			while (true) {
 				manager.fetchInfo(vsong);
-				manager.downloadOneVocaloidPV(vsong);
+				if (!manager.downloadOneVocaloidPV(vsong)) System.out.println(vsong + "doesn't exist!!, plz skip");
 				var scanner = new Scanner(System.in);
 				String answer = "";
 				while (!answer.equalsIgnoreCase("y") && !answer.equalsIgnoreCase("n")) {
