@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 /**
  * the collection reader that read a local file to get a collection of downloaded Vocaloid videos list
  * @see CollectionReader
@@ -30,8 +33,8 @@ public class LocalReader extends CollectionReader{
 		try (BufferedReader reader = new BufferedReader(new FileReader(listDownloadedTxt));){
 			
 			for (String i = reader.readLine(); i != null && !i.equals(""); i = reader.readLine()) {
-				String[] detialArray = i.split("\t");
-				collection.add(new Vsong(Integer.parseInt(detialArray[0].substring(2, detialArray[0].length())),detialArray[1]));
+				String[] detialArray = i.split("------");
+				collection.add(new Vsong(getIntFromSongId(detialArray[0]),detialArray[1]));
 			}
 			System.out.println("local record is: " + collection);
 			reader.close();
@@ -43,8 +46,26 @@ public class LocalReader extends CollectionReader{
 		}
 		
 	}
+	
+	/**
+	 * a function to filter chars from sm-id and get the integers.
+	 * this function is designed because in some casees, the smXXXXXXXX doesn't read properly
+	 * from download.txt file.
+	 * @param smid
+	 * @return
+	 */
+	private int getIntFromSongId(String smid) {
+		return Integer.parseInt(
+				smid.chars().parallel()
+				.filter(Character::isDigit)
+				.mapToObj(Character::toString)
+				.collect(Collectors.joining())
+				);
+		//return Integer.parseInt(smid.substring(2, smid.length()));
+	}
 
 	public static void main(String[] args) throws IOException {
+		testGetSMid();
 		testReading();
 	}
 	public static void testReading() {
@@ -53,6 +74,12 @@ public class LocalReader extends CollectionReader{
 		localReader.readRecord();
 		System.out.println(localReader.getCollection());
 		
+	}
+	
+	public static void testGetSMid() {
+		LocalReader localReader = new LocalReader();
+		System.out.println(localReader.getIntFromSongId("m12345678"));
+		System.out.println(localReader.getIntFromSongId("sm12345678"));
 	}
 	
 }
