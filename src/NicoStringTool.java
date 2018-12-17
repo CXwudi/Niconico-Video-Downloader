@@ -1,3 +1,4 @@
+
 /**
  * Tool for String replacement or modification, keep this class for future development.
  * @author CXwudi

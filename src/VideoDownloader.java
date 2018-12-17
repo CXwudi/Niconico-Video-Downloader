@@ -57,22 +57,24 @@ public class VideoDownloader {
 		}
 	}
 	private void downloadUsingStream(Vsong song, File file) throws IOException{
-		var input = new BufferedInputStream(new URL(song.getURL()).openStream()); //get the input stream from video url
-		var output = new FileOutputStream(file); 	//create FileOutputStream for the above file.
-		
-		//start downloading process
-		System.out.println("start downloading");
-		byte[] buffer = new byte[1024];
-		int count=0;
-		while((count = input.read(buffer,0,1024)) != -1){
-		    output.write(buffer, 0, count);
-		}
-		output.close();
-		input.close();
-		if (file.renameTo(new File(file.getParentFile(), generateFileName(song)))) {
-			System.out.println(file.getName() + " done, yeah!!");
-		} else {
-			System.out.println(file.getName() + " done, but rename fail :(");
+		try (var input = new BufferedInputStream(new URL(song.getURL()).openStream()); // get the input stream from video url
+				var output = new FileOutputStream(file);) { // create FileOutputStream for the above file.
+
+			// start downloading process
+			System.out.println("start downloading");
+			byte[] buffer = new byte[1024];
+			int count = 0;
+			int size = 0;
+			while ((count = input.read(buffer, 0, 1024)) != -1) {
+				output.write(buffer, 0, count);
+				size += count;
+			}
+			System.out.println("file size = " + size);
+			if (file.renameTo(new File(file.getParentFile(), generateFileName(song)))) {
+				System.out.println(file.getName() + " done, yeah!!");
+			} else {
+				System.out.println(file.getName() + " done, but rename fail :(");
+			}
 		}
 	}
 	
