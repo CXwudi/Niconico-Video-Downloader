@@ -34,7 +34,7 @@ public class LocalReader extends CollectionReader{
 			
 			for (String i = reader.readLine(); i != null && !i.equals(""); i = reader.readLine()) {
 				String[] detialArray = i.split("------");
-				collection.add(new Vsong(getIntFromSongId(detialArray[0]),detialArray[1]));
+				collection.add(new Vsong(filterIntsFromString(detialArray[0]),detialArray[1]));
 			}
 			System.out.println("local record is: " + collection);
 			reader.close();
@@ -54,7 +54,7 @@ public class LocalReader extends CollectionReader{
 	 * @param smid
 	 * @return
 	 */
-	private int getIntFromSongId(String smid) {
+	private int filterIntsFromString(String smid) {
 		return Integer.parseInt(
 				smid.chars().parallel()
 				.filter(Character::isDigit)
@@ -78,8 +78,8 @@ public class LocalReader extends CollectionReader{
 	
 	public static void testGetSMid() {
 		LocalReader localReader = new LocalReader();
-		System.out.println(localReader.getIntFromSongId("m12345678"));
-		System.out.println(localReader.getIntFromSongId("sm12345678"));
+		System.out.println(localReader.filterIntsFromString("m12345678"));
+		System.out.println(localReader.filterIntsFromString("sm12345678"));
 	}
 	
 }
