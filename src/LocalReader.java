@@ -34,7 +34,7 @@ public class LocalReader extends CollectionReader{
 			
 			for (String i = reader.readLine(); i != null && !i.equals(""); i = reader.readLine()) {
 				String[] detialArray = i.split("------");
-				collection.add(new Vsong(filterIntsFromString(detialArray[0]),detialArray[1]));
+				collection.add(new Vsong(detialArray[0] ,detialArray[1]));
 			}
 			System.out.println("local record is: " + collection);
 			reader.close();
@@ -46,26 +46,9 @@ public class LocalReader extends CollectionReader{
 		}
 		
 	}
-	
-	/**
-	 * a function to filter chars from sm-id and get the integers.
-	 * this function is designed because in some casees, the smXXXXXXXX doesn't read properly
-	 * from download.txt file.
-	 * @param smid
-	 * @return
-	 */
-	private int filterIntsFromString(String smid) {
-		return Integer.parseInt(
-				smid.chars().parallel()
-				.filter(Character::isDigit)
-				.mapToObj(Character::toString)
-				.collect(Collectors.joining())
-				);
-		//return Integer.parseInt(smid.substring(2, smid.length()));
-	}
+
 
 	public static void main(String[] args) throws IOException {
-		testGetSMid();
 		testReading();
 	}
 	public static void testReading() {
@@ -74,12 +57,6 @@ public class LocalReader extends CollectionReader{
 		localReader.readRecord();
 		System.out.println(localReader.getCollection());
 		
-	}
-	
-	public static void testGetSMid() {
-		LocalReader localReader = new LocalReader();
-		System.out.println(localReader.filterIntsFromString("m12345678"));
-		System.out.println(localReader.filterIntsFromString("sm12345678"));
 	}
 	
 }

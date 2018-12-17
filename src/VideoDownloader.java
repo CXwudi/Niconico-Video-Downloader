@@ -40,12 +40,10 @@ public class VideoDownloader {
 		Objects.requireNonNull(song);
 		if (song.getURL().equals("")) return false;
 		
-		File file = makeVideoFile(song);//make a file to receive data from above input stream.
+		File file = makeVideoFile(song);//make a file to receive data from input stream.
 		if (file.isFile()) {
 			file.delete();	//we'll see if this can fix the broken file issue
 		}
-		//WARNING: don't try to use try-on-resource for now, broken video file detected when using try-on-resource
-		//need further investigation on why this is happen, is it my bad or a problem from niconico's server.
 		try {
 			downloadUsingStream(song, file);
 			//downloadUsingNIO(song, file);
@@ -92,9 +90,14 @@ public class VideoDownloader {
 		}
 	}
 	
+	/**
+	 * Create a empty file in proper directory for downloading
+	 * @param song the Vsong to download.
+	 * @return the file 
+	 */
 	private File makeVideoFile(Vsong song) {
 		String subDir = NicoStringTool.fixFileName(song.getSubDir());
-		var fileName = generateFileName(song);
+		var fileNameString = generateFileName(song);
 		//make sure the subfolder is created, otherwise downloading PV might cause problem
 		File dir = new File(rootDLdir, subDir);
 		try {
@@ -103,23 +106,29 @@ public class VideoDownloader {
 			if (!dir.isDirectory()) 
 				throw new SecurityException("Such path name is not a directory");//a fake exception
 		} catch (SecurityException e) {
-			System.err.println(e + "\nCXwudi and miku found that this directory" + dir + "is not avaliable, video file is now made on default directory as " + new File(defaultDir, fileName.toString()));
+			System.err.println(e + "\nCXwudi and miku found that this directory" + dir + "is not avaliable, video file is now made on default directory as " + new File(defaultDir, fileNameString.toString()));
 			dir = defaultDir;
 		}
 		
-		return new File(dir, NicoStringTool.fixFileName(fileName.toString()));
+		return new File(dir, fileNameString);
 	}
+	
+	/**
+	 * generate an error-free string of the file name. e.g. xxxx.mp4
+	 * @param song the Vsong object
+	 * @return the error-free name of the file 
+	 */
 	private String generateFileName(Vsong song) {
 		String title = song.getTitle();
-		var fileName = new StringBuilder(title);
-		
+		var fileNameBuilder = new StringBuilder(title);
 		if (!song.getProducerName().equals("") && !title.contains(song.getProducerName())) {
-			fileName.append("【")
+			fileNameBuilder.append("【")
 					.append(song.getProducerName())
 					.append("】");
 		}
-		fileName.append(".mp4");
-		return fileName.toString();
+		fileNameBuilder.append(".mp4");
+		var fileNameString = fileNameBuilder.toString().replace("オリジナル", "").replace("MV", "").replace("【】", "");
+		return NicoStringTool.fixFileName(fileNameString);
 	}
 	
 	/**
