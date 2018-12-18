@@ -62,13 +62,20 @@ public class MainModel {
 
 	public void setupNicoNico() {
 		boolean isSuccess = true;
-		if (!driver.getCurrentUrl().equals("http://www.nicovideo.jp/")) {
-			driver.get("http://www.nicovideo.jp/");
+		try {
+			if (!driver.getCurrentUrl().equals("http://www.nicovideo.jp/")) {
+				driver.get("http://www.nicovideo.jp/");
+			}
+		} catch (TimeoutException e) {
+			System.err.println("get current url may fail");
+			//e1.printStackTrace();
+			isSuccess = false;
 		}
 		
 		//change area
 		try {
 			var areaElement = driver.findElement(By.id("areaTrigger"));
+			((JavascriptExecutor) driver.getChromeDriver()).executeScript("return window.stop");
 			//if element exists, mean we are currently in US or Taiwan city, since they are using old niconico web page.
 			if (areaElement != null) {
 				areaElement.click();
@@ -90,7 +97,7 @@ public class MainModel {
 		try {
 			var lanElement = driver.findElement(By.cssSelector("span.CountrySelector-item.CountrySelector-currentItem[data-value='en-us']"));
 			if (lanElement == null) lanElement = driver.findElement(By.cssSelector("span.CountrySelector-item.CountrySelector-currentItem[data-value='zh-tw']"));
-			((JavascriptExecutor) driver).executeScript("return window.stop");
+			((JavascriptExecutor) driver.getChromeDriver()).executeScript("return window.stop");
 			//if element exists, means we are in either English or Chinese language, change it to Japanese
 			if (lanElement != null) {
 				lanElement.click();
@@ -111,13 +118,6 @@ public class MainModel {
             setupNicoNico();
         }
 
-	}
-
-	public void reset() {
-		driver.quit();
-		driver = new NicoDriver();
-		taskManager.setDriver(driver);
-		downloadManager.setDriver(driver);
 	}
 
 	/**
@@ -175,7 +175,7 @@ public class MainModel {
 		main.setupNicoNico();
 		main.taskManager().readRecord();
 		main.taskManager().getTaskAndUpdate();
-		main.reset();
+		main.driver().resetDriver();
 		main.setupNicoNico();
 		main.downloadManager().forEachVsong(vsong -> {
 			DownloadManager manager = main.downloadManager();

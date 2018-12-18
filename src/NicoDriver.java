@@ -1,17 +1,19 @@
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 /**
- * An specific ChromeDriver that is optimized for Niconico video website. More specifically, optimized for nicovideo.jp
+ * NicoDriver is a WebDriver that contains a ChromeDriver that is optimized for Niconico video website, nicovideo.jp
  * Since the server of nicovideo.jp is in Japan region which is far from North America, 
  * so there is a high chance that loading a website or elements from nicovideo.jp can throw TimeoutException due to the far location network transaction.
  * I override some functions from ChromeDriver so that the method would try again after an TimeoutException is thrown. 
@@ -29,41 +31,86 @@ import org.openqa.selenium.chrome.ChromeOptions;
  *  getWindowHandle() used for switching tab
  *  getWindowHandles() used for switching tab as well
  */
-public class NicoDriver extends ChromeDriver {
+public class NicoDriver implements WebDriver{
+	
+	private ChromeDriver chromeDriver;
 
 	public NicoDriver() {
-		super();
+		chromeDriver = new ChromeDriver();
 		setupDriver();
 	}
 
 	public NicoDriver(ChromeDriverService service) {
-		super(service);
+		chromeDriver = new ChromeDriver(service);
 		setupDriver();
 	}
 
 	public NicoDriver(ChromeOptions options) {
-		super(options);
+		chromeDriver = new ChromeDriver(options);
 		setupDriver();
 	}
 
 	public NicoDriver(ChromeDriverService service, ChromeOptions options) {
-		super(service, options);
+		chromeDriver = new ChromeDriver(service, options);
 		setupDriver();
 	}
 
 	private void setupDriver() {
-        manage().deleteAllCookies();
-        manage().window().maximize();
+        chromeDriver.manage().deleteAllCookies();
+        //chromeDriver.manage().window().maximize();
         //synchronization between this application and the website pages, so that my codes can wait for the web elements to come up, then do the work.
-        manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-        manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
+        chromeDriver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+        chromeDriver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
     }
+	
+	/**
+	 * @return the real chromeDriver inside the wrapper class
+	 */
+	public ChromeDriver getChromeDriver() {
+		return chromeDriver;
+	}
+
+	/**
+	 * @param chromeDriver the chromeDriver to set
+	 * @Warnning this setter doesn't delete and quit the old chromeDriver, better do {@code getDriver().quit()}
+	 * before using {@code setDriver()}.
+	 */
+	public void setChromeDriver(ChromeDriver driver) {
+		this.chromeDriver = driver;
+	}
+
+	/**
+	 * Simply just close the browser and reopen a new one.
+	 */
+	public void resetDriver() {
+		quit();
+		chromeDriver = new ChromeDriver();
+		setupDriver();
+	}
+
+	public void resetDriver(ChromeDriverService service) {
+		quit();
+		chromeDriver = new ChromeDriver(service);
+		setupDriver();
+	}
+
+	public void resetDriver(ChromeOptions options) {
+		quit();
+		chromeDriver = new ChromeDriver(options);
+		setupDriver();
+	}
+
+	public void resetDriver(ChromeDriverService service, ChromeOptions options) {
+		quit();
+		chromeDriver = new ChromeDriver(service, options);
+		setupDriver();
+	}
 	@Override
 	public void get(String url) {
 		
 		while (true) {
 			try {
-				super.get(url);
+				chromeDriver.get(url);
 				System.out.println("load website " + url + " success");
 				Thread.sleep(100 + new Random().nextInt(400));
 				return;
@@ -77,15 +124,25 @@ public class NicoDriver extends ChromeDriver {
 	}
 	
 	public void originGet(String url) {
-		super.get(url);
+		chromeDriver.get(url);
+	}
+	
+	@Override
+	public String getCurrentUrl() {
+		return chromeDriver.getCurrentUrl();
 	}
 
+	@Override
+	public String getTitle() {
+		return chromeDriver.getTitle();
+	}
+	
 	@Override
 	public WebElement findElement(By by) {
 		int i = 0;
 		while (true) {
 			try {
-				return super.findElement(by);
+				return chromeDriver.findElement(by);
 			} catch (TimeoutException e) {
 				System.err.println("find element timeout:( ");
 				if (i++ < 2) System.out.println("don't worry, CXwudi and miku are going to try again and make it work!!");
@@ -112,7 +169,7 @@ public class NicoDriver extends ChromeDriver {
 		int i = 0;
 		while (true) {
 			try {
-				return super.findElements(by);
+				return chromeDriver.findElements(by);
 			} catch (TimeoutException e) {
 				System.err.println("find elements" + by.toString() + " timeout:( ");
 				if (i++ < 2) System.out.println("don't worry, CXwudi and miku are going to try again and make it work!!");
@@ -133,12 +190,47 @@ public class NicoDriver extends ChromeDriver {
 	@Override
 	public void quit() {
 	    try {
-			manage().deleteAllCookies();
+			chromeDriver.manage().deleteAllCookies();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			System.err.println("fail to delete all cookies before quiting brower");
 			e.printStackTrace();
 		}
-	    super.quit();
+	    chromeDriver.quit();
+	    chromeDriver = null;
+	}
+	
+	@Override
+	public String getPageSource() {
+		return chromeDriver.getPageSource();
 	}
 
+	@Override
+	public void close() {
+		chromeDriver.close();
+	}
+
+	@Override
+	public Set<String> getWindowHandles() {
+		return chromeDriver.getWindowHandles();
+	}
+
+	@Override
+	public String getWindowHandle() {
+		return chromeDriver.getWindowHandle();
+	}
+
+	@Override
+	public TargetLocator switchTo() {
+		return chromeDriver.switchTo();
+	}
+
+	@Override
+	public Navigation navigate() {
+		return chromeDriver.navigate();
+	}
+
+	@Override
+	public Options manage() {
+		return chromeDriver.manage();
+	}
 }

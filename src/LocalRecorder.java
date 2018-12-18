@@ -32,17 +32,15 @@ public class LocalRecorder {
 	
 	public void writeRecord() {
 		try (PrintWriter writer = new PrintWriter(listDownloadedTxt)){
-			
 			for (Iterator<Vsong> iterator = update.iterator(); iterator.hasNext();) {
 				Vsong vsong = iterator.next();
 				StringBuilder sb = new StringBuilder();
-				sb.append("sm").append(vsong.getSmId()).append("\t").append(vsong.getTitle());
+				sb.append("sm").append(vsong.getId()).append("------").append(vsong.getTitle());
 				writer.println(sb.toString());
 			}
-			writer.close();
 		} catch (IOException e) {
 			System.err.println(e + "\nthis shouldn't happen");
-		}
+		} 
 	}
 
 }

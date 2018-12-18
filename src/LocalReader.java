@@ -1,8 +1,12 @@
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 /**
  * the collection reader that read a local file to get a collection of downloaded Vocaloid videos list
  * @see CollectionReader
@@ -29,8 +33,8 @@ public class LocalReader extends CollectionReader{
 		try (BufferedReader reader = new BufferedReader(new FileReader(listDownloadedTxt));){
 			
 			for (String i = reader.readLine(); i != null && !i.equals(""); i = reader.readLine()) {
-				String[] detialArray = i.split("\t");
-				collection.add(new Vsong(Integer.parseInt(detialArray[0].substring(2, detialArray[0].length())),detialArray[1]));
+				String[] detialArray = i.split("------");
+				collection.add(new Vsong(detialArray[0] ,detialArray[1]));
 			}
 			System.out.println("local record is: " + collection);
 			reader.close();
@@ -42,6 +46,7 @@ public class LocalReader extends CollectionReader{
 		}
 		
 	}
+
 
 	public static void main(String[] args) throws IOException {
 		testReading();

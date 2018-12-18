@@ -1,3 +1,5 @@
+import java.util.stream.Collectors;
+
 /**
  * Tool for String replacement or modification, keep this class for future development.
  * @author CXwudi
@@ -15,5 +17,22 @@ public interface NicoStringTool {
 				.replaceAll("\\\\", "-")
 				.replaceAll("\\?", " ")
 				.replaceAll("\\*", " ");
+	}
+	
+	/**
+	 * a function to filter chars from sm-id and get the integers.
+	 * this function is designed because in some casees, the smXXXXXXXX doesn't read properly
+	 * from download.txt file.
+	 * @param smid
+	 * @return
+	 */
+	public static int filterIntsFromString(String smid) {
+		return Integer.parseInt(
+				smid.chars().parallel()
+				.filter(Character::isDigit)
+				.mapToObj(Character::toString)
+				.collect(Collectors.joining())
+				);
+		//return Integer.parseInt(smid.substring(2, smid.length()));
 	}
 }

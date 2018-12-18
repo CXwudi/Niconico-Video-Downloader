@@ -8,9 +8,9 @@ import java.util.List;
  */
 public class Vsong implements Comparable<Vsong>{
 
-	private int smId;				//the sm-number of the song
-	private String URL;		//the url that contains video file for download
-	private String title;		//the title of the song
+	private String id;				//the sm-number or nm-number of the song
+	private String URL;				//the url that contains video file for download
+	private String title;			//the title of the song
 	private String producerName;	//the name of producer
 	private String subDir;			//the name of folder that contains this song
 	private List<String> vocals;	//Singers who sing this song
@@ -19,7 +19,7 @@ public class Vsong implements Comparable<Vsong>{
 	 * create Vocaloid Song object using only
 	 * @param id the sm-number of the song
 	 */
-	public Vsong(int id) {
+	public Vsong(String id) {
 		this(id, "");
 	}
 	/**
@@ -27,7 +27,7 @@ public class Vsong implements Comparable<Vsong>{
 	 * @param id the sm-number of the song
 	 * @param title the title of the song
 	 */
-	public Vsong(int id, String title) {
+	public Vsong(String id, String title) {
 		this(id, title, "");
 	}
 	/**
@@ -36,8 +36,8 @@ public class Vsong implements Comparable<Vsong>{
 	 * @param title the title of the song
 	 * @param folder the folder where the song is stored.
 	 */
-	public Vsong(int id, String title, String folder) {
-		this.smId = id;
+	public Vsong(String id, String title, String folder) {
+		this.id = id;
 		this.title = title;
 		this.subDir = folder;
 		this.URL =  this.producerName = "";
@@ -45,12 +45,12 @@ public class Vsong implements Comparable<Vsong>{
 		this.tags = new ArrayList<>();
 	}
 
-	/* (non-Javadoc)
+	/** the hashcode of Vsong is the id number itself.
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
-		return this.smId;
+		return NicoStringTool.filterIntsFromString(this.id);
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class Vsong implements Comparable<Vsong>{
 	public boolean equals(Object obj) {
 		if (obj == null) return false;
 		else if (!(obj instanceof Vsong)) return false;
-		return ((Vsong) obj).hashCode() == this.hashCode();
+		else return ((Vsong) obj).hashCode() == this.hashCode();
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class Vsong implements Comparable<Vsong>{
 	public String toString() {
 		return new StringBuilder()
 				.append("\n[Song: ").append(title)
-				.append(", smID: sm").append(smId)
+				.append(", smID: ").append(id)
 				.append(producerName == "" ? "" : ", Producer: ").append(producerName)
 				.append(subDir == "" ? "" : ", Folder: ").append(subDir)
 				// .append(", status: ").append(isDownloaded ? "done" : "to be downloaded")
@@ -85,7 +85,7 @@ public class Vsong implements Comparable<Vsong>{
 	 */
 	@Override
 	public int compareTo(Vsong o) {
-		return o.smId - this.smId;
+		return o.hashCode() - this.hashCode();
 	}
 
 	/**
@@ -170,10 +170,10 @@ public class Vsong implements Comparable<Vsong>{
 	}
 
 	/**
-	 * @return the smId
+	 * @return the id
 	 */
-	public int getSmId() {
-		return smId;
+	public String getId() {
+		return id;
 	}
 
 	/**
@@ -195,7 +195,7 @@ public class Vsong implements Comparable<Vsong>{
 	public static void main(String[] args) {
 		testVsong();
 		testString();
-		Vsong vsong = new Vsong(23379461, "My PV");
+		Vsong vsong = new Vsong("sm23379461", "My PV");
 		testVsongAtt(vsong);
 		System.out.println(vsong);
 	}
@@ -217,17 +217,17 @@ public class Vsong implements Comparable<Vsong>{
 	}
 	private static void testVsong() {
 		java.util.TreeSet<Vsong> set = new java.util.TreeSet<>(), set2 = new java.util.TreeSet<>(), pointer = null;
-		System.out.println("add first song: " + set.add(new Vsong(27384957, "40mP MV")));
-		System.out.println("add duplicated song: " + set.add(new Vsong(27384957, "40mP duplicate")));
-		System.out.println("add second song: " + set.add(new Vsong(30772034, "LamazeP MV")));
-		System.out.println("add third song: " + set.add(new Vsong(25446788, "MARETU MV")));
+		System.out.println("add first song: " + set.add(new Vsong("sm27384957", "40mP MV")));
+		System.out.println("add duplicated song: " + set.add(new Vsong("sm27384957", "40mP duplicate")));
+		System.out.println("add second song: " + set.add(new Vsong("sm30772034", "LamazeP MV")));
+		System.out.println("add third song: " + set.add(new Vsong("sm25446788", "MARETU MV")));
 		System.out.println("the set is \n" + set);
-		set2.add(new Vsong(27384957, "40mP MV"));
-		set2.add(new Vsong(29987635, "Hachi PV"));
+		set2.add(new Vsong("sm27384957", "40mP MV"));
+		set2.add(new Vsong("sm29987635", "Hachi PV"));
 		set2.addAll(set);
 		System.out.println("merge two set that contains same songs with different status: \n" + set2);
 		pointer = set2;
-		pointer.add(new Vsong(29882986, "Deco*27 PV"));
+		pointer.add(new Vsong("sm29882986", "Deco*27 PV"));
 		System.out.println("pointer and reference theory applied in Java: \n" + set2);
 		
 	}
