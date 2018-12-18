@@ -28,7 +28,7 @@ public class VideoDownloader {
 	 * @param rootDLdir the root directory of downloaded video.
 	 */
 	public VideoDownloader(String downloadDir) {
-		defaultDir.mkdirs(); //this step should not 
+		defaultDir.mkdirs(); //this step should not make error
 		this.rootDLdir = new File(downloadDir);
 	}
 	/**
@@ -40,10 +40,9 @@ public class VideoDownloader {
 		Objects.requireNonNull(song);
 		if (song.getURL().equals("")) return false;
 		
-		File file = makeVideoFile(song);//make a file to receive data from input stream.
-		if (file.isFile()) {
-			file.delete();	//we'll see if this can fix the broken file issue
-		}
+		File file = makeDirForDownloadingVideoFile(song);//It's a File represents a directory
+		
+		//TODO: write code to use Youtube-dl to download file
 		try {
 			downloadUsingStream(song, file);
 			//downloadUsingNIO(song, file);
@@ -54,48 +53,13 @@ public class VideoDownloader {
 			return false;
 		}
 	}
-	private void downloadUsingStream(Vsong song, File file) throws IOException{
-		try (var input = new BufferedInputStream(new URL(song.getURL()).openStream()); // get the input stream from video url
-				var output = new FileOutputStream(file);) { // create FileOutputStream for the above file.
-
-			// start downloading process
-			System.out.println("start downloading");
-			byte[] buffer = new byte[1024];
-			int count = 0;
-			int size = 0;
-			while ((count = input.read(buffer, 0, 1024)) != -1) {
-				output.write(buffer, 0, count);
-				size += count;
-			}
-			System.out.println("file size = " + size);
-			if (file.renameTo(new File(file.getParentFile(), generateFileName(song)))) {
-				System.out.println(file.getName() + " done, yeah!!");
-			} else {
-				System.out.println(file.getName() + " done, but rename fail :(");
-			}
-		}
-	}
-	
-	private void downloadUsingNIO(Vsong song, File file) throws IOException {
-		 var rbc = Channels.newChannel(new URL(song.getURL()).openStream());
-		 var output = new FileOutputStream(file);
-		 System.out.println("start downloading");
-		 output.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-		 output.close();
-	     rbc.close();
-		if (file.renameTo(new File(file.getParentFile(), generateFileName(song)))) {
-			System.out.println(file.getName() + " done, yeah!!");
-		} else {
-			System.out.println(file.getName() + " done, but rename fail :(");
-		}
-	}
-	
 	/**
-	 * Create a empty file in proper directory for downloading
+	 * Create a proper directory for downloading the video, the last folder is named 
+	 * as the same name of the subDir of this vsong. 
 	 * @param song the Vsong to download.
-	 * @return the file 
+	 * @return the file that contains the directory.
 	 */
-	private File makeVideoFile(Vsong song) {
+	private File makeDirForDownloadingVideoFile(Vsong song) {
 		String subDir = NicoStringTool.fixFileName(song.getSubDir());
 		var fileNameString = generateFileName(song);
 		//make sure the subfolder is created, otherwise downloading PV might cause problem
@@ -106,11 +70,11 @@ public class VideoDownloader {
 			if (!dir.isDirectory()) 
 				throw new SecurityException("Such path name is not a directory");//a fake exception
 		} catch (SecurityException e) {
-			System.err.println(e + "\nCXwudi and miku found that this directory" + dir + "is not avaliable, video file is now made on default directory as " + new File(defaultDir, fileNameString.toString()));
+			System.err.println(e + "\nCXwudi and miku found that this directory" + dir + "is not avaliable, default directory is set, as " + defaultDir.toString());
 			dir = defaultDir;
 		}
 		
-		return new File(dir, fileNameString);
+		return dir;
 	}
 	
 	/**
@@ -128,7 +92,9 @@ public class VideoDownloader {
 		}
 		fileNameBuilder.append(".mp4");
 		var fileNameString = fileNameBuilder.toString().replace("オリジナル", "").replace("MV", "").replace("【】", "");
-		return NicoStringTool.fixFileName(fileNameString);
+		fileNameString = NicoStringTool.fixFileName(fileNameString);
+		System.out.println("next download: " + fileNameString);
+		return fileNameString;
 	}
 	
 	/**
@@ -164,6 +130,40 @@ public class VideoDownloader {
 		System.out.println(video);
 		video = new File(v.rootDLdir, "");
 		System.out.println(video);
+	}
+	private void downloadUsingStream(Vsong song, File file) throws IOException{
+		try (var input = new BufferedInputStream(new URL(song.getURL()).openStream()); // get the input stream from video url
+				var output = new FileOutputStream(file);) { // create FileOutputStream for the above file.
+	
+			// start downloading process
+			System.out.println("start downloading");
+			byte[] buffer = new byte[1024];
+			int count = 0;
+			int size = 0;
+			while ((count = input.read(buffer, 0, 1024)) != -1) {
+				output.write(buffer, 0, count);
+				size += count;
+			}
+			System.out.println("file size = " + size);
+			if (file.renameTo(new File(file.getParentFile(), generateFileName(song)))) {
+				System.out.println(file.getName() + " done, yeah!!");
+			} else {
+				System.out.println(file.getName() + " done, but rename fail :(");
+			}
+		}
+	}
+	private void downloadUsingNIO(Vsong song, File file) throws IOException {
+		 var rbc = Channels.newChannel(new URL(song.getURL()).openStream());
+		 var output = new FileOutputStream(file);
+		 System.out.println("start downloading");
+		 output.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+		 output.close();
+	     rbc.close();
+		if (file.renameTo(new File(file.getParentFile(), generateFileName(song)))) {
+			System.out.println(file.getName() + " done, yeah!!");
+		} else {
+			System.out.println(file.getName() + " done, but rename fail :(");
+		}
 	}
 
 }
