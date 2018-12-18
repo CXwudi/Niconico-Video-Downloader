@@ -62,13 +62,20 @@ public class MainModel {
 
 	public void setupNicoNico() {
 		boolean isSuccess = true;
-		if (!driver.getCurrentUrl().equals("http://www.nicovideo.jp/")) {
-			driver.get("http://www.nicovideo.jp/");
+		try {
+			if (!driver.getCurrentUrl().equals("http://www.nicovideo.jp/")) {
+				driver.get("http://www.nicovideo.jp/");
+			}
+		} catch (TimeoutException e) {
+			System.err.println("get current url may fail");
+			//e1.printStackTrace();
+			isSuccess = false;
 		}
 		
 		//change area
 		try {
 			var areaElement = driver.findElement(By.id("areaTrigger"));
+			((JavascriptExecutor) driver.getChromeDriver()).executeScript("return window.stop");
 			//if element exists, mean we are currently in US or Taiwan city, since they are using old niconico web page.
 			if (areaElement != null) {
 				areaElement.click();

@@ -28,7 +28,7 @@ public class InfoGainer {
 
 		try {
 			driver.get("http://www.nicovideo.jp/");//give program a break, to see broken video or not
-			driver.get("http://www.nicovideo.jp/watch/sm" + song.getId());
+			driver.get("http://www.nicovideo.jp/watch/" + song.getId());
 			driver.navigate().refresh();
 			Thread.sleep(700);
 			System.out.println("website opened");

@@ -57,7 +57,7 @@ public class NicoDriver implements WebDriver{
 
 	private void setupDriver() {
         chromeDriver.manage().deleteAllCookies();
-        chromeDriver.manage().window().maximize();
+        //chromeDriver.manage().window().maximize();
         //synchronization between this application and the website pages, so that my codes can wait for the web elements to come up, then do the work.
         chromeDriver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
         chromeDriver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
