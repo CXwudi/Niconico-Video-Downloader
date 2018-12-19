@@ -137,9 +137,9 @@ public class VideoDownloader {
 		}
 		
 		//check is success or not
-		int state = NicoStringTool.filterIntsFromString(stdOutStrBuilder.substring(
-				stdOutStrBuilder.lastIndexOf("%")-5, stdOutStrBuilder.lastIndexOf("%")));
-		if (stdErrStrBuilder.toString().contains("ERROR") || state < 1000) { //if the downloading process does not hit 100.0%
+		double state = Double.parseDouble(stdOutStrBuilder.substring(
+				stdOutStrBuilder.lastIndexOf("%")-4, stdOutStrBuilder.lastIndexOf("%")));
+		if (stdErrStrBuilder.toString().contains("ERROR") || state < 100) { //if the downloading process does not hit 100.0%
 			System.out.println("Don't worry, CXwudi and Miku will retry downloading again from " + state + "%");
 			downloadUsingYoutube_dl(song, file);
 		}
@@ -177,8 +177,8 @@ public class VideoDownloader {
 					.append("】");
 		}
 		fileNameBuilder.append(".mp4");
-		var fileNameString = fileNameBuilder.toString()
-				.replace("オリジナルMV", "").replace("オリジナル曲", "").replace("オリジナル", "").replace("【】", "");
+		var fileNameString = fileNameBuilder.toString().replace("オリジナルMV", "")
+				.replace("オリジナル曲", "").replace("オリジナル", "").replace("【MV】", "").replace("【】", "");
 		fileNameString = NicoStringTool.fixFileName(fileNameString);
 		System.out.println("file name: " + fileNameString);
 		return fileNameString;

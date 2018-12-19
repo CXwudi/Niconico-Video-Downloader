@@ -33,7 +33,7 @@ public class MainModel {
 		ChromeOptions co = new ChromeOptions();
 		co.addArguments("--mute-audio");
 		//co.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.ACCEPT);
-		driver  = new NicoDriver(co);
+		driver  = new NicoDriver();
 		//WARNING don't write done = task = new TreeSet<>(); 
 		//this gonna make two pointers point to the same one TreeSet, which is bad.
 		done = new TreeSet<>();
