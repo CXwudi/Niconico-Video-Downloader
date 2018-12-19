@@ -9,7 +9,7 @@ public class Main {
 		main.setupNicoNico();
 		main.taskManager().readRecord();
 		main.taskManager().getTaskAndUpdate();
-		main.taskManager().setAllDownload();//WARNING: remove this line to download songs
+//		main.taskManager().setAllDownload();//WARNING: remove this line to download songs
 //		main.driver().resetDriver(); // no needed if using youtube-dl
 //		main.setupNicoNico(); 
 		DownloadManager manager = main.downloadManager();
