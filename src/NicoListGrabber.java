@@ -92,16 +92,18 @@ public class NicoListGrabber extends CollectionReader{
 			Thread.sleep(700);
 	
 			System.out.println("start fetching lists");
-			List<WebElement> myFavorMusics = driver.findElements(By.cssSelector("li[id^=SYS_box_item_0_]"));
-	
 			
-			for (WebElement webElement : myFavorMusics) {
-				WebElement description = webElement.findElement(By.cssSelector("a[href^='/watch/']"));
-				String videoLink = description.getAttribute("href");// it gives us url like: http://www.nicovideo.jp/watch/sm31818521
-				String Id = videoLink.substring(videoLink.lastIndexOf("s"), videoLink.length());
-				String title = description.getText();// it gives us string like: ハチ MV「砂の惑星 feat.初音ミク」
-				folder.add(new Vsong(Id, title, folderName));
-			}
+			do {
+				List<WebElement> myFavorMusics = driver.findElements(By.cssSelector("li[id^=SYS_box_item_0_]"));
+				for (WebElement webElement : myFavorMusics) {
+					WebElement description = webElement.findElement(By.cssSelector("a[href^='/watch/']"));
+					String videoLink = description.getAttribute("href");// it gives us url like: http://www.nicovideo.jp/watch/sm31818521
+					String Id = videoLink.substring(videoLink.lastIndexOf("s"), videoLink.length());
+					String title = description.getText();// it gives us string like: ハチ MV「砂の惑星 feat.初音ミク」
+					folder.add(new Vsong(Id, title, folderName));
+				}
+			} while (hasNextPage());
+			
 			System.out.println("Collection \"" + folderName + "\" has following songs: " + folder);
 			
 		} catch (StaleElementReferenceException | TimeoutException e) {
@@ -117,6 +119,27 @@ public class NicoListGrabber extends CollectionReader{
 			return getOneFolderCollection(id, folderName);
 		}
 		return folder;
+	}
+
+	/**
+	 * check if there is more than one page of this folder, if yes, navigate to next page.
+	 * @return
+	 */
+	private boolean hasNextPage() {
+		WebElement nextButton = driver.findElement(By.cssSelector("a.SYS_btn_pager_next"));
+		if (nextButton == null) return false;
+		else {
+			nextButton.click();
+			driver.navigate().refresh();
+			try {
+				Thread.sleep(300);
+			} catch (InterruptedException e) {
+				System.err.println("NicoListGrabber.hasNextPage() should not have " + e + " here");
+				e.printStackTrace();
+			}
+			return true;
+		}
+		
 	}
 
 }
