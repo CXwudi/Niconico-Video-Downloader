@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
@@ -27,11 +28,11 @@ public class InfoGainer {
 		List<String> tags = new ArrayList<>();
 
 		try {
-			driver.get("http://www.nicovideo.jp/");//give program a break, to see broken video or not
+			//driver.get("http://www.nicovideo.jp/");//give program a break, to see broken video or not
 			driver.get("http://www.nicovideo.jp/watch/" + song.getId());
-			driver.navigate().refresh();
-			Thread.sleep(700);
+			//driver.navigate().refresh();
 			System.out.println("website opened");
+			Thread.sleep(700 + new Random().nextInt(300));
 			if (driver.findElement(By.cssSelector("p.messageTitle")) != null) {
     			System.err.println("fake video, CXwudi and Miku are very ANGRY and wanna exits :(");
     			return;

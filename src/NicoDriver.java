@@ -144,7 +144,7 @@ public class NicoDriver implements WebDriver{
 			try {
 				return chromeDriver.findElement(by);
 			} catch (TimeoutException e) {
-				System.err.println("find element timeout:( ");
+				System.err.println("find element " + by.toString() + " timeout:( ");
 				if (i++ < 2) System.out.println("don't worry, CXwudi and miku are going to try again and make it work!!");
 				else {
 					System.err.println("Oh NO, we really failed :(");
@@ -157,7 +157,7 @@ public class NicoDriver implements WebDriver{
 				}
 
 			} catch (NoSuchElementException e) {
-				System.err.println("Oh NO, we can't find this element, (maybe) get perpared for NullPointerException 😂");
+				System.err.println("Oh NO, we can't find element " + by.toString() + " , (maybe) get perpared for NullPointerException 😂");
 				return null;
 			}
 		} 

@@ -9,13 +9,20 @@ public class Main {
 		main.setupNicoNico();
 		main.taskManager().readRecord();
 		main.taskManager().getTaskAndUpdate();
-		main.driver().resetDriver();
-		main.setupNicoNico();
+//		main.driver().resetDriver(); // no needed if using youtube-dl
+//		main.setupNicoNico(); 
+		DownloadManager manager = main.downloadManager();
 		main.downloadManager().forEachVsong(vsong -> {
-			DownloadManager manager = main.downloadManager();
-			while (true) {
+			
+			manager.fetchInfo(vsong);
+			if (!manager.downloadOneVocaloidPV(vsong)) System.out.println(vsong + "doesn't exist!!, plz skip");
+			manager.markDone(vsong);
+			manager.triggerRecord(); //if the currentRuntime.addShutdownHook works, then we don't need this line
+
+			/*while (true) {
 				manager.fetchInfo(vsong);
 				if (!manager.downloadOneVocaloidPV(vsong)) System.out.println(vsong + "doesn't exist!!, plz skip");
+				
 				var scanner = new Scanner(System.in);
 				String answer = "";
 				while (!answer.equalsIgnoreCase("y") && !answer.equalsIgnoreCase("n")) {
@@ -30,9 +37,10 @@ public class Main {
 				} else {
 					System.out.println("Okay, CXwudi and Miku will re-download this song :/");
 				}
-			}
+			}*/
+			
 			try {
-				Thread.sleep(4000L + new Random().nextInt(5000));// does 20 seconds help?
+				Thread.sleep(1000L + new Random().nextInt(3000));// does 20 seconds help?
 			} catch (InterruptedException e) {
 				System.err.println(e + "\n this should not happen");
 			}

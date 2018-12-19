@@ -50,7 +50,7 @@ public class MainModel {
 		WebElement ps = driver.findElement(By.id("input__password"));
 		ps.sendKeys(password);
 		ps.submit();
-
+		System.out.println(driver.getCurrentUrl());
 		if (driver.getCurrentUrl().equals("http://www.nicovideo.jp/")) {
 			System.out.println("login success");
 			return true;
@@ -74,8 +74,8 @@ public class MainModel {
 		
 		//change area
 		try {
-			var areaElement = driver.findElement(By.id("areaTrigger"));
 			((JavascriptExecutor) driver.getChromeDriver()).executeScript("return window.stop");
+			var areaElement = driver.findElement(By.id("areaTrigger"));
 			//if element exists, mean we are currently in US or Taiwan city, since they are using old niconico web page.
 			if (areaElement != null) {
 				areaElement.click();
@@ -87,17 +87,15 @@ public class MainModel {
 			}
 		} catch (TimeoutException | InterruptedException e) {
 			System.err.println("change region may fail");
-			/*((JavascriptExecutor) driver).executeScript("return window.stop");
-			driver.navigate().refresh();
-			*/
 			isSuccess = false;
 		}
 		
 		//change language under Japan region.
 		try {
+			((JavascriptExecutor) driver.getChromeDriver()).executeScript("return window.stop");
 			var lanElement = driver.findElement(By.cssSelector("span.CountrySelector-item.CountrySelector-currentItem[data-value='en-us']"));
 			if (lanElement == null) lanElement = driver.findElement(By.cssSelector("span.CountrySelector-item.CountrySelector-currentItem[data-value='zh-tw']"));
-			((JavascriptExecutor) driver.getChromeDriver()).executeScript("return window.stop");
+			
 			//if element exists, means we are in either English or Chinese language, change it to Japanese
 			if (lanElement != null) {
 				lanElement.click();
@@ -107,16 +105,11 @@ public class MainModel {
 			} else {
 				System.out.println("already in Japanese");
 			}
-			
-
 		} catch (TimeoutException | InterruptedException e) {
 			System.err.println("change language may fail");
-			//driver.navigate().refresh();
 			isSuccess = false;
 		}
-		if (!isSuccess) {
-            setupNicoNico();
-        }
+		//if (!isSuccess)  setupNicoNico();
 
 	}
 
@@ -170,7 +163,7 @@ public class MainModel {
 	}
 
 	public static void main(String[] args) {
-		
+		Main.main(args);
 	}
 
 }

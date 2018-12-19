@@ -80,12 +80,11 @@ public class Vsong implements Comparable<Vsong>{
 	}
 
 	/**
-	 * define the natural order of Vsong, which is the newest song go first.
-	 * In another word, bigger sm-number songs go first, rather than the Java integer natural order that smaller go first
+	 * define the natural order of Vsong, which is the increasing order of id.
 	 */
 	@Override
 	public int compareTo(Vsong o) {
-		return o.hashCode() - this.hashCode();
+		return this.id.compareTo(o.id);
 	}
 
 	/**

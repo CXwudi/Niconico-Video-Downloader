@@ -13,6 +13,7 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Objects;
 /**
  * The video downloader is the main class of downloading Vocaloid PV,
@@ -49,19 +50,33 @@ public class VideoDownloader {
 		
 		File file = makeDirForDownloadingVideoFile(song);//It's a file represents a directory
 		
-		//TODO: write code to use Youtube-dl to download file
-		
+		System.out.println("It's show time for Youtube-dl");
 		try {
 			downloadUsingYoutube_dl(song, file);
 			//downloadUsingStream(song, file);
 			//downloadUsingNIO(song, file);
-			return true;
+			System.out.println("done");
 		}  catch (IOException e) {
 			e.printStackTrace();
 			System.err.println("どうしよう!!!!, CXwudi and Miku failed to download " + song.getTitle() + " from " + song.getURL());
 			return false;
-		} finally {
-			System.out.println("done");
+		} 
+		
+		File[] videoFiles = file.listFiles( (dir, aFile) -> {
+			return aFile.toString().contains(song.getId());
+		});
+		if (videoFiles.length > 0) {
+			var videoFile = videoFiles[0];
+			if (videoFile.renameTo(new File(videoFile.getParentFile(), generateFileName(song)))) {
+				System.out.println("rename success");
+				System.out.println("done");
+				return true;
+			} else {
+				System.err.println("rename fail:(");
+				return false;
+			}
+		} else {
+			System.out.println("VideoDownloader.downloadVocaloidPV() fail to find and rename the downloaded video file");
 			return false;
 		}
 	}
@@ -95,7 +110,6 @@ public class VideoDownloader {
 		//initialize variables and cmd process
 		var youtube_dlProcessBuilder = new ProcessBuilder("cmd");
 		youtube_dlProcessBuilder.directory(file);
-		System.out.println("It's show time for Youtube-dl");
 		var youtube_dlProcess = youtube_dlProcessBuilder.start();
 		var stdOutStrBuilder = new StringBuilder();
 		var stdErrStrBuilder = new StringBuilder();
@@ -125,7 +139,7 @@ public class VideoDownloader {
 		//check is success or not
 		int state = NicoStringTool.filterIntsFromString(stdOutStrBuilder.substring(
 				stdOutStrBuilder.lastIndexOf("%")-5, stdOutStrBuilder.lastIndexOf("%")));
-		if (stdErrStrBuilder.toString().contains("ERROR") || state < 100) { //if the downloading process does not hit 100.0%
+		if (stdErrStrBuilder.toString().contains("ERROR") || state < 1000) { //if the downloading process does not hit 100.0%
 			System.out.println("Don't worry, CXwudi and Miku will retry downloading again from " + state + "%");
 			downloadUsingYoutube_dl(song, file);
 		}
@@ -134,9 +148,14 @@ public class VideoDownloader {
 	private void syncStream(InputStream input, StringBuilder sb, PrintStream out) {
 		try(var output = new BufferedReader(new InputStreamReader(input))){
 			String s;
+			int c = 0;
 			while ((s = output.readLine()) != null) {
 				if (sb != null) sb.append(s).append("\n");
-				out.println(s);
+				if (c++ >= 5 || !s.contains("ETA")) {
+					out.println(s);
+					c = 0;
+				}
+				
 			}
 			
 		} catch (IOException e) {
@@ -158,9 +177,10 @@ public class VideoDownloader {
 					.append("】");
 		}
 		fileNameBuilder.append(".mp4");
-		var fileNameString = fileNameBuilder.toString().replace("オリジナル", "").replace("MV", "").replace("【】", "");
+		var fileNameString = fileNameBuilder.toString()
+				.replace("オリジナルMV", "").replace("オリジナル曲", "").replace("オリジナル", "").replace("【】", "");
 		fileNameString = NicoStringTool.fixFileName(fileNameString);
-		System.out.println("next download: " + fileNameString);
+		System.out.println("file name: " + fileNameString);
 		return fileNameString;
 	}
 	
@@ -195,7 +215,7 @@ public class VideoDownloader {
 	
 	private static void testDownload() {
 		VideoDownloader v = new VideoDownloader();
-		v.downloadVocaloidPV(new Vsong("sm34225660").setSubDir("2018年V家新曲").setURL("fake url"));
+		v.downloadVocaloidPV(new Vsong("sm34200478").setTitle("ビューティフルなフィクション / 初音ミク").setSubDir("2018年V家新曲").setURL("fake url"));
 		
 	}
 	private static void testStream() {
@@ -208,7 +228,7 @@ public class VideoDownloader {
 		System.out.println(video.isFile());
 		System.out.println(video);
 		video = new File(v.rootDLdir, "");
-		System.out.println(video);
+		System.out.println(new File(v.rootDLdir, "a video.mp4").getParentFile());
 	}
 	
 	
