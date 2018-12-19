@@ -187,6 +187,10 @@ public class NicoDriver implements WebDriver{
 		}
 	}
 	
+	public boolean containsElements(By by) {
+		return !findElements(by).isEmpty();
+	}
+	
 	@Override
 	public void quit() {
 	    try {

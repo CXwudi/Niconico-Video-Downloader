@@ -13,13 +13,15 @@ public class Main {
 //		main.driver().resetDriver(); // no needed if using youtube-dl
 //		main.setupNicoNico(); 
 		DownloadManager manager = main.downloadManager();
-		main.downloadManager().forEachVsong(vsong -> {
+		main.downloadManager().forEachVsongInTask(vsong -> {
 			
-			manager.fetchInfo(vsong);
-			if (!manager.downloadOneVocaloidPV(vsong)) System.out.println(vsong + "doesn't exist!!, plz skip");
+			if (manager.fetchInfo(vsong))
+				if (!manager.downloadOneVocaloidPV(vsong)) 
+					System.out.println("done");
 			manager.markDone(vsong);
 			manager.triggerRecord(); //if the currentRuntime.addShutdownHook works in eclipse, then we don't need this line
-
+			
+			
 			/*while (true) {
 				manager.fetchInfo(vsong);
 				if (!manager.downloadOneVocaloidPV(vsong)) System.out.println(vsong + "doesn't exist!!, plz skip");

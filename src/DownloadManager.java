@@ -28,11 +28,12 @@ public class DownloadManager {
 		Runtime.getRuntime().addShutdownHook(new Thread(this::triggerRecord));
 	}
 	
-	public void forEachVsong(Consumer<Vsong> c) {
+	public void forEachVsongInTask(Consumer<Vsong> c) {
 		for (Iterator<Vsong> iterator = task.iterator(); iterator.hasNext();) {
 			c.accept(iterator.next());
 		}
 	}
+	
 	public void downloadVocaloidPVs() {
 		for (Iterator<Vsong> iterator = task.iterator(); iterator.hasNext();) {
 			Vsong vsong = iterator.next();
@@ -43,11 +44,11 @@ public class DownloadManager {
 		}
 	}
 	/**
-	 * fulfill Vsong instance's other information including url, producer name, etc. by visiting niconico website.
 	 * @param song the Vocaloid song to be filled.
+	 * @return {@code true} iff {@link InfoGainer#fetchInfo(Vsong)} return true.
 	 */
-	public void fetchInfo(Vsong song) {
-		infoGainer.fetchInfo(song);
+	public boolean fetchInfo(Vsong song) {
+		return infoGainer.fetchInfo(song);
 	}
 	/**
 	 * The honor method to download the Vocaloid PV
@@ -58,13 +59,13 @@ public class DownloadManager {
 		return downloader.downloadVocaloidPV(song);
 	}
 	/**
-	 * put the one or more Vsong (depends on number of parameters)that has been downloaded into local recorder.
-	 * Be aware that this method does not record them into the local file yet.
-	 * Call {@code triggerRecord()} to do so. 
-	 * @param song 
+	 * put the one or more Vsong that has been downloaded into local recorder.
+	 * Be aware that this method does not record them into the local file yet, 
+	 * call {@link #triggerRecord()} to do so. 
+	 * @param songs songs that has been downloaded.
 	 */
-	public void markDone(Vsong... song) {
-		localRecorder.markDone(song);
+	public void markDone(Vsong... songs) {
+		localRecorder.markDone(songs);
 	}
 	/**
 	 * Tell local record to start the record process.

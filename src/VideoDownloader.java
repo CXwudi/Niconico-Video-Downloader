@@ -39,28 +39,32 @@ public class VideoDownloader {
 		this.rootDLdir = new File(downloadDir);
 	}
 	/**
-	 * Download the Vocaloid Song.
+	 * Download the Vocaloid Song and rename it properly. 
+	 * it's a warper function of {@link #downloadUsingYoutube_dl(Vsong, File)} 
 	 * @param song the song to be download.
-	 * @return {@code true} if the Vocaloid PV file is downloaded and ready to be watched.
+	 * @return {@code true} if the Vocaloid PV file is downloaded and renamed.
 	 */
-	@SuppressWarnings("finally")
 	public boolean downloadVocaloidPV(Vsong song) {
 		Objects.requireNonNull(song);
-		if (song.getURL().equals("")) return false;
-		
-		File file = makeDirForDownloadingVideoFile(song);//It's a file represents a directory
+		if (song.getId().equals("")) return false;
+		File file = makeDirForDownloadingVideoFile(song);//get the directory
 		
 		System.out.println("It's show time for Youtube-dl");
 		try {
 			downloadUsingYoutube_dl(song, file);
 			//downloadUsingStream(song, file);
 			//downloadUsingNIO(song, file);
-			System.out.println("done");
+			System.out.println("download success");
 		}  catch (IOException e) {
 			e.printStackTrace();
 			System.err.println("どうしよう!!!!, CXwudi and Miku failed to download " + song.getTitle() + " from " + song.getURL());
 			return false;
 		} 
+		
+		if (song.getId().contains("nm")) {
+			System.out.println("since we don't grab the info for nm-id video " + song.getId() + ", no renaming action performed");
+			return true;
+		}
 		
 		File[] videoFiles = file.listFiles( (dir, aFile) -> {
 			return aFile.toString().contains(song.getId());
@@ -69,19 +73,86 @@ public class VideoDownloader {
 			var videoFile = videoFiles[0];
 			if (videoFile.renameTo(new File(videoFile.getParentFile(), generateFileName(song)))) {
 				System.out.println("rename success");
-				System.out.println("done");
 				return true;
 			} else {
-				System.err.println("rename fail:(");
+				System.err.println("rename fail:(, renamed file might already exists");
 				return false;
 			}
+			
 		} else {
-			System.out.println("VideoDownloader.downloadVocaloidPV() fail to find and rename the downloaded video file");
+			System.out.println("VideoDownloader.downloadVocaloidPV() fail to find the downloaded video file");
 			return false;
 		}
 	}
 	
-
+	/**
+	 * The core honor function that download videos from a niconico website denoted by vsong obj
+	 * it use 3rd library executable downloader, youtube-dl to achieve the download process.
+	 * thanks for the awesome 3rd library from https://github.com/rg3/youtube-dl
+	 * @param song the song to downloaded
+	 * @param dir the directory of where the video to be download.
+	 * @throws IOException
+	 */
+	private void downloadUsingYoutube_dl(Vsong song, File dir) throws IOException{
+		//initialize variables and cmd process
+		var youtube_dlProcessBuilder = new ProcessBuilder("cmd");
+		youtube_dlProcessBuilder.directory(dir);
+		var youtube_dlProcess = youtube_dlProcessBuilder.start();
+		var stdOutStrBuilder = new StringBuilder();
+		var stdErrStrBuilder = new StringBuilder();
+		
+		//redirect output/error stream of cmd to java stdout/stderr
+		new Thread(() -> {
+			syncStream(youtube_dlProcess.getInputStream(), stdOutStrBuilder, System.out);
+		}).start();
+		
+		new Thread(() -> {
+			syncStream(youtube_dlProcess.getErrorStream(), stdErrStrBuilder, System.err);
+		}).start();
+		
+		//redirect java stdin to cmd input, and type cmd command to invoke downloading process
+		var stdIn = new PrintWriter(youtube_dlProcess.getOutputStream());
+		//stdIn.println("echo " + file.toString());
+		stdIn.println(new StringBuilder().append(System.getProperty("user.dir")).append("/youtube-dl -v")
+				.append(" --username \"1113421658@qq.com\"").append(" --password \"2010017980502\"")
+				.append(" https://www.nicovideo.jp/watch/").append(song.getId())
+				.append(" -f \"best[height<=720]\""));
+		stdIn.close();
+		
+		//wait for the downloading process
+		try {
+			youtube_dlProcess.waitFor();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		//check is success or not
+		double state = Double.parseDouble(stdOutStrBuilder.substring(
+				stdOutStrBuilder.lastIndexOf("%")-4, stdOutStrBuilder.lastIndexOf("%")));
+		if (stdErrStrBuilder.toString().contains("ERROR") || state < 100) { //if the downloading process does not hit 100.0%
+			System.out.println("Don't worry, CXwudi and Miku will retry downloading again from " + state + "%");
+			downloadUsingYoutube_dl(song, dir);
+		}
+		
+	}
+	private void syncStream(InputStream input, StringBuilder sb, PrintStream out) {
+		try(var output = new BufferedReader(new InputStreamReader(input))){
+			String s;
+			int c = 0;
+			while ((s = output.readLine()) != null) {
+				if (sb != null) sb.append(s).append("\n");
+				if (c++ >= 5 || !s.contains("ETA")) {
+					out.println(s);
+					c = 0;
+				}
+				
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * Create a proper directory for downloading the video, the last folder is named 
 	 * as the same name of the subDir of this vsong. 
@@ -105,67 +176,6 @@ public class VideoDownloader {
 		
 		return dir;
 	}
-	
-	private void downloadUsingYoutube_dl(Vsong song, File file) throws IOException{
-		//initialize variables and cmd process
-		var youtube_dlProcessBuilder = new ProcessBuilder("cmd");
-		youtube_dlProcessBuilder.directory(file);
-		var youtube_dlProcess = youtube_dlProcessBuilder.start();
-		var stdOutStrBuilder = new StringBuilder();
-		var stdErrStrBuilder = new StringBuilder();
-		
-		//redirect output/error stream of process to java stdout/stderr
-		new Thread(() -> {
-			syncStream(youtube_dlProcess.getInputStream(), stdOutStrBuilder, System.out);
-		}).start();
-		
-		new Thread(() -> {
-			syncStream(youtube_dlProcess.getErrorStream(), stdErrStrBuilder, System.err);
-		}).start();
-		//redirect java stdin to cmd input
-		var stdIn = new PrintWriter(youtube_dlProcess.getOutputStream());
-		//create downloading process, Powered by youtube-dl, thanks for the awesome 3rd library from https://github.com/rg3/youtube-dl
-		//stdIn.println("echo " + file.toString());
-		stdIn.println(new StringBuilder().append(System.getProperty("user.dir")).append("/youtube-dl -v")
-				.append(" --username \"1113421658@qq.com\"").append(" --password \"2010017980502\"")
-				.append(" https://www.nicovideo.jp/watch/").append(song.getId())
-				.append(" -f \"best[height<=720]\""));
-		stdIn.close();
-		
-		//wait for the downloading process
-		try {
-			youtube_dlProcess.waitFor();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
-		//check is success or not
-		double state = Double.parseDouble(stdOutStrBuilder.substring(
-				stdOutStrBuilder.lastIndexOf("%")-4, stdOutStrBuilder.lastIndexOf("%")));
-		if (stdErrStrBuilder.toString().contains("ERROR") || state < 100) { //if the downloading process does not hit 100.0%
-			System.out.println("Don't worry, CXwudi and Miku will retry downloading again from " + state + "%");
-			downloadUsingYoutube_dl(song, file);
-		}
-		
-	}
-	private void syncStream(InputStream input, StringBuilder sb, PrintStream out) {
-		try(var output = new BufferedReader(new InputStreamReader(input))){
-			String s;
-			int c = 0;
-			while ((s = output.readLine()) != null) {
-				if (sb != null) sb.append(s).append("\n");
-				if (c++ >= 5 || !s.contains("ETA")) {
-					out.println(s);
-					c = 0;
-				}
-				
-			}
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	/**
 	 * generate an error-free string of the file name. e.g. xxxx.mp4
 	 * @param song the Vsong object
@@ -180,8 +190,9 @@ public class VideoDownloader {
 					.append("】");
 		}
 		fileNameBuilder.append(".mp4");
+		
 		var fileNameString = fileNameBuilder.toString().replace("オリジナル", "")
-				.replace("曲", "").replace("MV", "").replace("PV", "").replace("【】", "");
+				.replace("曲", "").replace("MV", "").replace("PV", "").replace("[]", "").replace("【】", "");
 		fileNameString = NicoStringTool.fixFileName(fileNameString);
 		System.out.println("file name: " + fileNameString);
 		return fileNameString;

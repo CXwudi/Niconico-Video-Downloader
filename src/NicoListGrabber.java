@@ -83,7 +83,7 @@ public class NicoListGrabber extends CollectionReader{
 			Thread.sleep(300);
 			WebElement sort = driver.findElement(By.cssSelector("select.itemSort[name=sort]"));
 			if (sort == null) {//means this folder is empty.
-				System.out.println("This folder, " + folderName + ",  is currently empty ╮(╯▽╰)╭");
+				System.out.println("This folder " + folderName + " is currently empty ╮(╯▽╰)╭");
 				return folder;
 			}
 			sort.click();
@@ -107,7 +107,7 @@ public class NicoListGrabber extends CollectionReader{
 			System.out.println("Collection \"" + folderName + "\" has following songs: " + folder);
 			
 		} catch (StaleElementReferenceException | TimeoutException e) {
-			System.err.println(e + "\nCXwudi and Miku failed to get list info, we are trying again");
+			System.err.println(e + "\nCXwudi and Miku failed to get list info due to web server problem, we are trying again");
 			return getOneFolderCollection(id, folderName);
 		} catch (InterruptedException e) {
 			System.err.println(e + "\nthis shouldn't happen");
@@ -130,11 +130,12 @@ public class NicoListGrabber extends CollectionReader{
 		if (nextButton == null) return false;
 		else {
 			nextButton.click();
+			System.out.println("next page");
 			driver.navigate().refresh();
 			try {
 				Thread.sleep(300);
 			} catch (InterruptedException e) {
-				System.err.println("NicoListGrabber.hasNextPage() should not have " + e + " here");
+				System.err.println(e + "\nthis should not happen in NicoListGrabber.hasNextPage()");
 				e.printStackTrace();
 			}
 			return true;

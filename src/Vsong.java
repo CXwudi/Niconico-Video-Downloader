@@ -3,7 +3,7 @@ import java.util.List;
 
 
 /**
- * The Vocaloid Song Object that contains information of sm-number, title, url, producer, tags and etc.
+ * The Vocaloid Song Object that contains information of id, title, url, producer, tags and etc.
  * @author CX无敌
  */
 public class Vsong implements Comparable<Vsong>{
@@ -65,13 +65,13 @@ public class Vsong implements Comparable<Vsong>{
 	}
 
 	/**
-	 * return the string representation of this Vsong as [Song: xxxxxx, sm-id: smxxxxxxxxx, Producer: xxxxxxxx]
+	 * return the string representation of this Vsong as [Song: xxxxxx, ID: smxxxxxxxxx, Producer: xxxxxxxx]
 	 */
 	@Override
 	public String toString() {
 		return new StringBuilder()
 				.append("\n[Song: ").append(title)
-				.append(", smID: ").append(id)
+				.append(", ID: ").append(id)
 				.append(producerName == "" ? "" : ", Producer: ").append(producerName)
 				.append(subDir == "" ? "" : ", Folder: ").append(subDir)
 				// .append(", status: ").append(isDownloaded ? "done" : "to be downloaded")

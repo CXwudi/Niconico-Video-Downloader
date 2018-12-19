@@ -21,21 +21,30 @@ public class InfoGainer {
 		this.driver = driver;
 	}
 
-	public void fetchInfo(Vsong song) {
+	/**
+	 * fulfill Vsong instance's other information including url, producer name, etc. by visiting niconico website.
+	 * @param song the Vocaloid song to be filled.
+	 * @return {@code true} iff the vsong obj has all info filled. 
+	 */
+	public boolean fetchInfo(Vsong song) {
 		String videoURL = "";
 		String producerName = "";
 		String videoTitle = "";
 		List<String> tags = new ArrayList<>();
 
 		try {
-			//driver.get("http://www.nicovideo.jp/");//give program a break, to see broken video or not
 			driver.get("http://www.nicovideo.jp/watch/" + song.getId());
 			//driver.navigate().refresh();
 			System.out.println("website opened");
 			Thread.sleep(700 + new Random().nextInt(300));
-			if (driver.findElement(By.cssSelector("p.messageTitle")) != null) {
-    			System.err.println("fake video, CXwudi and Miku are very ANGRY and wanna exits :(");
-    			return;
+			//some check
+			if (song.getId().contains("nm")) {
+				System.err.println("nm-id video unsupported, not gonna grab info for" + song.getId());
+				return true;
+			}
+			if (driver.containsElements(By.cssSelector("div.mb16p4"))) {
+    			System.err.println("fake webpage, CXwudi and Miku are very ANGRY and wanna exits :(");
+    			return false;
     		}
 			
 			
@@ -47,7 +56,7 @@ public class InfoGainer {
 				producerName = driver.findElement(By.cssSelector("a.Link.VideoOwnerInfo-pageLink")).getAttribute("title");
 				producerName = producerName.substring(0, producerName.length() - 3);
 			} else {
-				//TODO: so-id has different webElement contains producer names, fix to later
+				producerName = driver.findElement(By.cssSelector("a.Link.ChannelInfo-pageLink")).getAttribute("title");
 			}
 			List<WebElement> tagElements = driver.findElements(By.cssSelector("a.Link.TagItem-name"));
 			for (WebElement tagElement : tagElements) {
@@ -57,20 +66,20 @@ public class InfoGainer {
 			//driver.findElement(By.cssSelector("div.ControllerButton-inner")).click();//start the video, fake the server
 		} catch (TimeoutException e) {
 			e.printStackTrace();
-			System.out.println("CXwudi and Miku failed to get video info, we are trying again");
-			fetchInfo(song);
+			System.err.println("CXwudi and Miku failed to get video info, we are trying again");
+			return fetchInfo(song);
 		} catch (InterruptedException e) {
-			System.err.println(e + "\nthis shouldn't happen");
+			System.err.println(e + "\nthis shouldn't happen at InfoGainer.fetchInfo()");
+			return false;
 		}
 		if (videoURL.equals("") || videoURL == null || producerName.equals("") || tags.isEmpty() || videoTitle.equals("")) {
-			System.out.println("CXwudi and Miku failed to get video info, we are trying again");
-			fetchInfo(song);
+			System.err.println("CXwudi and Miku failed to get video info, we are trying again");
+			return fetchInfo(song);
 		} else {
 			song.setProducerName(producerName).setURL(videoURL).setTagsList(tags).setTitle(videoTitle);
 			System.out.println("SEE!! CXwudi and miku get the URL, here is video info:\n" + song);
+			return true;
 		}
-
-		
 	}
 
 	public static void main(String[] args) {
