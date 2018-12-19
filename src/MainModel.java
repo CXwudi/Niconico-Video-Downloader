@@ -50,8 +50,7 @@ public class MainModel {
 		WebElement ps = driver.findElement(By.id("input__password"));
 		ps.sendKeys(password);
 		ps.submit();
-		System.out.println(driver.getCurrentUrl());
-		if (driver.getCurrentUrl().equals("http://www.nicovideo.jp/")) {
+		if (driver.getCurrentUrl().contains("www.nicovideo.jp")) {
 			System.out.println("login success");
 			return true;
 		} else {

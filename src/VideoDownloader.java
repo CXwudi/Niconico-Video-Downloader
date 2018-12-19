@@ -125,8 +125,11 @@ public class VideoDownloader {
 		//redirect java stdin to cmd input
 		var stdIn = new PrintWriter(youtube_dlProcess.getOutputStream());
 		//create downloading process, Powered by youtube-dl, thanks for the awesome 3rd library from https://github.com/rg3/youtube-dl
-		stdIn.println(new StringBuilder().append(System.getProperty("user.dir")).append("/youtube-dl -v ")
-				.append("https://www.nicovideo.jp/watch/").append(song.getId()));
+		//stdIn.println("echo " + file.toString());
+		stdIn.println(new StringBuilder().append(System.getProperty("user.dir")).append("/youtube-dl -v")
+				.append(" --username \"1113421658@qq.com\"").append(" --password \"2010017980502\"")
+				.append(" https://www.nicovideo.jp/watch/").append(song.getId())
+				.append(" -f \"best[height<=720]\""));
 		stdIn.close();
 		
 		//wait for the downloading process
@@ -177,8 +180,8 @@ public class VideoDownloader {
 					.append("】");
 		}
 		fileNameBuilder.append(".mp4");
-		var fileNameString = fileNameBuilder.toString().replace("オリジナルMV", "")
-				.replace("オリジナル曲", "").replace("オリジナル", "").replace("【MV】", "").replace("【】", "");
+		var fileNameString = fileNameBuilder.toString().replace("オリジナル", "")
+				.replace("曲", "").replace("MV", "").replace("PV", "").replace("【】", "");
 		fileNameString = NicoStringTool.fixFileName(fileNameString);
 		System.out.println("file name: " + fileNameString);
 		return fileNameString;

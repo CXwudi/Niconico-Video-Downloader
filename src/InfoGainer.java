@@ -38,13 +38,17 @@ public class InfoGainer {
     			return;
     		}
 			
+			
 			videoTitle = driver.findElement(By.cssSelector("h1")).getText();
 			
 			videoURL = driver.findElement(By.id("MainVideoPlayer")).findElement(By.cssSelector("video")).getAttribute("src");
 			System.out.println("url reached: " + videoURL);
-			
-			producerName = driver.findElement(By.cssSelector("a.Link.VideoOwnerInfo-pageLink")).getAttribute("title");
-			producerName = producerName.substring(0, producerName.length() - 3);
+			if (!song.getId().contains("so")) {
+				producerName = driver.findElement(By.cssSelector("a.Link.VideoOwnerInfo-pageLink")).getAttribute("title");
+				producerName = producerName.substring(0, producerName.length() - 3);
+			} else {
+				//TODO: so-id has different webElement contains producer names, fix to later
+			}
 			List<WebElement> tagElements = driver.findElements(By.cssSelector("a.Link.TagItem-name"));
 			for (WebElement tagElement : tagElements) {
 				tags.add(tagElement.getText());
