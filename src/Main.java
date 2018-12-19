@@ -9,6 +9,7 @@ public class Main {
 		main.setupNicoNico();
 		main.taskManager().readRecord();
 		main.taskManager().getTaskAndUpdate();
+		main.taskManager().setAllDownload();//WARNING: remove this line to download songs
 //		main.driver().resetDriver(); // no needed if using youtube-dl
 //		main.setupNicoNico(); 
 		DownloadManager manager = main.downloadManager();
@@ -17,7 +18,7 @@ public class Main {
 			manager.fetchInfo(vsong);
 			if (!manager.downloadOneVocaloidPV(vsong)) System.out.println(vsong + "doesn't exist!!, plz skip");
 			manager.markDone(vsong);
-			manager.triggerRecord(); //if the currentRuntime.addShutdownHook works, then we don't need this line
+			manager.triggerRecord(); //if the currentRuntime.addShutdownHook works in eclipse, then we don't need this line
 
 			/*while (true) {
 				manager.fetchInfo(vsong);
@@ -40,12 +41,13 @@ public class Main {
 			}*/
 			
 			try {
-				Thread.sleep(1000L + new Random().nextInt(3000));// does 20 seconds help?
+				Thread.sleep(1000L + new Random().nextInt(3000));
 			} catch (InterruptedException e) {
 				System.err.println(e + "\n this should not happen");
 			}
 			
 		});
+		System.err.println("おめでとう、全部ダウンロードを終わった");
 	}
 
 }

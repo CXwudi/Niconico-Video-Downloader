@@ -80,6 +80,7 @@ public class TaskManager{
 	 */
 	public boolean setAllDownload() {
 		if(!nicoListGrabber.isDone()) return false;
+		done.clear();
 		done.addAll(getOnlineCollection());
 		return true;
 	}
