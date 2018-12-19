@@ -70,8 +70,8 @@ public class TaskManager{
 		
 		if (map.get(true) != null) done.addAll(map.get(true));
 		if (map.get(false) != null) task.addAll(map.get(false));
-		System.out.println("PV that needed to be downloaded: \n" + task);
-		System.out.println("PV that already been downloaded: \n" + done);
+		System.out.println("PV that needed to be downloaded: \n" + task + "\ntotally " + task.size() + " PVs");
+		System.out.println("PV that already been downloaded: \n" + done + "\ntotally " + done.size() + " PVs");
 		return true;
 	}
 	/**
@@ -80,6 +80,7 @@ public class TaskManager{
 	 */
 	public boolean setAllDownload() {
 		if(!nicoListGrabber.isDone()) return false;
+		done.clear();
 		done.addAll(getOnlineCollection());
 		return true;
 	}

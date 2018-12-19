@@ -20,8 +20,8 @@ public interface NicoStringTool {
 	}
 	
 	/**
-	 * a function to filter chars from sm-id and get the integers.
-	 * this function is designed because in some casees, the smXXXXXXXX doesn't read properly
+	 * a function to filter chars from string and keep the integers.
+	 * this function is designed because in some cases, the smXXXXXXXX doesn't read properly
 	 * from download.txt file.
 	 * @param smid
 	 * @return

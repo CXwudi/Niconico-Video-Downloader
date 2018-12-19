@@ -33,7 +33,7 @@ public class MainModel {
 		ChromeOptions co = new ChromeOptions();
 		co.addArguments("--mute-audio");
 		//co.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.ACCEPT);
-		driver  = new NicoDriver(co);
+		driver  = new NicoDriver();
 		//WARNING don't write done = task = new TreeSet<>(); 
 		//this gonna make two pointers point to the same one TreeSet, which is bad.
 		done = new TreeSet<>();
@@ -50,8 +50,7 @@ public class MainModel {
 		WebElement ps = driver.findElement(By.id("input__password"));
 		ps.sendKeys(password);
 		ps.submit();
-
-		if (driver.getCurrentUrl().equals("http://www.nicovideo.jp/")) {
+		if (driver.getCurrentUrl().contains("www.nicovideo.jp")) {
 			System.out.println("login success");
 			return true;
 		} else {
@@ -74,8 +73,8 @@ public class MainModel {
 		
 		//change area
 		try {
-			var areaElement = driver.findElement(By.id("areaTrigger"));
 			((JavascriptExecutor) driver.getChromeDriver()).executeScript("return window.stop");
+			var areaElement = driver.findElement(By.id("areaTrigger"));
 			//if element exists, mean we are currently in US or Taiwan city, since they are using old niconico web page.
 			if (areaElement != null) {
 				areaElement.click();
@@ -87,17 +86,15 @@ public class MainModel {
 			}
 		} catch (TimeoutException | InterruptedException e) {
 			System.err.println("change region may fail");
-			/*((JavascriptExecutor) driver).executeScript("return window.stop");
-			driver.navigate().refresh();
-			*/
 			isSuccess = false;
 		}
 		
 		//change language under Japan region.
 		try {
+			((JavascriptExecutor) driver.getChromeDriver()).executeScript("return window.stop");
 			var lanElement = driver.findElement(By.cssSelector("span.CountrySelector-item.CountrySelector-currentItem[data-value='en-us']"));
 			if (lanElement == null) lanElement = driver.findElement(By.cssSelector("span.CountrySelector-item.CountrySelector-currentItem[data-value='zh-tw']"));
-			((JavascriptExecutor) driver.getChromeDriver()).executeScript("return window.stop");
+			
 			//if element exists, means we are in either English or Chinese language, change it to Japanese
 			if (lanElement != null) {
 				lanElement.click();
@@ -107,16 +104,11 @@ public class MainModel {
 			} else {
 				System.out.println("already in Japanese");
 			}
-			
-
 		} catch (TimeoutException | InterruptedException e) {
 			System.err.println("change language may fail");
-			//driver.navigate().refresh();
 			isSuccess = false;
 		}
-		if (!isSuccess) {
-            setupNicoNico();
-        }
+		//if (!isSuccess)  setupNicoNico();
 
 	}
 
@@ -170,40 +162,7 @@ public class MainModel {
 	}
 
 	public static void main(String[] args) {
-		MainModel main = new MainModel();
-		main.login("1113421658@qq.com", "2010017980502");
-		main.setupNicoNico();
-		main.taskManager().readRecord();
-		main.taskManager().getTaskAndUpdate();
-		main.driver().resetDriver();
-		main.setupNicoNico();
-		main.downloadManager().forEachVsong(vsong -> {
-			DownloadManager manager = main.downloadManager();
-			while (true) {
-				manager.fetchInfo(vsong);
-				if (!manager.downloadOneVocaloidPV(vsong)) System.out.println(vsong + "doesn't exist!!, plz skip");
-				var scanner = new Scanner(System.in);
-				String answer = "";
-				while (!answer.equalsIgnoreCase("y") && !answer.equalsIgnoreCase("n")) {
-					System.err.print("PLZ check the video file, is it integrite? y/n: ");
-					answer = scanner.nextLine();
-				}
-				if (answer.equalsIgnoreCase("y")) {
-					System.out.println("Good, CXwudi and Miku are moving to next file");
-					manager.markDone(vsong);
-					manager.triggerRecord();// we add this line for now
-					break;
-				} else {
-					System.out.println("Okay, CXwudi and Miku will re-download this song :/");
-				}
-			}
-			try {
-				Thread.sleep(4000L + new Random().nextInt(5000));// does 20 seconds help?
-			} catch (InterruptedException e) {
-				System.err.println(e + "\n this should not happen");
-			}
-			
-		});
+		Main.main(args);
 	}
 
 }

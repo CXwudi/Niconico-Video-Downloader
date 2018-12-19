@@ -23,6 +23,9 @@ public class DownloadManager {
 		this.downloader = new VideoDownloader();
 		this.infoGainer = new InfoGainer(d);
 		this.localRecorder = new LocalRecorder(update);
+		//Learn java: addShutdownHook can tell java application to do something after the application is shut down
+		//However, eclipse red button terminal the application with SIGKILL but not SIGTERM, so addShutdownHook doesn't work in eclipse
+		Runtime.getRuntime().addShutdownHook(new Thread(this::triggerRecord));
 	}
 	
 	public void forEachVsong(Consumer<Vsong> c) {

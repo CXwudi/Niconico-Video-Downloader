@@ -31,11 +31,15 @@ public class LocalRecorder {
 	}
 	
 	public void writeRecord() {
+		var inverseOrderSet = new TreeSet<Vsong>((s1, s2) -> {
+			return s2.compareTo(s1);
+		});
+		inverseOrderSet.addAll(update);
 		try (PrintWriter writer = new PrintWriter(listDownloadedTxt)){
-			for (Iterator<Vsong> iterator = update.iterator(); iterator.hasNext();) {
+			for (Iterator<Vsong> iterator = inverseOrderSet.iterator(); iterator.hasNext();) {
 				Vsong vsong = iterator.next();
 				StringBuilder sb = new StringBuilder();
-				sb.append("sm").append(vsong.getId()).append("------").append(vsong.getTitle());
+				sb.append(vsong.getId()).append("------").append(vsong.getTitle());
 				writer.println(sb.toString());
 			}
 		} catch (IOException e) {

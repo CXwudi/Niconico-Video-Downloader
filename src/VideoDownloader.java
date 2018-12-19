@@ -1,12 +1,19 @@
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Objects;
 /**
  * The video downloader is the main class of downloading Vocaloid PV,
@@ -28,7 +35,7 @@ public class VideoDownloader {
 	 * @param rootDLdir the root directory of downloaded video.
 	 */
 	public VideoDownloader(String downloadDir) {
-		defaultDir.mkdirs(); //this step should not 
+		defaultDir.mkdirs(); //this step should not make error
 		this.rootDLdir = new File(downloadDir);
 	}
 	/**
@@ -36,68 +43,54 @@ public class VideoDownloader {
 	 * @param song the song to be download.
 	 * @return {@code true} if the Vocaloid PV file is downloaded and ready to be watched.
 	 */
+	@SuppressWarnings("finally")
 	public boolean downloadVocaloidPV(Vsong song) {
 		Objects.requireNonNull(song);
 		if (song.getURL().equals("")) return false;
 		
-		File file = makeVideoFile(song);//make a file to receive data from input stream.
-		if (file.isFile()) {
-			file.delete();	//we'll see if this can fix the broken file issue
-		}
+		File file = makeDirForDownloadingVideoFile(song);//It's a file represents a directory
+		
+		System.out.println("It's show time for Youtube-dl");
 		try {
-			downloadUsingStream(song, file);
+			downloadUsingYoutube_dl(song, file);
+			//downloadUsingStream(song, file);
 			//downloadUsingNIO(song, file);
-			return true;
+			System.out.println("done");
 		}  catch (IOException e) {
 			e.printStackTrace();
 			System.err.println("どうしよう!!!!, CXwudi and Miku failed to download " + song.getTitle() + " from " + song.getURL());
 			return false;
-		}
-	}
-	private void downloadUsingStream(Vsong song, File file) throws IOException{
-		try (var input = new BufferedInputStream(new URL(song.getURL()).openStream()); // get the input stream from video url
-				var output = new FileOutputStream(file);) { // create FileOutputStream for the above file.
-
-			// start downloading process
-			System.out.println("start downloading");
-			byte[] buffer = new byte[1024];
-			int count = 0;
-			int size = 0;
-			while ((count = input.read(buffer, 0, 1024)) != -1) {
-				output.write(buffer, 0, count);
-				size += count;
-			}
-			System.out.println("file size = " + size);
-			if (file.renameTo(new File(file.getParentFile(), generateFileName(song)))) {
-				System.out.println(file.getName() + " done, yeah!!");
+		} 
+		
+		File[] videoFiles = file.listFiles( (dir, aFile) -> {
+			return aFile.toString().contains(song.getId());
+		});
+		if (videoFiles.length > 0) {
+			var videoFile = videoFiles[0];
+			if (videoFile.renameTo(new File(videoFile.getParentFile(), generateFileName(song)))) {
+				System.out.println("rename success");
+				System.out.println("done");
+				return true;
 			} else {
-				System.out.println(file.getName() + " done, but rename fail :(");
+				System.err.println("rename fail:(");
+				return false;
 			}
-		}
-	}
-	
-	private void downloadUsingNIO(Vsong song, File file) throws IOException {
-		 var rbc = Channels.newChannel(new URL(song.getURL()).openStream());
-		 var output = new FileOutputStream(file);
-		 System.out.println("start downloading");
-		 output.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-		 output.close();
-	     rbc.close();
-		if (file.renameTo(new File(file.getParentFile(), generateFileName(song)))) {
-			System.out.println(file.getName() + " done, yeah!!");
 		} else {
-			System.out.println(file.getName() + " done, but rename fail :(");
+			System.out.println("VideoDownloader.downloadVocaloidPV() fail to find and rename the downloaded video file");
+			return false;
 		}
 	}
 	
+
 	/**
-	 * Create a empty file in proper directory for downloading
+	 * Create a proper directory for downloading the video, the last folder is named 
+	 * as the same name of the subDir of this vsong. 
 	 * @param song the Vsong to download.
-	 * @return the file 
+	 * @return the file that contains the directory.
 	 */
-	private File makeVideoFile(Vsong song) {
+	private File makeDirForDownloadingVideoFile(Vsong song) {
 		String subDir = NicoStringTool.fixFileName(song.getSubDir());
-		var fileNameString = generateFileName(song);
+		//var fileNameString = generateFileName(song);
 		//make sure the subfolder is created, otherwise downloading PV might cause problem
 		File dir = new File(rootDLdir, subDir);
 		try {
@@ -106,11 +99,71 @@ public class VideoDownloader {
 			if (!dir.isDirectory()) 
 				throw new SecurityException("Such path name is not a directory");//a fake exception
 		} catch (SecurityException e) {
-			System.err.println(e + "\nCXwudi and miku found that this directory" + dir + "is not avaliable, video file is now made on default directory as " + new File(defaultDir, fileNameString.toString()));
+			System.err.println(e + "\nCXwudi and miku found that this directory" + dir + "is not avaliable, default directory is set, as " + defaultDir.toString());
 			dir = defaultDir;
 		}
 		
-		return new File(dir, fileNameString);
+		return dir;
+	}
+	
+	private void downloadUsingYoutube_dl(Vsong song, File file) throws IOException{
+		//initialize variables and cmd process
+		var youtube_dlProcessBuilder = new ProcessBuilder("cmd");
+		youtube_dlProcessBuilder.directory(file);
+		var youtube_dlProcess = youtube_dlProcessBuilder.start();
+		var stdOutStrBuilder = new StringBuilder();
+		var stdErrStrBuilder = new StringBuilder();
+		
+		//redirect output/error stream of process to java stdout/stderr
+		new Thread(() -> {
+			syncStream(youtube_dlProcess.getInputStream(), stdOutStrBuilder, System.out);
+		}).start();
+		
+		new Thread(() -> {
+			syncStream(youtube_dlProcess.getErrorStream(), stdErrStrBuilder, System.err);
+		}).start();
+		//redirect java stdin to cmd input
+		var stdIn = new PrintWriter(youtube_dlProcess.getOutputStream());
+		//create downloading process, Powered by youtube-dl, thanks for the awesome 3rd library from https://github.com/rg3/youtube-dl
+		//stdIn.println("echo " + file.toString());
+		stdIn.println(new StringBuilder().append(System.getProperty("user.dir")).append("/youtube-dl -v")
+				.append(" --username \"1113421658@qq.com\"").append(" --password \"2010017980502\"")
+				.append(" https://www.nicovideo.jp/watch/").append(song.getId())
+				.append(" -f \"best[height<=720]\""));
+		stdIn.close();
+		
+		//wait for the downloading process
+		try {
+			youtube_dlProcess.waitFor();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		//check is success or not
+		double state = Double.parseDouble(stdOutStrBuilder.substring(
+				stdOutStrBuilder.lastIndexOf("%")-4, stdOutStrBuilder.lastIndexOf("%")));
+		if (stdErrStrBuilder.toString().contains("ERROR") || state < 100) { //if the downloading process does not hit 100.0%
+			System.out.println("Don't worry, CXwudi and Miku will retry downloading again from " + state + "%");
+			downloadUsingYoutube_dl(song, file);
+		}
+		
+	}
+	private void syncStream(InputStream input, StringBuilder sb, PrintStream out) {
+		try(var output = new BufferedReader(new InputStreamReader(input))){
+			String s;
+			int c = 0;
+			while ((s = output.readLine()) != null) {
+				if (sb != null) sb.append(s).append("\n");
+				if (c++ >= 5 || !s.contains("ETA")) {
+					out.println(s);
+					c = 0;
+				}
+				
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -127,8 +180,11 @@ public class VideoDownloader {
 					.append("】");
 		}
 		fileNameBuilder.append(".mp4");
-		var fileNameString = fileNameBuilder.toString().replace("オリジナル", "").replace("MV", "").replace("【】", "");
-		return NicoStringTool.fixFileName(fileNameString);
+		var fileNameString = fileNameBuilder.toString().replace("オリジナル", "")
+				.replace("曲", "").replace("MV", "").replace("PV", "").replace("【】", "");
+		fileNameString = NicoStringTool.fixFileName(fileNameString);
+		System.out.println("file name: " + fileNameString);
+		return fileNameString;
 	}
 	
 	/**
@@ -156,14 +212,74 @@ public class VideoDownloader {
 	}
 	public static void main(String[] args) {
 		testFile();
+		testStream();
+		testDownload();
+	}
+	
+	private static void testDownload() {
+		VideoDownloader v = new VideoDownloader();
+		v.downloadVocaloidPV(new Vsong("sm34200478").setTitle("ビューティフルなフィクション / 初音ミク").setSubDir("2018年V家新曲").setURL("fake url"));
+		
+	}
+	private static void testStream() {
+		var stdout = new PrintWriter(System.out, true);
+		stdout.println("print from print writer");
 	}
 	private static void testFile() {
 		VideoDownloader v = new VideoDownloader();
-		File video = new File(v.rootDLdir + "\\" + "resume upload.mp4");
+		File video = new File(v.rootDLdir + "\\" + "a video.mp4");
 		System.out.println(video.isFile());
 		System.out.println(video);
 		video = new File(v.rootDLdir, "");
-		System.out.println(video);
+		System.out.println(new File(v.rootDLdir, "a video.mp4").getParentFile());
+	}
+	
+	
+	/**
+	 * @Deprecated
+	 * This method is unstable after 2018 April when Niconico web site has updated that allows 
+	 * account-free video watching. From then on, video url sometime receive HTTP 403 forbidden that 
+	 * cause the on-going downloading process stops.
+	 * @param song vsong to download
+	 * @param file folder of vsong
+	 * @throws IOException
+	 */
+	@Deprecated
+	private void downloadUsingStream(Vsong song, File file) throws IOException{
+		try (var input = new BufferedInputStream(new URL(song.getURL()).openStream()); // get the input stream from video url
+				var output = new FileOutputStream(file);) { // create FileOutputStream for the above file.
+	
+			// start downloading process
+			System.out.println("start downloading");
+			byte[] buffer = new byte[1024];
+			int count = 0;
+			int size = 0;
+			while ((count = input.read(buffer, 0, 1024)) != -1) {
+				output.write(buffer, 0, count);
+				size += count;
+			}
+			System.out.println("file size = " + size);
+			if (file.renameTo(new File(file.getParentFile(), generateFileName(song)))) {
+				System.out.println(file.getName() + " done, yeah!!");
+			} else {
+				System.out.println(file.getName() + " done, but rename fail :(");
+			}
+		}
+	}
+	
+	@Deprecated
+	private void downloadUsingNIO(Vsong song, File file) throws IOException {
+		 var rbc = Channels.newChannel(new URL(song.getURL()).openStream());
+		 var output = new FileOutputStream(file);
+		 System.out.println("start downloading");
+		 output.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+		 output.close();
+	     rbc.close();
+		if (file.renameTo(new File(file.getParentFile(), generateFileName(song)))) {
+			System.out.println(file.getName() + " done, yeah!!");
+		} else {
+			System.out.println(file.getName() + " done, but rename fail :(");
+		}
 	}
 
 }
