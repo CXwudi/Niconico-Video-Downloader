@@ -191,8 +191,10 @@ public class VideoDownloader {
 		}
 		fileNameBuilder.append(".mp4");
 		
-		var fileNameString = fileNameBuilder.toString().replace("オリジナル", "")
-				.replace("曲", "").replace("MV", "").replace("PV", "").replace("[]", "").replace("【】", "");
+		var fileNameString = fileNameBuilder.toString()
+				.replace("オリジナル曲", "").replace("オリジナル", "")
+				.replace("アニメ", "").replace("MV", "").replace("PV", "")
+				.replace("[]", "").replace("【】", "");
 		fileNameString = NicoStringTool.fixFileName(fileNameString);
 		System.out.println("file name: " + fileNameString);
 		return fileNameString;
