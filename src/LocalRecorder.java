@@ -1,7 +1,11 @@
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.TreeSet;
 /**
@@ -31,10 +35,10 @@ public class LocalRecorder {
 	}
 	
 	public void writeRecord() {
-		var inverseOrderSet = new TreeSet<Vsong>((s1, s2) -> {
-			return s2.compareTo(s1);
-		});
+		var inverseOrderSet = new TreeSet<Vsong>(Comparator.reverseOrder());
 		inverseOrderSet.addAll(update);
+		//LearnJava: whenever we open a txt file to read or write, we first open the FileIO, then BufferIO
+		//if writing txt, we add one more warp, PrintWriter
 		try (PrintWriter writer = new PrintWriter(listDownloadedTxt)){
 			for (Iterator<Vsong> iterator = inverseOrderSet.iterator(); iterator.hasNext();) {
 				Vsong vsong = iterator.next();

@@ -30,6 +30,7 @@ public class LocalReader extends CollectionReader{
 	@Override
 	public void readRecord() {
 		//convert into a smarter line-by-line reader from a char-by-char reader.
+		//we first open the file, then use the better buffer reader
 		try (BufferedReader reader = new BufferedReader(new FileReader(listDownloadedTxt));){
 			
 			for (String i = reader.readLine(); i != null && !i.equals(""); i = reader.readLine()) {
