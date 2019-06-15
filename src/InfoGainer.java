@@ -52,12 +52,13 @@ public class InfoGainer {
 			
 			videoURL = driver.findElement(By.id("MainVideoPlayer")).findElement(By.cssSelector("video")).getAttribute("src");
 			System.out.println("url reached: " + videoURL);
-			if (!song.getId().contains("so")) {
-				producerName = driver.findElement(By.cssSelector("a.Link.VideoOwnerInfo-pageLink")).getAttribute("title");
-				producerName = producerName.substring(0, producerName.length() - 3);
-			} else {
+			producerName = driver.findElement(By.cssSelector("a.Link.VideoOwnerInfo-pageLink")).getAttribute("title");
+			if (producerName == null) { //that means it's a non-sm id, like nm-id or pure number id (2019)
 				producerName = driver.findElement(By.cssSelector("a.Link.ChannelInfo-pageLink")).getAttribute("title");
+			} else {
+				producerName = producerName.substring(0, producerName.length() - 3);
 			}
+			
 			List<WebElement> tagElements = driver.findElements(By.cssSelector("a.Link.TagItem-name"));
 			for (WebElement tagElement : tagElements) {
 				tags.add(tagElement.getText());

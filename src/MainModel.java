@@ -71,23 +71,23 @@ public class MainModel {
 			isSuccess = false;
 		}
 		
-		//change area
-		try {
-			((JavascriptExecutor) driver.getChromeDriver()).executeScript("return window.stop");
-			var areaElement = driver.findElement(By.id("areaTrigger"));
-			//if element exists, mean we are currently in US or Taiwan city, since they are using old niconico web page.
-			if (areaElement != null) {
-				areaElement.click();
-				Thread.sleep(50);
-				driver.findElement(By.cssSelector("a.selectType.JP")).click();
-				System.out.println("change region success");
-			} else {
-				System.out.println("already in Japan region");
-			}
-		} catch (TimeoutException | InterruptedException e) {
-			System.err.println("change region may fail");
-			isSuccess = false;
-		}
+		//change area, no longer available after 2019
+//		try {
+//			((JavascriptExecutor) driver.getChromeDriver()).executeScript("return window.stop");
+//			var areaElement = driver.findElement(By.id("areaTrigger"));
+//			//if element exists, mean we are currently in US or Taiwan city, since they are using old niconico web page.
+//			if (areaElement != null) {
+//				areaElement.click();
+//				Thread.sleep(50);
+//				driver.findElement(By.cssSelector("a.selectType.JP")).click();
+//				System.out.println("change region success");
+//			} else {
+//				System.out.println("already in Japan region");
+//			}
+//		} catch (TimeoutException | InterruptedException e) {
+//			System.err.println("change region may fail");
+//			isSuccess = false;
+//		}
 		
 		//change language under Japan region.
 		try {
