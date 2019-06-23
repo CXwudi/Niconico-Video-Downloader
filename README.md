@@ -1,5 +1,6 @@
 # Niconico-Video-Downloader
 The coolest project I wrote that use selenium to download video from niconico
+![alt text](https://upload.wikimedia.org/wikipedia/de/c/ce/NicoNicoDouga-Logo-Vector.svg)
 
 Special thanks for the 3rd party programable video downloader------Youtube-dl,
 without this excutable file, I can't fix the issue that happened after the niconico website updates.
