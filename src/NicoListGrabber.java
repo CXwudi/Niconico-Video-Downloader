@@ -55,8 +55,11 @@ public class NicoListGrabber extends CollectionReader{
 
 				String id = webElement.getAttribute("id");
 				System.out.println("List id found: " + id);
-				myLists.put(id.substring(id.lastIndexOf("_") + 1, id.length()), webElement.findElement(By.cssSelector("span")).getText());
-
+				String folderName = webElement.findElement(By.cssSelector("span")).getText();
+				if (folderName.contains("2019")) {
+					myLists.put(id.substring(id.lastIndexOf("_") + 1, id.length()), folderName);
+				}
+				
 			}
 			System.out.println(myLists);
 			return myLists;
