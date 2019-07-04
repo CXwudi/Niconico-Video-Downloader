@@ -21,27 +21,6 @@ public class Main {
 			manager.markDone(vsong);
 			manager.triggerRecord(); //if the currentRuntime.addShutdownHook works in eclipse, then we don't need this line
 			
-			
-			/*while (true) {
-				manager.fetchInfo(vsong);
-				if (!manager.downloadOneVocaloidPV(vsong)) System.out.println(vsong + "doesn't exist!!, plz skip");
-				
-				var scanner = new Scanner(System.in);
-				String answer = "";
-				while (!answer.equalsIgnoreCase("y") && !answer.equalsIgnoreCase("n")) {
-					System.err.print("PLZ check the video file, is it integrite? y/n: ");
-					answer = scanner.nextLine();
-				}
-				if (answer.equalsIgnoreCase("y")) {
-					System.out.println("Good, CXwudi and Miku are moving to next file");
-					manager.markDone(vsong);
-					manager.triggerRecord();// we add this line for now
-					break;
-				} else {
-					System.out.println("Okay, CXwudi and Miku will re-download this song :/");
-				}
-			}*/
-			
 			try {
 				Thread.sleep(1000L + new Random().nextInt(3000));
 			} catch (InterruptedException e) {
@@ -54,3 +33,25 @@ public class Main {
 	}
 
 }
+
+
+//legacy code
+/*while (true) {
+	manager.fetchInfo(vsong);
+	if (!manager.downloadOneVocaloidPV(vsong)) System.out.println(vsong + "doesn't exist!!, plz skip");
+	
+	var scanner = new Scanner(System.in);
+	String answer = "";
+	while (!answer.equalsIgnoreCase("y") && !answer.equalsIgnoreCase("n")) {
+		System.err.print("PLZ check the video file, is it integrite? y/n: ");
+		answer = scanner.nextLine();
+	}
+	if (answer.equalsIgnoreCase("y")) {
+		System.out.println("Good, CXwudi and Miku are moving to next file");
+		manager.markDone(vsong);
+		manager.triggerRecord();// we add this line for now
+		break;
+	} else {
+		System.out.println("Okay, CXwudi and Miku will re-download this song :/");
+	}
+}*/
