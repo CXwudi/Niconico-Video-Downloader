@@ -1,87 +1,131 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.cxwudi</groupId>
-  <artifactId>niconico-video-downloader</artifactId>
-  <version>3.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
+	<groupId>com.cxwudi</groupId>
+	<artifactId>niconico-video-downloader</artifactId>
+	<version>3.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 
-  <name>niconico-video-downloader</name>
-  <url>http://maven.apache.org</url>
+	<name>niconico-video-downloader</name>
+	<url>http://maven.apache.org</url>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.10</maven.compiler.source>
-    <maven.compiler.target>1.10</maven.compiler.target>
-  </properties>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.10</maven.compiler.source>
+		<maven.compiler.target>1.10</maven.compiler.target>
+		<webdriver.edge.driver></webdriver.edge.driver>
+		<webdriver.opera.driver></webdriver.opera.driver>
+		<webdriver.chrome.driver></webdriver.chrome.driver>
+	</properties>
 
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-    	<groupId>org.seleniumhq.selenium</groupId>
-    	<artifactId>selenium-java</artifactId>
-    	<version>3.141.59</version>
-    </dependency>
-  </dependencies>
-  <build>
-    <plugins>
-        <plugin>
-            <groupId>com.lazerycode.selenium</groupId>
-            <artifactId>driver-binary-downloader-maven-plugin</artifactId>
-            <version>1.0.17</version>
-            <configuration>
-                <!-- root directory that downloaded driver binaries will be stored in -->
-                <rootStandaloneServerDirectory>src/lib/selenium_drivers/bin</rootStandaloneServerDirectory>
-                <!-- Where you want to store downloaded zip files -->
-                <downloadedZipFileDirectory>src/lib/selenium_drivers/zips</downloadedZipFileDirectory>
-                <!-- Location of a custom repository map -->
-                <customRepositoryMap>src/lib/selenium_drivers/repo.xml</customRepositoryMap>
-                <!-- This will ensure that the plugin only downloads binaries for the current OS, this will override anything specified in the <operatingSystems> configuration -->
-                <onlyGetDriversForHostOperatingSystem>true</onlyGetDriversForHostOperatingSystem>
-                <!-- Operating systems you want to download binaries for (Only valid options are: windows, linux, osx) -->
-                <operatingSystems>
-                    <windows>true</windows>
-                    <linux>true</linux>
-                    <mac>true</mac>
-                </operatingSystems>
-                <!-- Download 32bit binaries -->
-                <thirtyTwoBitBinaries>true</thirtyTwoBitBinaries>
-                <!-- Download 64bit binaries -->
-                <sixtyFourBitBinaries>true</sixtyFourBitBinaries>
-                <!-- If set to false will download every version available (Other filters will be taken into account -->
-                <onlyGetLatestVersions>false</onlyGetLatestVersions>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.4</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>3.141.59</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.lazerycode.selenium</groupId>
+				<artifactId>driver-binary-downloader-maven-plugin</artifactId>
+				<version>1.0.17</version>
+				<configuration>
+					<!-- root directory that downloaded driver binaries will be stored in -->
+					<rootStandaloneServerDirectory>lib/selenium_drivers/bin</rootStandaloneServerDirectory>
+					<!-- Where you want to store downloaded zip files -->
+					<downloadedZipFileDirectory>lib/selenium_drivers/zips</downloadedZipFileDirectory>
+					<!-- Location of a custom repository map -->
+					<customRepositoryMap>lib/selenium_drivers/repo.xml</customRepositoryMap>
+					<!-- This will ensure that the plugin only downloads binaries for the 
+						current OS, this will override anything specified in the <operatingSystems> 
+						configuration -->
+					<onlyGetDriversForHostOperatingSystem>true</onlyGetDriversForHostOperatingSystem>
+					<!-- Operating systems you want to download binaries for (Only valid 
+						options are: windows, linux, osx) -->
+					<operatingSystems>
+						<windows>true</windows>
+						<linux>true</linux>
+						<mac>true</mac>
+					</operatingSystems>
+					<!-- Download 32bit binaries -->
+					<thirtyTwoBitBinaries>true</thirtyTwoBitBinaries>
+					<!-- Download 64bit binaries -->
+					<sixtyFourBitBinaries>true</sixtyFourBitBinaries>
+					<!-- If set to false will download every version available (Other filters 
+						will be taken into account -->
+					<onlyGetLatestVersions>true</onlyGetLatestVersions>
 
-                <!-- Throw an exception if any specified binary versions that the plugin tries to download do not exist -->
-                <throwExceptionIfSpecifiedVersionIsNotFound>false</throwExceptionIfSpecifiedVersionIsNotFound>
-                <!-- Number of times to attempt to download each file -->
-                <fileDownloadRetryAttempts>2</fileDownloadRetryAttempts>
-                <!-- Number of ms to wait before timing out when trying to connect to remote server to download file -->
-                <fileDownloadConnectTimeout>20000</fileDownloadConnectTimeout>
-                <!-- Number of ms to wait before timing out when trying to read file from remote server -->
-                <fileDownloadReadTimeout>10000</fileDownloadReadTimeout>
-                <!-- Overwrite any existing binaries that have been downloaded and extracted -->
-                <overwriteFilesThatExist>true</overwriteFilesThatExist>
-                <!-- Check file hashes of downloaded files.  Default: true -->
-                <checkFileHashes>true</checkFileHashes>
-                <!-- auto detect system proxy to use when downloading files -->
-                <!-- To specify an explicit proxy set the environment variables http.proxyHost and http.proxyPort -->
-                <useSystemProxy>true</useSystemProxy>
-            </configuration>
-            <executions>
-                <execution>
-                    <goals>
-                        <goal>selenium</goal>
-                    </goals>
-                </execution>
-            </executions>
-        </plugin>
-    </plugins>
-</build>
-  <description>A 3rd new evolution of Niconico video downloader that use youtube-dl, Selenium, Hibernate+salute, and etc. </description>
+					<!-- Throw an exception if any specified binary versions that the plugin 
+						tries to download do not exist -->
+					<throwExceptionIfSpecifiedVersionIsNotFound>false</throwExceptionIfSpecifiedVersionIsNotFound>
+					<!-- Number of times to attempt to download each file -->
+					<fileDownloadRetryAttempts>2</fileDownloadRetryAttempts>
+					<!-- Number of ms to wait before timing out when trying to connect to 
+						remote server to download file -->
+					<fileDownloadConnectTimeout>20000</fileDownloadConnectTimeout>
+					<!-- Number of ms to wait before timing out when trying to read file 
+						from remote server -->
+					<fileDownloadReadTimeout>10000</fileDownloadReadTimeout>
+					<!-- Overwrite any existing binaries that have been downloaded and extracted -->
+					<overwriteFilesThatExist>true</overwriteFilesThatExist>
+					<!-- Check file hashes of downloaded files. Default: true -->
+					<checkFileHashes>true</checkFileHashes>
+					<!-- auto detect system proxy to use when downloading files -->
+					<!-- To specify an explicit proxy set the environment variables http.proxyHost 
+						and http.proxyPort -->
+					<useSystemProxy>true</useSystemProxy>
+				</configuration>
+				<executions>
+					<execution>
+					   <phase>compile</phase>
+						<goals>
+							<goal>selenium</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+		        <artifactId>properties-maven-plugin</artifactId>
+		        <version>1.0.0</version>
+				<executions>
+					<execution>
+					    <phase>compile</phase>
+						<goals>
+							<goal>set-system-properties</goal>
+						</goals>
+						<configuration>
+							<properties>
+								<property>
+									<name>webdriver.edge.driver</name>
+                                    <value>${webdriver.edge.driver}</value>
+								</property>
+								<property>
+                                    <name>webdriver.opera.driver</name>
+                                    <value>${webdriver.opera.driver}</value>
+                                </property>
+                                <property>
+                                     <name>webdriver.chrome.driver</name>
+                                    <value>${webdriver.chrome.driver}</value>
+                                </property>
+							</properties>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+		</plugins>
+	</build>
+	<description>A 3rd new evolution of Niconico video downloader that use youtube-dl, Selenium, Hibernate+salute, and etc. </description>
 </project>

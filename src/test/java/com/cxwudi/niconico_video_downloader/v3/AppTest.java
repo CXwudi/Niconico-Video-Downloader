@@ -1,5 +1,7 @@
 package com.cxwudi.niconico_video_downloader.v3;
 
+import com.cxwudi.niconico_video_downloader.old.v2.Main;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -33,6 +35,7 @@ public class AppTest
      */
     public void testApp()
     {
+    	Main.main(null);
         assertTrue( true );
     }
 }

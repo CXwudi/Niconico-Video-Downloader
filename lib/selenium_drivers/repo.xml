@@ -3,12 +3,12 @@
     <windows>
         <driver id="internetexplorer">
             <version id="3.9.0">
-                <bitrate sixtyfourbit="true">
+                <bitrate sixtyfourbit="false">
                     <filelocation>http://selenium-release.storage.googleapis.com/3.9/IEDriverServer_x64_3.9.0.zip</filelocation>
                     <hash>c9f885b6a339f3f0039d670a23f998868f539e65</hash>
                     <hashtype>sha1</hashtype>
                 </bitrate>
-                <bitrate thirtytwobit="true">
+                <bitrate thirtytwobit="false">
                     <filelocation>http://selenium-release.storage.googleapis.com/3.9/IEDriverServer_Win32_3.9.0.zip</filelocation>
                     <hash>dab42d7419599dd311d4fba424398fba2f20e883</hash>
                     <hashtype>sha1</hashtype>
@@ -25,9 +25,9 @@
             </version>
         </driver>
         <driver id="googlechrome">
-            <version id="2.37">
+            <version id="75.0.3770.140">
                 <bitrate thirtytwobit="true" sixtyfourbit="true">
-                    <filelocation>https://chromedriver.storage.googleapis.com/2.37/chromedriver_win32.zip</filelocation>
+                    <filelocation>https://chromedriver.storage.googleapis.com/75.0.3770.140/chromedriver_win32.zip</filelocation>
                     <hash>fe708aac4eeb919a4ce26cf4aa52a2dacc666a2f</hash>
                     <hashtype>sha1</hashtype>
                 </bitrate>
@@ -87,9 +87,9 @@
     </windows>
     <linux>
         <driver id="googlechrome">
-            <version id="2.37">
+            <version id="75.0.3770.140">
                 <bitrate sixtyfourbit="true">
-                    <filelocation>https://chromedriver.storage.googleapis.com/2.37/chromedriver_linux64.zip</filelocation>
+                    <filelocation>https://chromedriver.storage.googleapis.com/75.0.3770.140/chromedriver_linux64.zip</filelocation>
                     <hash>b8515d09bb2d533ca3b85174c85cac1e062d04c6</hash>
                     <hashtype>sha1</hashtype>
                 </bitrate>
@@ -154,9 +154,9 @@
     </linux>
     <osx>
         <driver id="googlechrome">
-            <version id="2.37">
+            <version id="75.0.3770.140">
                 <bitrate sixtyfourbit="true">
-                    <filelocation>https://chromedriver.storage.googleapis.com/2.37/chromedriver_mac64.zip</filelocation>
+                    <filelocation>https://chromedriver.storage.googleapis.com/75.0.3770.140/chromedriver_mac64.zip</filelocation>
                     <hash>714e7abb1a7aeea9a8997b64a356a44fb48f5ef4</hash>
                     <hashtype>sha1</hashtype>
                 </bitrate>
