@@ -15,9 +15,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.10</maven.compiler.source>
 		<maven.compiler.target>1.10</maven.compiler.target>
-		<webdriver.edge.driver></webdriver.edge.driver>
-		<webdriver.opera.driver></webdriver.opera.driver>
-		<webdriver.chrome.driver></webdriver.chrome.driver>
+        <webdriver.edge.driver></webdriver.edge.driver>
+        <webdriver.opera.driver></webdriver.opera.driver>
+        <webdriver.chrome.driver></webdriver.chrome.driver>
+		<exec.mainClass>com.cxwudi.niconico_video_downloader.old.v2.Main</exec.mainClass>
 	</properties>
 
 	<dependencies>
@@ -87,7 +88,7 @@
 				</configuration>
 				<executions>
 					<execution>
-					   <phase>compile</phase>
+					   <phase>default-compile</phase>
 						<goals>
 							<goal>selenium</goal>
 						</goals>
@@ -101,7 +102,7 @@
 		        <version>1.0.0</version>
 				<executions>
 					<execution>
-					    <phase>compile</phase>
+					    <phase>default-test-compile</phase>
 						<goals>
 							<goal>set-system-properties</goal>
 						</goals>
@@ -124,7 +125,24 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.6.0</version>
+				<executions>
+					<execution>
+					   <phase>test</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<mainClass>com.cxwudi.niconico_video_downloader.old.v2.Main</mainClass>
+					<arguments>
+					</arguments>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	<description>A 3rd new evolution of Niconico video downloader that use youtube-dl, Selenium, Hibernate+salute, and etc. </description>
