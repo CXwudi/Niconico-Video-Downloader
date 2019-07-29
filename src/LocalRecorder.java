@@ -20,7 +20,11 @@ public class LocalRecorder {
 		this.update = update;
 		listDownloadedTxt = new File(new File("."), "downloaded.txt");
 		try {
-			listDownloadedTxt.createNewFile();
+			if (!listDownloadedTxt.exists()) {
+				if (!listDownloadedTxt.createNewFile()) {
+					System.err.println("unable to create new downloader.txt");
+				}
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
