@@ -84,7 +84,7 @@
 					<useSystemProxy>true</useSystemProxy>
 				</configuration>
 				<executions>
-					<execution>
+					<execution> <!-- in eclipse it shows error of the phase, but it has no problem in fact, so ignore it -->
 					    <phase>initialize</phase> <!-- avaliable phases => https://balamaci.ro/maven-lifecycles-explained/ -->
 						<goals>
 							<goal>selenium</goal>
