@@ -31,6 +31,7 @@ public class Main {
 		});
 		System.err.println("おめでとう、全部ダウンロードを終わった");
 		main.driver().quit();
+		System.exit(0);
 	}
 
 }
