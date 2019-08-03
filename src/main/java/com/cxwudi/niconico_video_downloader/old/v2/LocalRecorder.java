@@ -19,9 +19,13 @@ public class LocalRecorder {
 	
 	public LocalRecorder(TreeSet<Vsong> update) {
 		this.update = update;
-		listDownloadedTxt = new File(new File("./src/data"), "downloaded.txt");
+		listDownloadedTxt = new File(new File("data/"), "downloaded.txt");
 		try {
-			listDownloadedTxt.createNewFile();
+			if (!listDownloadedTxt.exists()) {
+				if (!listDownloadedTxt.createNewFile()) {
+					System.err.println("unable to create new downloader.txt");
+				}
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

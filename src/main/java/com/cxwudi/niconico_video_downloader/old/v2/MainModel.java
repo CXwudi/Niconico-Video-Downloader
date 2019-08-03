@@ -30,9 +30,7 @@ public class MainModel {
 	private TreeSet<Vsong> task, done;
 
 	public MainModel() {
-//		System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir") 
-//				+ "/lib/selenium_drivers/bin/windows/googlechrome/32bit/chromedriver.exe");
-		System.out.println("webdriver.chrome.driver = " + System.getProperty("webdriver.chrome.driver"));
+		//System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir") + "/chromedriver.exe");
 		ChromeOptions co = new ChromeOptions();
 		co.addArguments("--mute-audio");
 		//co.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.ACCEPT);

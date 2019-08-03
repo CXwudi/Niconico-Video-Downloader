@@ -20,9 +20,13 @@ public class LocalReader extends CollectionReader{
 
 	public LocalReader() {
 		super();
-		listDownloadedTxt = new File(new File("./src/data"), "downloaded.txt");
+		listDownloadedTxt = new File(new File("data/"), "downloaded.txt");
 		try {
-			listDownloadedTxt.createNewFile();
+			if (!listDownloadedTxt.exists()) {
+				if (!listDownloadedTxt.createNewFile()) {
+					System.err.println("unable to create new downloader.txt");
+				}
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -56,7 +60,7 @@ public class LocalReader extends CollectionReader{
 	public static void testReading() {
 		LocalReader localReader = new LocalReader();
 		//Map<String, String> map = localRecorder.getIsDownloaded();
-		System.out.println(new File(new File("./src/data"), "downloaded.txt").getAbsolutePath());
+		System.out.println(new File(new File("."), "downloaded.txt").getAbsolutePath());
 		System.out.println(System.getProperty("user.dir"));
 		localReader.readRecord();
 		System.out.println(localReader.getCollection());

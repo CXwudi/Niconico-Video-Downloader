@@ -195,7 +195,7 @@ public class VideoDownloader {
 		var fileNameString = fileNameBuilder.toString()
 				.replace("オリジナル曲", "").replace("オリジナル", "")
 				.replace("アニメ", "").replace("MV", "").replace("PV", "")
-				.replaceAll("[]", "").replaceAll("【】", "");
+				.replace("[]", "").replace("【】", "");
 		fileNameString = NicoStringTool.fixFileName(fileNameString);
 		System.out.println("file name: " + fileNameString);
 		return fileNameString;
