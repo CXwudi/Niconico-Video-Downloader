@@ -29,7 +29,14 @@
 			<artifactId>selenium-java</artifactId>
 			<version>3.141.59</version>
 		</dependency>
+		<dependency>
+		    <groupId>org.bytedeco</groupId>
+		    <artifactId>ffmpeg</artifactId>
+		    <version>4.1.3-1.5.1</version>
+		</dependency>
+
 	</dependencies>
+	
 	<build>
 		<plugins>
 			<plugin>
@@ -84,7 +91,7 @@
 				</configuration>
 				<executions>
 					<execution> <!-- in eclipse it shows error of the phase, but it has no problem in fact, so ignore it -->
-					    <phase>initialize</phase> <!-- avaliable phases => https://balamaci.ro/maven-lifecycles-explained/ -->
+					    <phase>generate-test-resources</phase> <!-- avaliable phases => https://balamaci.ro/maven-lifecycles-explained/ -->
 						<goals>
 							<goal>selenium</goal>
 						</goals>
