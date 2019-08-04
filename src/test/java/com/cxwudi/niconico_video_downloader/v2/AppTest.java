@@ -1,6 +1,6 @@
-package com.cxwudi.niconico_video_downloader.v3;
+package com.cxwudi.niconico_video_downloader.v2;
 
-import com.cxwudi.niconico_video_downloader.old.v2.Main;
+import com.cxwudi.niconico_video_downloader.v2.Main;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

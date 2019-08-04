@@ -1,4 +1,4 @@
-package com.cxwudi.niconico_video_downloader.old.v2;
+package com.cxwudi.niconico_video_downloader.v2;
 
 import java.util.HashMap;
 import java.util.Iterator;

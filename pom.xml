@@ -6,16 +6,15 @@
 	<groupId>com.cxwudi</groupId>
 	<artifactId>niconico-video-downloader</artifactId>
 	<version>3.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
 
 	<name>niconico-video-downloader</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.11</maven.compiler.source>
-		<maven.compiler.target>1.11</maven.compiler.target>
-		<mainClassToRun>com.cxwudi.niconico_video_downloader.old.v2.Main</mainClassToRun>
+		<maven.compiler.source>1.10</maven.compiler.source>
+		<maven.compiler.target>1.10</maven.compiler.target>
+		<mainClassToRun>com.cxwudi.niconico_video_downloader.v2.Main</mainClassToRun>
 	</properties>
 
 	<dependencies>
@@ -150,5 +149,5 @@
 	       
 		</plugins>
 	</build>
-	<description>A 3rd new evolution of Niconico video downloader that use youtube-dl, Selenium, Hibernate+salute, and etc. </description>
+	<description>A new evolution of Niconico video downloader that use maven, youtube-dl, Selenium, and etc. </description>
 </project>

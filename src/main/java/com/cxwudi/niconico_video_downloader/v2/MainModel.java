@@ -1,4 +1,4 @@
-package com.cxwudi.niconico_video_downloader.old.v2;
+package com.cxwudi.niconico_video_downloader.v2;
 
 import java.util.Random;
 import java.util.Scanner;
@@ -60,19 +60,17 @@ public class MainModel {
 		}
 	}
 
-	public void setupNicoNico() {
-		boolean isSuccess = true;
+	public boolean setupNicoNico() {
+		boolean isSuccess = false;
 		try {
 			if (!driver.getCurrentUrl().equals("http://www.nicovideo.jp/")) {
 				driver.get("http://www.nicovideo.jp/");
 			}
 		} catch (TimeoutException e) {
 			System.err.println("get current url may fail");
-			//e1.printStackTrace();
-			isSuccess = false;
 		}
 		
-		//change area, no longer available after 2019
+		//change area, no longer available after 2019 April
 //		try {
 //			((JavascriptExecutor) driver.getChromeDriver()).executeScript("return window.stop");
 //			var areaElement = driver.findElement(By.id("areaTrigger"));
@@ -105,11 +103,13 @@ public class MainModel {
 			} else {
 				System.out.println("already in Japanese");
 			}
+			isSuccess = true;
 		} catch (TimeoutException | InterruptedException e) {
 			System.err.println("change language may fail");
 			isSuccess = false;
 		}
-		//if (!isSuccess)  setupNicoNico();
+		
+		return isSuccess;
 
 	}
 
