@@ -1,4 +1,4 @@
-package com.cxwudi.niconico_video_downloader.v2;
+package com.cxwudi.niconico_video_downloader.side_project.print_files_name;
 import java.io.File;
 
 public class PrintFilePathAndName {
