@@ -1,0 +1,153 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.cxwudi</groupId>
+	<artifactId>niconico-video-downloader</artifactId>
+	<version>3.0.1-SNAPSHOT</version>
+
+	<name>niconico-video-downloader</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.10</maven.compiler.source>
+		<maven.compiler.target>1.10</maven.compiler.target>
+		<mainClassToRun>com.cxwudi.niconico_video_downloader.v2.Main</mainClassToRun>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>3.141.59</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.lazerycode.selenium</groupId>
+				<artifactId>driver-binary-downloader-maven-plugin</artifactId>
+				<version>1.0.17</version>
+				<configuration>
+					<!-- root directory that downloaded driver binaries will be stored in -->
+					<rootStandaloneServerDirectory>lib/selenium_drivers/bin</rootStandaloneServerDirectory>
+					<!-- Where you want to store downloaded zip files -->
+					<downloadedZipFileDirectory>lib/selenium_drivers/zips</downloadedZipFileDirectory>
+					<!-- Location of a custom repository map -->
+					<customRepositoryMap>lib/selenium_drivers/repo.xml</customRepositoryMap>
+					<!-- This will ensure that the plugin only downloads binaries for the 
+						current OS, this will override anything specified in the <operatingSystems> 
+						configuration -->
+					<onlyGetDriversForHostOperatingSystem>true</onlyGetDriversForHostOperatingSystem>
+					<!-- Operating systems you want to download binaries for (Only valid 
+						options are: windows, linux, osx) -->
+					<operatingSystems>
+						<windows>true</windows>
+						<linux>true</linux>
+						<mac>true</mac>
+					</operatingSystems>
+					<!-- Download 32bit binaries -->
+					<thirtyTwoBitBinaries>true</thirtyTwoBitBinaries>
+					<!-- Download 64bit binaries -->
+					<sixtyFourBitBinaries>true</sixtyFourBitBinaries>
+					<!-- If set to false will download every version available (Other filters 
+						will be taken into account -->
+					<onlyGetLatestVersions>true</onlyGetLatestVersions>
+
+					<!-- Throw an exception if any specified binary versions that the plugin 
+						tries to download do not exist -->
+					<throwExceptionIfSpecifiedVersionIsNotFound>false</throwExceptionIfSpecifiedVersionIsNotFound>
+					<!-- Number of times to attempt to download each file -->
+					<fileDownloadRetryAttempts>2</fileDownloadRetryAttempts>
+					<!-- Number of ms to wait before timing out when trying to connect to 
+						remote server to download file -->
+					<fileDownloadConnectTimeout>20000</fileDownloadConnectTimeout>
+					<!-- Number of ms to wait before timing out when trying to read file 
+						from remote server -->
+					<fileDownloadReadTimeout>10000</fileDownloadReadTimeout>
+					<!-- Overwrite any existing binaries that have been downloaded and extracted -->
+					<overwriteFilesThatExist>false</overwriteFilesThatExist>
+					<!-- Check file hashes of downloaded files. Default: true -->
+					<checkFileHashes>false</checkFileHashes>
+					<!-- auto detect system proxy to use when downloading files -->
+					<!-- To specify an explicit proxy set the environment variables http.proxyHost 
+						and http.proxyPort -->
+					<useSystemProxy>true</useSystemProxy>
+				</configuration>
+				<executions>
+					<execution> <!-- in eclipse it shows error of the phase, but it has no problem in fact, so ignore it -->
+					    <phase>initialize</phase> <!-- avaliable phases => https://balamaci.ro/maven-lifecycles-explained/ -->
+						<goals>
+							<goal>selenium</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.0.0-M3</version>
+				<executions>
+                    <execution>
+                        <id>default-test</id><!-- to force change the order of surefire test in effective POM, since eclipse IDE add default order on test using id here-->
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal><!-- so far we choose to not change the order, but change the order of selenium plugin to the frontier -->
+                        </goals>
+                    </execution>
+                </executions>
+				<configuration>
+					<systemPropertyVariables>
+					    <webdriver.chrome.driver>${webdriver.chrome.driver}</webdriver.chrome.driver>
+                        <webdriver.opera.driver>${webdriver.opera.driver}</webdriver.opera.driver>
+                        <webdriver.edge.driver>${webdriver.edge.driver}</webdriver.edge.driver>
+                    </systemPropertyVariables>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+		       <groupId>org.codehaus.mojo</groupId>
+		       <artifactId>exec-maven-plugin</artifactId>
+		       <version>1.6.0</version>
+		       <executions>
+		         <execution>
+		           <phase>test</phase>
+		           <goals>
+		             <goal>java</goal>
+		           </goals>
+		         </execution>
+		       </executions>
+		       <configuration>
+		         <mainClass>${mainClassToRun}</mainClass>
+		         <arguments>
+		         </arguments>
+		         <systemProperties>
+		           <systemProperty>
+		             <key>webdriver.edge.driver</key>
+		             <value>${webdriver.edge.driver}</value>
+		           </systemProperty>
+		           <systemProperty>
+                     <key>webdriver.opera.driver</key>
+                     <value>${webdriver.opera.driver}</value>
+                   </systemProperty>
+                   <systemProperty>
+                     <key>webdriver.chrome.driver</key>
+                     <value>${webdriver.chrome.driver}</value>
+                   </systemProperty>
+		         </systemProperties>
+		       </configuration>
+	       </plugin>
+	       
+		</plugins>
+	</build>
+	<description>A new evolution of Niconico video downloader that use maven, youtube-dl, Selenium, and etc. </description>
+</project>
