@@ -39,7 +39,15 @@
 			<version>2.5.1</version>
 		</dependency>
 		
-
+		<!-- Java MP4 Parser, to warp raw .aac file into .m4a file, without re-encoding-->
+		<!-- https://github.com/sannies/mp4parser/ -->
+		<dependency>
+			<groupId>com.googlecode.mp4parser</groupId>
+			<artifactId>isoparser</artifactId>
+			<version>1.1.22</version> <!-- currently using old version, his new version api changes a lot -->
+		</dependency>
+		
+		<!-- Too bad that no maven repository for youtube-dl, have to manually update youtube-dl.exe file in lib/ -->
 	</dependencies>
 	
 	<build>
