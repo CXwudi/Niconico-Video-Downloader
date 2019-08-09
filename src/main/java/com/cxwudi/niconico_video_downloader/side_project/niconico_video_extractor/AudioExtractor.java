@@ -1,17 +1,12 @@
 package com.cxwudi.niconico_video_downloader.side_project.niconico_video_extractor;
 
-import java.io.BufferedReader;
+
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import com.cxwudi.niconico_video_downloader.side_project.niconico_video_extractor.AbstractAudioTask.IsNotFileException;
 
