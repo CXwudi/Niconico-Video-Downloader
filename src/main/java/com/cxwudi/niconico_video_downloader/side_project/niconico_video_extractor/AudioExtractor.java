@@ -88,6 +88,7 @@ public class AudioExtractor {
 	/**
 	 * @param ffmpegTasks
 	 */
+	//TODO: change this method to return a list of output Files 
 	private void extractAudios(Queue<AbstractAudioTask> ffmpegTasks) {
 		// ffmpeg attributes
 		var audio = new AudioAttributes();
@@ -102,10 +103,10 @@ public class AudioExtractor {
 	
 		while (!ffmpegTasks.isEmpty()) {
 			AbstractAudioTask task = ffmpegTasks.remove();
-			// get ffmpeg
-			var ffmpegEncoder = new Encoder();
+			
 			executor.execute(() -> {
 				try {
+					var ffmpegEncoder = new Encoder(); //to multi-threaded, creates instance for each thread
 					System.out.println("start processing " + task.getInputFile().toString());
 					ffmpegEncoder.encode(
 							new MultimediaObject(
@@ -138,6 +139,7 @@ public class AudioExtractor {
 				} catch (EncoderException e) {
 					System.err.println("Cannot encode: " + e);
 				}
+				
 			});
 		}
 		executor.shutdown();
