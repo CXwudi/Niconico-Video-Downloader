@@ -1,4 +1,4 @@
-package com.cxwudi.niconico_video_downloader.side_project.niconico_video_extractor;
+package com.cxwudi.side_project.niconico_video_extractor;
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -1,4 +1,4 @@
-package com.cxwudi.niconico_video_downloader.side_project.niconico_video_extractor;
+package com.cxwudi.side_project.niconico_video_extractor;
 
 
 import java.io.File;
@@ -7,8 +7,6 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import com.cxwudi.niconico_video_downloader.side_project.niconico_video_extractor.AbstractAudioTask.IsNotFileException;
 
 import ws.schild.jave.AudioAttributes;
 import ws.schild.jave.Encoder;
