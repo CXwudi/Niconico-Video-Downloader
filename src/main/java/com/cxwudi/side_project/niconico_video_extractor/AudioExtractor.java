@@ -7,6 +7,11 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+import com.cxwudi.side_project.niconico_video_extractor.ExtractTaskThread.MiddleFileMismatchException;
 
 import ws.schild.jave.AudioAttributes;
 import ws.schild.jave.Encoder;
@@ -19,7 +24,7 @@ import ws.schild.jave.MultimediaObject;
 
 public class AudioExtractor {
 
-	private static final int MAX_T = 16;
+	private static final int MAX_T = 16, MAX_HOLD = 1024;
 
 	private File inputRoot;
 	private File outputRoot;
@@ -38,18 +43,20 @@ public class AudioExtractor {
 
 	public void dojob() throws Exception {
 		// get all input song files
-		Queue<AbstractAudioTask> ffmpegTasks = getFFmpegTasks();
+		Queue<ExtractTaskThread> ffmpegTasks = getTasks();
 		
 		extractAudios(ffmpegTasks);
 	}
 
+	
 	/**
 	 * @param ffmpegTasks
 	 * @return
+	 * @throws MiddleFileMismatchException 
 	 * @throws IsNotFileException
 	 */
-	private Queue<AbstractAudioTask> getFFmpegTasks() throws IOException {
-		Queue<AbstractAudioTask> ffmpegTasks = new LinkedList<>();
+	private Queue<ExtractTaskThread> getTasks() throws IOException, MiddleFileMismatchException {
+		Queue<ExtractTaskThread> taskThreads = new LinkedList<>();
 	
 		// for each folder in folders
 		for (File subDir : folders) {
@@ -60,13 +67,21 @@ public class AudioExtractor {
 				String[] songNameArray = inputFolder.list();
 				
 				// for each songs in the current folder
-				for (String inputSongName : songNameArray) {
-					var inputFile = new File(inputFolder, inputSongName);
+				for (String inputSongFileName : songNameArray) {
+					var inputFile = new File(inputFolder, inputSongFileName);
 					// remove the .mp4 or .flv extension, and add .aac
-					var outputSongName = inputSongName.substring(0, inputSongName.length() - 4) + ".aac";
-					var outputFile = new File(outputFolder, outputSongName);
-	
-					ffmpegTasks.offer(new ExtractTask(inputFile, outputFile));
+					String outputAACFileName = inputSongFileName.substring(0, inputSongFileName.length() - 4) + ".aac";
+					var outputAACFile = new File(outputFolder, outputAACFileName);
+					//create first i/o file apir
+					var ffmpegIOFilePair = new IOFilePair(inputFile, outputAACFile);
+					
+					// remove the .aac, and add .m4a
+					String outputM4AFileName = inputSongFileName.substring(0, inputSongFileName.length() - 4) + ".m4a";
+					var outputM4AFile = new File(outputFolder, outputM4AFileName);
+					//create second i/o file apir
+					var mp4praserIOFilePair = new IOFilePair(outputAACFile, outputM4AFile);
+					
+					taskThreads.offer(new ExtractTaskThread(ffmpegIOFilePair, mp4praserIOFilePair));
 				}
 			} else {
 				System.err.println("Invalid directory, Miku and CXwudi are very angry, skip!! " + inputFolder.toString());
@@ -75,19 +90,19 @@ public class AudioExtractor {
 		}
 	
 		System.out.println("we have these following ffmpeg tasks:");
-		for (var abstractAudioTask : ffmpegTasks) {
+		for (var abstractAudioTask : taskThreads) {
 			System.out.println(abstractAudioTask);
 		}
-		System.out.println("in total " + ffmpegTasks.size() + " of them");
+		System.out.println("in total " + taskThreads.size() + " of them");
 	
-		return ffmpegTasks;
+		return taskThreads;
 	}
 
 	/**
-	 * @param ffmpegTasks
+	 * @param taskThreads
 	 */
-	//TODO: change this method to return a list of output Files 
-	private void extractAudios(Queue<AbstractAudioTask> ffmpegTasks) {
+	//TODO: create a new entity obj that extends thread class and handle all 2 task
+	private void extractAudios(Queue<ExtractTaskThread> taskThreads) {
 		// ffmpeg attributes
 		var audio = new AudioAttributes();
 		audio.setCodec(AudioAttributes.DIRECT_STREAM_COPY);
@@ -97,48 +112,12 @@ public class AudioExtractor {
 		attributes.setVideoAttributes(null);
 
 		// perpare for multithread task;
-		ExecutorService executor = Executors.newFixedThreadPool(MAX_T);
-	
-		while (!ffmpegTasks.isEmpty()) {
-			AbstractAudioTask task = ffmpegTasks.remove();
-			
-			executor.execute(() -> {
-				try {
-					var ffmpegEncoder = new Encoder(); //to multi-threaded, creates instance for each thread
-					System.out.println("start processing " + task.getInputFile().toString());
-					ffmpegEncoder.encode(
-							new MultimediaObject(
-									task.getInputFile()),
-							task.getOutputFile(), attributes, new EncoderProgressListener() {
-	
-						@Override
-						public void sourceInfo(MultimediaInfo info) {
-							System.out.println("format: " + info.toString());
-						}
-	
-						@Override
-						public void progress(int permil) {
-							System.out.println("current progress: " + (permil / 10.0) + "%");
-						}
-	
-						@Override
-						public void message(String message) {
-							System.err.println("message: ");
-							System.err.println(message);
-	
-						}
-					});
-					
-				} catch (IllegalArgumentException e) {
-					System.err.println("IllegalArgumentException: " + e);
-				} catch (InputFormatException e) {
-					System.err.println("Cannot recognize this format: " + e);
-					e.printStackTrace();
-				} catch (EncoderException e) {
-					System.err.println("Cannot encode: " + e);
-				}
-				
-			});
+		ThreadPoolExecutor executor = new ThreadPoolExecutor(MAX_T
+				, MAX_HOLD, 0L, TimeUnit.MILLISECONDS
+				, new LinkedBlockingDeque<>());
+		//Executors.newFixedThreadPool(MAX_T);
+		while (!taskThreads.isEmpty()) {
+			executor.execute(taskThreads.remove());
 		}
 		executor.shutdown();
 	}
