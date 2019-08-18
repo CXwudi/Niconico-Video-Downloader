@@ -21,12 +21,6 @@ public class IOFilePair {
 	 * @throws IsNotFileException 
 	 */
 	public IOFilePair(File inputFile, File outputFile) throws IOException {
-		if (!inputFile.exists()) {
-			throw new FileNotFoundException("This doesn't exist: " + inputFile.toString());
-		}
-		if (!inputFile.isFile()) {
-			throw new IsNotFileException(inputFile);
-		}
 		this.inputFile = inputFile;
 		this.outputFile = outputFile;
 	}

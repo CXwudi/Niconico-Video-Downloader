@@ -64,8 +64,7 @@ public class ExtractTaskThread implements Runnable {
 		}
 		
 		//extract audio
-		boolean isSuccess = runFFmpegExtraction();
-		if (!isSuccess) {
+		if (!runFFmpegExtraction()) {
 			return;
 		}
 		
@@ -76,10 +75,11 @@ public class ExtractTaskThread implements Runnable {
 			return;
 		}
 		
-		isSuccess = runMp4parserTask();
-		if (isSuccess) {
-			System.out.println("all done" + mp4PhraserFilePair.getOutputFile());
+		if (runMp4parserTask()) {
+			System.out.println("all done, final output file" + mp4PhraserFilePair.getOutputFile());
 		}
+		
+		mp4PhraserFilePair.deleteInputFile();
 		
 	}
 
@@ -125,7 +125,7 @@ public class ExtractTaskThread implements Runnable {
 			return false;
 		}
 		if (ffmpegFilePair.isOutputFileExist()) {
-			System.out.println("finish processing " + ffmpegFilePair.getInputFile());
+			System.out.println("finish processing " + ffmpegFilePair.getOutputFile());
 			return true;
 		} else {
 			System.err.println("どうしよう, CXwudi and Miku can't find the output file: " + ffmpegFilePair.getOutputFile());
@@ -157,8 +157,16 @@ public class ExtractTaskThread implements Runnable {
 		Container m4aFile = new DefaultMp4Builder().build(movie);
 		try (FileChannel ch = new FileOutputStream(mp4PhraserFilePair.getOutputFile()).getChannel()){
 			m4aFile.writeContainer(ch);
-		} catch (Exception e) {
+		} catch (IOException e) {
 			System.err.println("どうしよう, CXwudi and miku fail to wrap aac to m4a file");
+			e.printStackTrace();
+			return false;
+		}
+		
+		try {
+			aacTrack.close();
+		} catch (IOException e) {
+			System.err.println("fail to close input file for mp4praser " + e);
 			e.printStackTrace();
 			return false;
 		}

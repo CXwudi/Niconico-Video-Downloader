@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -14,17 +12,29 @@ import java.util.concurrent.TimeUnit;
 import com.cxwudi.side_project.niconico_video_extractor.ExtractTaskThread.MiddleFileMismatchException;
 
 import ws.schild.jave.AudioAttributes;
-import ws.schild.jave.Encoder;
-import ws.schild.jave.EncoderException;
-import ws.schild.jave.EncoderProgressListener;
 import ws.schild.jave.EncodingAttributes;
-import ws.schild.jave.InputFormatException;
-import ws.schild.jave.MultimediaInfo;
-import ws.schild.jave.MultimediaObject;
-
+/**
+ * A small script to extract audio tracks from multiple PV video files.
+ * It support mp4 and flv format, indeed, it should support all video with aac audio track.
+ * This project, first collect all input files, 
+ * for each input files, it use ffmpeg to extract the raw aac-lc format audio track, then use mp4praser to wrap it to m4a file.
+ * This Project use multi-threads, to speed up the whole process. By default, it opens 16 threads at the time.
+ * <br></br>
+ * How to use:<br></br>
+ * {@code new AudioExtractor(inputRoot, outputRoot, folders).doJob();} <br></br>
+ * where {@code inputRoot} is the root folder contains all videos in these following {@code folders}
+ * and {@code outputRoot} is the output root folder that contains 
+ * 
+ * @author CX无敌
+ *
+ */
 public class AudioExtractor {
 
-	private static final int MAX_T = 16, MAX_HOLD = 1024;
+	private static int MAX_T = 16;
+	/**
+	 * simply telling the thread pool executor how many thread can be waiting to be executed
+	 */
+	private static final int MAX_HOLD = 1024;
 
 	private File inputRoot;
 	private File outputRoot;
@@ -35,16 +45,19 @@ public class AudioExtractor {
 	 * @param outputRoot
 	 * @param folders
 	 */
-	public AudioExtractor(File inputRoot, File outputRoot, File[] folders) {
+	public AudioExtractor(File inputRoot, File[] folders, File outputRoot) {
 		this.inputRoot = inputRoot;
 		this.outputRoot = outputRoot;
 		this.folders = folders;
 	}
-
+	/**
+	 * like what it said, it simply just do job LOL
+	 * @throws Exception
+	 */
 	public void dojob() throws Exception {
 		// get all input song files
 		Queue<ExtractTaskThread> ffmpegTasks = getTasks();
-		
+		//process it
 		extractAudios(ffmpegTasks);
 	}
 
@@ -57,7 +70,14 @@ public class AudioExtractor {
 	 */
 	private Queue<ExtractTaskThread> getTasks() throws IOException, MiddleFileMismatchException {
 		Queue<ExtractTaskThread> taskThreads = new LinkedList<>();
-	
+		
+		var audio = new AudioAttributes();
+		audio.setCodec(AudioAttributes.DIRECT_STREAM_COPY);
+		
+		var attributes = new EncodingAttributes();
+		attributes.setAudioAttributes(audio);
+		attributes.setVideoAttributes(null);
+		
 		// for each folder in folders
 		for (File subDir : folders) {
 			var inputFolder = new File(inputRoot, subDir.getName());
@@ -69,9 +89,11 @@ public class AudioExtractor {
 				// for each songs in the current folder
 				for (String inputSongFileName : songNameArray) {
 					var inputFile = new File(inputFolder, inputSongFileName);
+					
 					// remove the .mp4 or .flv extension, and add .aac
 					String outputAACFileName = inputSongFileName.substring(0, inputSongFileName.length() - 4) + ".aac";
 					var outputAACFile = new File(outputFolder, outputAACFileName);
+					
 					//create first i/o file apir
 					var ffmpegIOFilePair = new IOFilePair(inputFile, outputAACFile);
 					
@@ -81,7 +103,11 @@ public class AudioExtractor {
 					//create second i/o file apir
 					var mp4praserIOFilePair = new IOFilePair(outputAACFile, outputM4AFile);
 					
-					taskThreads.offer(new ExtractTaskThread(ffmpegIOFilePair, mp4praserIOFilePair));
+					//create task
+					var taskThread = new ExtractTaskThread(ffmpegIOFilePair, mp4praserIOFilePair);
+					taskThread.setEncodingAttributes(attributes);
+					
+					taskThreads.offer(taskThread);
 				}
 			} else {
 				System.err.println("Invalid directory, Miku and CXwudi are very angry, skip!! " + inputFolder.toString());
@@ -101,21 +127,11 @@ public class AudioExtractor {
 	/**
 	 * @param taskThreads
 	 */
-	//TODO: create a new entity obj that extends thread class and handle all 2 task
 	private void extractAudios(Queue<ExtractTaskThread> taskThreads) {
-		// ffmpeg attributes
-		var audio = new AudioAttributes();
-		audio.setCodec(AudioAttributes.DIRECT_STREAM_COPY);
-	
-		var attributes = new EncodingAttributes();
-		attributes.setAudioAttributes(audio);
-		attributes.setVideoAttributes(null);
-
-		// perpare for multithread task;
+		//prepare for multi-thread task
 		ThreadPoolExecutor executor = new ThreadPoolExecutor(MAX_T
 				, MAX_HOLD, 0L, TimeUnit.MILLISECONDS
-				, new LinkedBlockingDeque<>());
-		//Executors.newFixedThreadPool(MAX_T);
+				, new LinkedBlockingDeque<>(MAX_HOLD));
 		while (!taskThreads.isEmpty()) {
 			executor.execute(taskThreads.remove());
 		}
@@ -123,16 +139,7 @@ public class AudioExtractor {
 	}
 
 	public static void main(String[] args) throws Exception {
-		File inputRoot = new File(System.getProperty("user.home") + "\\Videos");
-		File outputRoot = new File(inputRoot, "2019年V家新曲合集");
-		File[] folders = new File[] { 
-				new File(inputRoot, "2019年V家新曲"), 
-				new File(inputRoot, "2019年V家可能好听") 
-				};
-
-		var extractAudioProcess = new AudioExtractor(inputRoot, outputRoot, folders);
-		extractAudioProcess.dojob();
-
+		Main.main(args);
 	}
 
 }
