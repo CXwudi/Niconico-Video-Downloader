@@ -131,6 +131,7 @@
                         <webdriver.opera.driver>${webdriver.opera.driver}</webdriver.opera.driver>
                         <webdriver.edge.driver>${webdriver.edge.driver}</webdriver.edge.driver>
                     </systemPropertyVariables>
+                    <skipTests>true</skipTests>
 				</configuration>
 			</plugin>
 			
