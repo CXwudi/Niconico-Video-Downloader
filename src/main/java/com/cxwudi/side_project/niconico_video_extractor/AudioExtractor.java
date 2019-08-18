@@ -66,7 +66,6 @@ public class AudioExtractor {
 	 * @param ffmpegTasks
 	 * @return
 	 * @throws MiddleFileMismatchException 
-	 * @throws IsNotFileException
 	 */
 	private Queue<ExtractTaskThread> getTasks() throws IOException, MiddleFileMismatchException {
 		Queue<ExtractTaskThread> taskThreads = new LinkedList<>();

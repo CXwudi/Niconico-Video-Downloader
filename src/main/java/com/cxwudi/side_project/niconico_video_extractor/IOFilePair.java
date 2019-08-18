@@ -18,9 +18,8 @@ public class IOFilePair {
 	 * just a constructor
 	 * @param inputFile 
 	 * @param outputFile
-	 * @throws IsNotFileException 
 	 */
-	public IOFilePair(File inputFile, File outputFile) throws IOException {
+	public IOFilePair(File inputFile, File outputFile) {
 		this.inputFile = inputFile;
 		this.outputFile = outputFile;
 	}
@@ -92,15 +91,6 @@ public class IOFilePair {
 	 */
 	public File getOutputFile() {
 		return outputFile;
-	}
-
-	class IsNotFileException extends IOException {
-
-		private static final long serialVersionUID = 840127318666270921L;
-		
-		public IsNotFileException(File file) {
-			super("This is not a file: " + file.getAbsolutePath());
-		}
 	}
 	
 }
