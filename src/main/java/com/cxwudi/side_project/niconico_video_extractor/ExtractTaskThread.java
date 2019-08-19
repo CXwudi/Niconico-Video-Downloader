@@ -56,7 +56,7 @@ public class ExtractTaskThread implements Runnable {
 		}
 		
 		//start ffmpeg process
-		//check input file
+		System.out.println("start processing " + ffmpegFilePair.getInputFile());
 		if (!ffmpegFilePair.isInputFileExists()) {
 			System.err.println("File doesn't exist: " + ffmpegFilePair.getInputFile() + ", CXwudi and Miku are so mad and have to exit");
 			return;
@@ -89,7 +89,6 @@ public class ExtractTaskThread implements Runnable {
 		
 		//start the process
 		var ffmpegEncoder = new Encoder(); //to multi-threaded, creates instance for each thread
-		System.out.println("start processing " + ffmpegFilePair.getInputFile());
 		try {
 			ffmpegEncoder.encode(new MultimediaObject(ffmpegFilePair.getInputFile()),
 					ffmpegFilePair.getOutputFile(), attributes, new EncoderProgressListener() {
