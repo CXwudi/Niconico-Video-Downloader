@@ -50,6 +50,7 @@ public class Mp4PraserTest {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
+		aacTrack.close();
 		
 	}
 
