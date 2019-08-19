@@ -1,0 +1,6 @@
+﻿./ffmpeg.exe -i いじめられっ子のルアン／初音ミク【雨の介】.mp4 -vn -acodec copy いじめられっ子のルアン／初音ミク【雨の介】.aac
+./mp4box.exe -add いじめられっ子のルアン／初音ミク【雨の介】.aac いじめられっ子のルアン／初音ミク【雨の介】.m4a
+每个command运行前先delete已经生成的目标m4a/aac文件
+每个command运行后要delete input m4a/aac文件
+
+这两个command可以做到无再编码抽取音频
