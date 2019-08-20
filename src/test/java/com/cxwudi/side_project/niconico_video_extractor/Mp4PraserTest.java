@@ -65,13 +65,12 @@ public class Mp4PraserTest {
 		var output = new File(directory, "【初音ミクDark】休憩【keeno】.m4a");
 		Files.deleteIfExists(output.toPath());
 		
-		var mp4boxProcessBuilder = new ProcessBuilder("lib/mp4box.exe",
+		var mp4boxProcessBuilder = new ProcessBuilder(new File("lib/mp4box.exe").getAbsolutePath(),
 				"-noprog", //don't show progress
 				"-add", //add input aac
 				input.getAbsolutePath(),
 				output.getAbsolutePath()); // to output m4a
 		
-		mp4boxProcessBuilder.directory(new File("."));
 		mp4boxProcessBuilder.redirectOutput(Redirect.INHERIT).redirectErrorStream(true);//.redirectError(Redirect.INHERIT).
 		Process mp4boxProcess = mp4boxProcessBuilder.start();
 		int state = mp4boxProcess.waitFor();

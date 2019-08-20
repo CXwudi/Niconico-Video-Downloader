@@ -3,11 +3,15 @@ package com.cxwudi.side_project.niconico_video_extractor;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
-import java.util.Queue;
+import java.util.Map;
+import java.util.List;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import com.cxwudi.side_project.niconico_video_extractor.ExtractTaskThread.MiddleFileMismatchException;
 
@@ -56,19 +60,24 @@ public class AudioExtractor {
 	 */
 	public void dojob() throws Exception {
 		// get all input song files
-		Queue<ExtractTaskThread> ffmpegTasks = getTasks();
+		List<ExtractTaskThread> ffmpegTasks = getTasks();
+		//sort the List
+		//sortByModifyDate(ffmpegTasks); //don't need it because multithread finishes in different times
 		//process it
 		extractAudios(ffmpegTasks);
 	}
 
 	
+	private void sortByModifyDate(List<ExtractTaskThread> ffmpegTasks) {
+		Collections.sort(ffmpegTasks);
+	}
 	/**
 	 * @param ffmpegTasks
 	 * @return
 	 * @throws MiddleFileMismatchException 
 	 */
-	private Queue<ExtractTaskThread> getTasks() throws IOException, MiddleFileMismatchException {
-		Queue<ExtractTaskThread> taskThreads = new LinkedList<>();
+	private List<ExtractTaskThread> getTasks() throws IOException, MiddleFileMismatchException {
+		List<ExtractTaskThread> taskThreads = new LinkedList<>();
 		
 		var audio = new AudioAttributes();
 		audio.setCodec(AudioAttributes.DIRECT_STREAM_COPY);
@@ -106,7 +115,7 @@ public class AudioExtractor {
 					var taskThread = new ExtractTaskThread(ffmpegIOFilePair, mp4praserIOFilePair);
 					taskThread.setEncodingAttributes(attributes);
 					
-					taskThreads.offer(taskThread);
+					taskThreads.add(taskThread);
 				}
 			} else {
 				System.err.println("Invalid directory, Miku and CXwudi are very angry, skip!! " + inputFolder.toString());
@@ -126,13 +135,13 @@ public class AudioExtractor {
 	/**
 	 * @param taskThreads
 	 */
-	private void extractAudios(Queue<ExtractTaskThread> taskThreads) {
+	private void extractAudios(List<ExtractTaskThread> taskThreads) {
 		//prepare for multi-thread task
 		ThreadPoolExecutor executor = new ThreadPoolExecutor(MAX_T
 				, MAX_HOLD, 0L, TimeUnit.MILLISECONDS
 				, new LinkedBlockingDeque<>(MAX_HOLD));
 		while (!taskThreads.isEmpty()) {
-			executor.execute(taskThreads.remove());
+			executor.execute(taskThreads.remove(0));
 		}
 		executor.shutdown();
 	}
