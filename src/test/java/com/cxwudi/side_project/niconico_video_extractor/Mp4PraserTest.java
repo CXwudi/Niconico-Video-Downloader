@@ -6,7 +6,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.ProcessBuilder.Redirect;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.junit.Test;
 
@@ -52,6 +56,26 @@ public class Mp4PraserTest {
 		}
 		aacTrack.close();
 		
+	}
+	
+	@Test
+	public void parseAudioWithMp4box() throws IOException, InterruptedException {
+		var directory = new File("test_files");
+		var input = new File(directory, "【初音ミクDark】休憩【keeno】.aac");
+		var output = new File(directory, "【初音ミクDark】休憩【keeno】.m4a");
+		Files.deleteIfExists(output.toPath());
+		
+		var mp4boxProcessBuilder = new ProcessBuilder("lib/mp4box.exe",
+				"-noprog", //don't show progress
+				"-add", //add input aac
+				input.getAbsolutePath(),
+				output.getAbsolutePath()); // to output m4a
+		
+		mp4boxProcessBuilder.directory(new File("."));
+		mp4boxProcessBuilder.redirectOutput(Redirect.INHERIT).redirectErrorStream(true);//.redirectError(Redirect.INHERIT).
+		Process mp4boxProcess = mp4boxProcessBuilder.start();
+		int state = mp4boxProcess.waitFor();
+		assertTrue(state == 0);
 	}
 
 }
