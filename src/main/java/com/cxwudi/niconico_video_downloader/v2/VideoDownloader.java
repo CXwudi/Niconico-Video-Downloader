@@ -96,13 +96,22 @@ public class VideoDownloader {
 	 */
 	private void downloadUsingYoutube_dl(Vsong song, File dir) throws IOException{
 		//initialize variables and cmd process
-		var youtube_dlProcessBuilder = new ProcessBuilder("cmd");
+		var youtube_dlProcessBuilder = new ProcessBuilder(
+				new StringBuilder().append(System.getProperty("user.dir")).append("/lib/youtube-dl.exe").toString(),
+				"-v",
+				"--username", "\"1113421658@qq.com\"",
+				"--password", "\"2010017980502\"",
+				"https://www.nicovideo.jp/watch/" + song.getId(),
+				"-f",
+				"\"best[height<=720]\"");
+		//set the download directory to the proper subfolder, for example, 20xx年V家新曲
 		youtube_dlProcessBuilder.directory(dir);
-		var youtube_dlProcess = youtube_dlProcessBuilder.start();
+		
+		//start the process
+		Process youtube_dlProcess = youtube_dlProcessBuilder.start();
+		//redirect output/error stream of cmd to java stdout/stderr
 		var stdOutStrBuilder = new StringBuilder();
 		var stdErrStrBuilder = new StringBuilder();
-		
-		//redirect output/error stream of cmd to java stdout/stderr
 		new Thread(() -> {
 			syncStream(youtube_dlProcess.getInputStream(), stdOutStrBuilder, System.out);
 		}).start();
@@ -112,13 +121,13 @@ public class VideoDownloader {
 		}).start();
 		
 		//redirect java stdin to cmd input, and type cmd command to invoke downloading process
-		var stdIn = new PrintWriter(youtube_dlProcess.getOutputStream());
-		//stdIn.println("echo " + file.toString());
-		stdIn.println(new StringBuilder().append(System.getProperty("user.dir")).append("/youtube-dl -v")
-				.append(" --username \"1113421658@qq.com\"").append(" --password \"2010017980502\"")
-				.append(" https://www.nicovideo.jp/watch/").append(song.getId())
-				.append(" -f \"best[height<=720]\""));
-		stdIn.close();
+//		var stdIn = new PrintWriter(youtube_dlProcess.getOutputStream());
+//		//stdIn.println("echo " + file.toString());
+//		stdIn.println(new StringBuilder().append(System.getProperty("user.dir")).append("/youtube-dl -v")
+//				.append(" --username \"1113421658@qq.com\"").append(" --password \"2010017980502\"")
+//				.append(" https://www.nicovideo.jp/watch/").append(song.getId())
+//				.append(" -f \"best[height<=720]\""));
+//		stdIn.close();
 		
 		//wait for the downloading process
 		try {
@@ -129,8 +138,10 @@ public class VideoDownloader {
 		
 		//check is success or not
 		double state = Double.parseDouble(stdOutStrBuilder.substring(
-				stdOutStrBuilder.lastIndexOf("%")-4, stdOutStrBuilder.lastIndexOf("%")));
-		if (stdErrStrBuilder.toString().contains("ERROR") || state < 100) { //if the downloading process does not hit 100.0%
+		 stdOutStrBuilder.lastIndexOf("%")-4, stdOutStrBuilder.lastIndexOf("%")));
+		//if the downloading process does not hit 100.0%, or returning error, then restart the process to continue.
+		//this is a very useful code to handle niconico website occasionally return HTTP 403 forbidden.
+		if (stdErrStrBuilder.toString().contains("ERROR") || state < 100) {
 			System.out.println("Don't worry, CXwudi and Miku will retry downloading again from " + state + "%");
 			downloadUsingYoutube_dl(song, dir);
 		}
@@ -225,8 +236,8 @@ public class VideoDownloader {
 		
 	}
 	public static void main(String[] args) {
-		testFile();
-		testStream();
+//		testFile();
+//		testStream();
 		testDownload();
 	}
 	

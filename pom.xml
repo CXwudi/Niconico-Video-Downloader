@@ -24,12 +24,32 @@
 			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
+		
+		<!-- The Selenium library -->
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
 			<version>3.141.59</version>
 		</dependency>
+		
+		<!-- The JAVE (Java Audio Video Encoder) library, which warp and contains a ffmpeg.exe executable file in jar  -->
+		<dependency> <!-- you can just use his ffmpeg.exe if u want -->
+			<groupId>ws.schild</groupId>
+			<artifactId>jave-all-deps</artifactId>
+			<version>2.5.1</version>
+		</dependency>
+		
+		<!-- Java MP4 Parser, to warp raw .aac file into .m4a file, without re-encoding-->
+		<dependency>
+			<groupId>com.googlecode.mp4parser</groupId>
+			<artifactId>isoparser</artifactId>
+			<version>1.1.22</version> <!-- currently using old version, his new version api changes a lot -->
+		</dependency>
+		
+		<!-- Too bad that no maven repository for youtube-dl, have to manually update youtube-dl.exe file in lib/ -->
+        <!-- can also consider warp mp4box.exe, for better performance -->
 	</dependencies>
+	
 	<build>
 		<plugins>
 			<plugin>
@@ -84,7 +104,7 @@
 				</configuration>
 				<executions>
 					<execution> <!-- in eclipse it shows error of the phase, but it has no problem in fact, so ignore it -->
-					    <phase>initialize</phase> <!-- avaliable phases => https://balamaci.ro/maven-lifecycles-explained/ -->
+					    <phase>generate-test-resources</phase> <!-- avaliable phases => https://balamaci.ro/maven-lifecycles-explained/ -->
 						<goals>
 							<goal>selenium</goal>
 						</goals>
@@ -111,6 +131,7 @@
                         <webdriver.opera.driver>${webdriver.opera.driver}</webdriver.opera.driver>
                         <webdriver.edge.driver>${webdriver.edge.driver}</webdriver.edge.driver>
                     </systemPropertyVariables>
+                    <skipTests>true</skipTests>
 				</configuration>
 			</plugin>
 			
