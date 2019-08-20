@@ -60,7 +60,7 @@ public class ExtractTaskThread implements Runnable, Comparable<ExtractTaskThread
 		}
 		
 		//start ffmpeg process
-		System.out.println("start processing " + ffmpegFilePair.getInputFile());
+		System.out.println("start video -> aac processing " + ffmpegFilePair.getInputFile());
 		if (!ffmpegFilePair.isInputFileExists()) {
 			System.err.println("File doesn't exist: " + ffmpegFilePair.getInputFile() + ", CXwudi and Miku are so mad and have to exit");
 			return;
@@ -72,14 +72,14 @@ public class ExtractTaskThread implements Runnable, Comparable<ExtractTaskThread
 		}
 		
 		//start the mp4phraser process
-		System.out.println("start processing " + mp4PhraserFilePair.getInputFile());
+		System.out.println("start aac -> m4a processing " + mp4PhraserFilePair.getInputFile());
 		if (!mp4PhraserFilePair.isInputFileExists()) {
 			System.err.println("File doesn't exist: " + mp4PhraserFilePair.getInputFile() + ", CXwudi and Miku are so mad and have to exit");
 			return;
 		}
 		
 		if (runMp4boxTask()) {
-			System.out.println("all done, final output file" + mp4PhraserFilePair.getOutputFile());
+			System.out.println("done, final output file: " + mp4PhraserFilePair.getOutputFile());
 		}
 		
 		mp4PhraserFilePair.deleteInputFile();

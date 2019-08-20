@@ -62,7 +62,7 @@ public class AudioExtractor {
 		// get all input song files
 		List<ExtractTaskThread> ffmpegTasks = getTasks();
 		//sort the List
-		//sortByModifyDate(ffmpegTasks); //don't need it because multithread finishes in different times
+		sortByModifyDate(ffmpegTasks); //since multithread, it can't follow exact order but roughly sorted
 		//process it
 		extractAudios(ffmpegTasks);
 	}
