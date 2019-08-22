@@ -1,5 +1,6 @@
 package com.cxwudi.niconico_video_downloader.v2;
 
+import java.util.Set;
 import java.util.TreeSet;
 /**
  * The abstruct collection reader, should have the following functionalities:
@@ -10,7 +11,7 @@ import java.util.TreeSet;
  *
  */
 public abstract class CollectionReader {
-	protected TreeSet<Vsong> collection;		//the Vocaloid Songs Collection
+	protected Set<Vsong> collection;			//the Vocaloid Songs Collection
 	protected boolean isDone;					//reading process is done or not
 	
 	public CollectionReader() {
@@ -28,7 +29,7 @@ public abstract class CollectionReader {
 	 * @return the collection of Vocaloid Songs in TreeSet<Vsong>.
 	 *  if the reading process has not finished yet, a Null will be returned
 	 */
-	public TreeSet<Vsong> getCollection() {
+	public Set<Vsong> getCollection() {
 		if (isDone) return collection;
 		else return null;
 	}

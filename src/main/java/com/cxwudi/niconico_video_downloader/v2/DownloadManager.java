@@ -1,5 +1,6 @@
 package com.cxwudi.niconico_video_downloader.v2;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -17,9 +18,9 @@ public class DownloadManager {
 	private InfoGainer infoGainer;
 	private LocalRecorder localRecorder;
 	
-	private TreeSet<Vsong> task;
+	private Set<Vsong> task; //currently use TreeSet
 
-	public DownloadManager(NicoDriver d, TreeSet<Vsong> task, TreeSet<Vsong> update) {
+	public DownloadManager(NicoDriver d, Set<Vsong> task, Set<Vsong> update) {
 		this.task = task;
 		this.downloader = new VideoDownloader();
 		this.infoGainer = new InfoGainer(d);

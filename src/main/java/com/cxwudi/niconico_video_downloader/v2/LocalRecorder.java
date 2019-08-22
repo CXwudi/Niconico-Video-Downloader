@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.TreeSet;
 /**
  * @author CX无敌
@@ -15,10 +16,10 @@ import java.util.TreeSet;
  */
 public class LocalRecorder {
 	private File listDownloadedTxt;
-	private TreeSet<Vsong> update;
+	private Set<Vsong> update;		//currently use TreeSet
 	
-	public LocalRecorder(TreeSet<Vsong> update) {
-		this.update = update;
+	public LocalRecorder(Set<Vsong> update2) {
+		this.update = update2;
 		listDownloadedTxt = new File(new File("data/"), "downloaded.txt");
 		try {
 			if (!listDownloadedTxt.exists()) {

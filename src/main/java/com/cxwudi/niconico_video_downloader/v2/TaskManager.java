@@ -1,6 +1,7 @@
 package com.cxwudi.niconico_video_downloader.v2;
 
 import java.util.Iterator;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.function.Function;
@@ -18,9 +19,9 @@ public class TaskManager{
 	private LocalReader localReader;			//manage to read collection of downloaded video
 	private NicoListGrabber nicoListGrabber;	//manage to get collection from Niconico douga favorite lists
 	
-	private TreeSet<Vsong> task, done;
+	private Set<Vsong> task, done;				//currently use TreeSet
 
-	public TaskManager(NicoDriver d, TreeSet<Vsong> task, TreeSet<Vsong> done) {	
+	public TaskManager(NicoDriver d, Set<Vsong> task, Set<Vsong> done) {	
 		localReader = new LocalReader();
 		nicoListGrabber = new NicoListGrabber(d);
 		this.task = task;
@@ -51,7 +52,7 @@ public class TaskManager{
 	public boolean getTaskAndUpdate() {
 		if (!localReader.isDone() || !nicoListGrabber.isDone()) 
 			return false;
-		TreeSet<Vsong> local = getLocalCollection(), online = getOnlineCollection();
+		Set<Vsong> local = getLocalCollection(), online = getOnlineCollection();
 		/*for (Iterator<Vsong> iterator = online.iterator(); iterator.hasNext();) {
 			Vsong vsong = iterator.next();
 			TreeSet<Vsong> pointer = local.contains(vsong)? done : task;
@@ -92,26 +93,26 @@ public class TaskManager{
 	/**
 	 * @return the local record of downloaded PV
 	 */
-	public TreeSet<Vsong> getLocalCollection() {
+	public Set<Vsong> getLocalCollection() {
 		return localReader.getCollection();
 	}
 
 	/**
 	 * @return the online collection of Vocaloid PV
 	 */
-	public TreeSet<Vsong> getOnlineCollection() {
+	public Set<Vsong> getOnlineCollection() {
 		return nicoListGrabber.getCollection();
 	}
 	/**
 	 * @return the task
 	 */
-	public TreeSet<Vsong> getTask() {
+	public Set<Vsong> getTask() {
 		return task;
 	}
 	/**
 	 * @return the done
 	 */
-	public TreeSet<Vsong> getUpdate() {
+	public Set<Vsong> getUpdate() {
 		return done;
 	}
 	
