@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.lang.ProcessBuilder.Redirect;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
@@ -112,13 +113,16 @@ public class VideoDownloader {
 		//redirect output/error stream of cmd to java stdout/stderr
 		var stdOutStrBuilder = new StringBuilder();
 		var stdErrStrBuilder = new StringBuilder();
-		new Thread(() -> {
-			syncStream(youtube_dlProcess.getInputStream(), stdOutStrBuilder, System.out);
-		}).start();
 		
-		new Thread(() -> {
+		var stdOutThread = new Thread(() -> {
+			syncStream(youtube_dlProcess.getInputStream(), stdOutStrBuilder, System.out);
+		});
+		stdOutThread.start();
+		
+		var stdErrThread = new Thread(() -> {
 			syncStream(youtube_dlProcess.getErrorStream(), stdErrStrBuilder, System.err);
-		}).start();
+		});
+		stdErrThread.start();
 		
 		//redirect java stdin to cmd input, and type cmd command to invoke downloading process
 //		var stdIn = new PrintWriter(youtube_dlProcess.getOutputStream());
@@ -132,6 +136,14 @@ public class VideoDownloader {
 		//wait for the downloading process
 		try {
 			youtube_dlProcess.waitFor();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		//wait for thread to be finished
+		try {
+			stdOutThread.join();
+			stdErrThread.join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -243,7 +255,7 @@ public class VideoDownloader {
 	
 	private static void testDownload() {
 		VideoDownloader v = new VideoDownloader();
-		v.downloadVocaloidPV(new Vsong("sm34200478").setTitle("ビューティフルなフィクション / 初音ミク").setSubDir("2018年V家新曲").setURL("fake url"));
+		v.downloadVocaloidPV(new Vsong("sm34200478").setTitle("ビューティフルなフィクション / 初音ミク").setSubDir("").setURL("fake url"));
 		
 	}
 	private static void testStream() {
