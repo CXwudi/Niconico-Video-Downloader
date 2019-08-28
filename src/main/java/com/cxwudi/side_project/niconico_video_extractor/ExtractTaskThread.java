@@ -220,6 +220,11 @@ public class ExtractTaskThread implements Runnable, Comparable<ExtractTaskThread
 					" is mismatch with mp4pharser input file " + mp4PhraserFilePair.getInputFile());
 		}
 	}
+	
+	public long getInputFileLastModify() {
+		return ffmpegFilePair.getInputFile().lastModified();
+
+	}
 
 	@Override
 	public int compareTo(ExtractTaskThread o) {

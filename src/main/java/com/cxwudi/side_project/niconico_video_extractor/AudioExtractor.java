@@ -7,10 +7,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.cxwudi.side_project.niconico_video_extractor.ExtractTaskThread.MiddleFileMismatchException;
@@ -62,14 +64,20 @@ public class AudioExtractor {
 		// get all input song files
 		List<ExtractTaskThread> ffmpegTasks = getTasks();
 		//sort the List
-		sortByModifyDate(ffmpegTasks); //since multithread, it can't follow exact order but roughly sorted
+		ffmpegTasks = sortByModifyDate(ffmpegTasks); //since multithread, it can't follow exact order but roughly sorted
 		//process it
 		extractAudios(ffmpegTasks);
 	}
 
-	
-	private void sortByModifyDate(List<ExtractTaskThread> ffmpegTasks) {
-		Collections.sort(ffmpegTasks);
+	@SuppressWarnings("untested") //TODO: once tested, remove compareTo method in other classes
+	private List<ExtractTaskThread> sortByModifyDate(List<ExtractTaskThread> ffmpegTasks) {
+		return ffmpegTasks.stream()
+				.collect(Collectors.toMap(Function.identity(),ExtractTaskThread::getInputFileLastModify))
+				.entrySet()
+				.stream()
+				.sorted((t1, t2) -> t1.getValue() - t2.getValue() < 0 ? -1 : 1)
+				.map(Entry::getKey) //.map(e -> e.getKey())
+				.collect(Collectors.toList());
 	}
 	/**
 	 * @param ffmpegTasks
