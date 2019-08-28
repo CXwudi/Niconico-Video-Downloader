@@ -33,6 +33,7 @@ public class Main {
 					
 			manager.markDone(vsong);
 			manager.triggerRecord(); //if the currentRuntime.addShutdownHook works in eclipse, then we don't need this line
+			System.out.println("record updated");
 			
 			try {
 				Thread.sleep(1000L + new Random().nextInt(3000));
