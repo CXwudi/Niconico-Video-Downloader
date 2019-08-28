@@ -44,11 +44,11 @@ public class VideoDownloader {
 	 * Download the Vocaloid Song and rename it properly. 
 	 * it's a warper function of {@link #downloadUsingYoutube_dl(Vsong, File)} 
 	 * @param song the song to be download.
-	 * @return {@code true} if the Vocaloid PV file is downloaded and renamed.
+	 * @return {@code SUCCESS} if the Vocaloid PV file is downloaded and renamed, otherwise, return others {@link DownloadStatus}.
 	 */
-	public boolean downloadVocaloidPV(Vsong song) {
+	public DownloadStatus downloadVocaloidPV(Vsong song) {
 		Objects.requireNonNull(song);
-		if (song.getId().equals("")) return false;
+		if (song.getId().equals("")) return DownloadStatus.FAIL_INITIAL;
 		File file = makeDirForDownloadingVideoFile(song);//get the directory
 		
 		System.out.println("It's show time for Youtube-dl");
@@ -59,13 +59,13 @@ public class VideoDownloader {
 			System.out.println("download success");
 		}  catch (IOException e) {
 			e.printStackTrace();
-			System.err.println("どうしよう!!!!, CXwudi and Miku failed to download " + song.getTitle() + " from " + song.getURL());
-			return false;
+			System.err.println("どうしよう!!!!, CXwudi and Miku failed to start the process on downloading " + song.getTitle() + " from " + song.getURL());
+			return DownloadStatus.FAIL_DOWNLOAD;
 		} 
 		
 		if (song.getId().contains("nm")) {
-			System.out.println("since we don't grab the info for nm-id video " + song.getId() + ", no renaming action performed");
-			return true;
+			System.out.println("since we don't grab the info for nm-id video " + song.getId() + ", no renaming action performed, but file was download");
+			return DownloadStatus.FAIL_RENAME;
 		}
 		
 		File[] videoFiles = file.listFiles( (dir, aFile) -> {
@@ -75,15 +75,15 @@ public class VideoDownloader {
 			var videoFile = videoFiles[0];
 			if (videoFile.renameTo(new File(videoFile.getParentFile(), generateFileName(song)))) {
 				System.out.println("rename success");
-				return true;
+				return DownloadStatus.SUCCESS;
 			} else {
 				System.err.println("rename fail:(, renamed file might already exists");
-				return false;
+				return DownloadStatus.FAIL_RENAME;
 			}
 			
-		} else {
+		} else { //although so-id and pure-number id are same, but youtube-dl rename the file with the input id
 			System.out.println("VideoDownloader.downloadVocaloidPV() fail to find the downloaded video file");
-			return false;
+			return DownloadStatus.FAIL_UNKNOWN;
 		}
 	}
 	

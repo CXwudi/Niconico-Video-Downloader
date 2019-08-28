@@ -40,7 +40,7 @@ public class DownloadManager {
 		for (Iterator<Vsong> iterator = task.iterator(); iterator.hasNext();) {
 			Vsong vsong = iterator.next();
 			fetchInfo(vsong);
-			if (downloadOneVocaloidPV(vsong))
+			if (downloadOneVocaloidPV(vsong) == DownloadStatus.SUCCESS)
 				markDone(vsong);
 			triggerRecord();//we add this line for now
 		}
@@ -55,9 +55,9 @@ public class DownloadManager {
 	/**
 	 * The honor method to download the Vocaloid PV
 	 * @param song
-	 * @return {@code true} if the downloading process succeed.
+	 * @return {@code SUCCESS} if the download process success, otherwise, return others {@link DownloadStatus}.
 	 */
-	public boolean downloadOneVocaloidPV(Vsong song) {
+	public DownloadStatus downloadOneVocaloidPV(Vsong song) {
 		return downloader.downloadVocaloidPV(song);
 	}
 	/**

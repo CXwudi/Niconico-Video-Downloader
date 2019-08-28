@@ -16,9 +16,21 @@ public class Main {
 		DownloadManager manager = main.downloadManager();
 		main.downloadManager().forEachVsongInTask(vsong -> {
 			
-			if (manager.fetchInfo(vsong))
-				if (!manager.downloadOneVocaloidPV(vsong)) 
+			if (!manager.fetchInfo(vsong)) {
+				return;
+			}
+			
+			switch (manager.downloadOneVocaloidPV(vsong)) {
+				case SUCCESS:
 					System.out.println("done");
+				break;
+				case FAIL_RENAME:
+					//do nothing
+				break;
+			default: //fail initial and fail download
+				return;
+			} 
+					
 			manager.markDone(vsong);
 			manager.triggerRecord(); //if the currentRuntime.addShutdownHook works in eclipse, then we don't need this line
 			
