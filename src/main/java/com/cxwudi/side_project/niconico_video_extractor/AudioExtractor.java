@@ -71,12 +71,12 @@ public class AudioExtractor {
 
 	@SuppressWarnings("untested") //TODO: once tested, remove compareTo method in other classes
 	private List<ExtractTaskThread> sortByModifyDate(List<ExtractTaskThread> ffmpegTasks) {
-		return ffmpegTasks.stream()
+		return ffmpegTasks.stream() //trasfer to map which task->modify date
 				.collect(Collectors.toMap(Function.identity(),ExtractTaskThread::getInputFileLastModify))
-				.entrySet()
+				.entrySet() 
 				.stream()
-				.sorted((t1, t2) -> t1.getValue() - t2.getValue() < 0 ? -1 : 1)
-				.map(Entry::getKey) //.map(e -> e.getKey())
+				.sorted((t1, t2) -> t1.getValue() - t2.getValue() < 0 ? -1 : 1) //sort by modify date stored
+				.map(Entry::getKey) // convert back to list
 				.collect(Collectors.toList());
 	}
 	/**
