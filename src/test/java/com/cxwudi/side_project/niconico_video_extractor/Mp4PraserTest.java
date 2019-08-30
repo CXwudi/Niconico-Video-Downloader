@@ -32,14 +32,11 @@ public class Mp4PraserTest {
 		var output = new File(directory, "いじめられっ子のルアン／初音ミク【雨の介】.m4a");
 		if (!input.exists()) {
 			try {
-				new FFmpegProcessTest().testExtractAudioWithApis();
+				new FFmpegProcessTest().testExtractAudioWithProcessBuilder();
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (InputFormatException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (EncoderException e) {
+			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
