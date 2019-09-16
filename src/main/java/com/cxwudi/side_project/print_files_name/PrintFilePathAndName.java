@@ -1,10 +1,15 @@
 package com.cxwudi.side_project.print_files_name;
 import java.io.File;
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.Map.Entry;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class PrintFilePathAndName {
 
 	public static void main(String[] args) {
-		String path = "D:\\11134\\Videos\\2018年V家新曲";   
+		String path = "C:\\Users\\11134\\Videos\\2019年V家新曲合集\\2010年V家可能好听新曲";   
         getFile(path);   
 	}
 	
@@ -12,6 +17,13 @@ public class PrintFilePathAndName {
 		File file = new File(path); 
 		// get the folder list
 		File[] array = file.listFiles(); 
+		//sort by modify date, increasing order
+		array = Arrays.stream(array).collect(Collectors.toMap(Function.identity(), File::lastModified))
+				.entrySet().stream()
+				.sorted((t1, t2) -> t1.getValue() - t2.getValue() < 0 ? -1 : 1)
+				.map(Entry::getKey)
+				.collect(Collectors.toList()).toArray(new File[0]);
+		
 		
 		for(int i=0;i<array.length;i++){
 			if(array[i].isFile()){ 
