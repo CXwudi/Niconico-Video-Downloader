@@ -8,11 +8,11 @@ import java.lang.ProcessBuilder.Redirect;
 import java.nio.channels.FileChannel;
 import java.util.Objects;
 
-import com.coremedia.iso.boxes.Container;
-import com.googlecode.mp4parser.FileDataSourceImpl;
-import com.googlecode.mp4parser.authoring.Movie;
-import com.googlecode.mp4parser.authoring.builder.DefaultMp4Builder;
-import com.googlecode.mp4parser.authoring.tracks.AACTrackImpl;
+//import com.coremedia.iso.boxes.Container;
+//import com.googlecode.mp4parser.FileDataSourceImpl;
+//import com.googlecode.mp4parser.authoring.Movie;
+//import com.googlecode.mp4parser.authoring.builder.DefaultMp4Builder;
+//import com.googlecode.mp4parser.authoring.tracks.AACTrackImpl;
 
 import ws.schild.jave.Encoder;
 import ws.schild.jave.EncoderException;
@@ -135,46 +135,6 @@ public class ExtractTaskThread implements Runnable, Comparable<ExtractTaskThread
 		}
 	}
 
-	private boolean runMp4parserTask() {
-		if(!mp4PhraserFilePair.deleteOutputFileIfExists()) {
-			System.err.println("Fail to delete existing output file before execution: " + mp4PhraserFilePair.getOutputFile());
-			return false;
-		}
-		AACTrackImpl aacTrack = null;
-		try {
-			aacTrack = new AACTrackImpl(new FileDataSourceImpl(mp4PhraserFilePair.getInputFile()));
-		} catch (FileNotFoundException e1) {
-			System.err.println("this shouldn't happens");
-			e1.printStackTrace();
-			return false;
-		} catch (IOException e1) {
-			System.err.println("What is this issue?");
-			e1.printStackTrace();
-			return false;
-		}
-		
-		var movie = new Movie();
-		movie.addTrack(aacTrack);
-		
-		Container m4aFile = new DefaultMp4Builder().build(movie);
-		try (FileChannel ch = new FileOutputStream(mp4PhraserFilePair.getOutputFile()).getChannel()){
-			m4aFile.writeContainer(ch);
-		} catch (IOException e) {
-			System.err.println("どうしよう, CXwudi and miku fail to wrap aac to m4a file");
-			e.printStackTrace();
-			return false;
-		}
-		
-		try {
-			aacTrack.close();
-		} catch (IOException e) {
-			System.err.println("fail to close input file for mp4praser " + e);
-			e.printStackTrace();
-			return false;
-		}
-		return true;
-	}
-	
 	private boolean runMp4boxTask() {
 		if(!mp4PhraserFilePair.deleteOutputFileIfExists()) {
 			System.err.println("Fail to delete existing output file before execution: " + mp4PhraserFilePair.getOutputFile());
@@ -243,6 +203,46 @@ public class ExtractTaskThread implements Runnable, Comparable<ExtractTaskThread
 		ExtractTaskThread other = (ExtractTaskThread) obj;
 		return Objects.equals(ffmpegFilePair, other.ffmpegFilePair) && Objects.equals(mp4PhraserFilePair, other.mp4PhraserFilePair);
 	}
+
+//	private boolean runMp4parserTask() {
+//		if(!mp4PhraserFilePair.deleteOutputFileIfExists()) {
+//			System.err.println("Fail to delete existing output file before execution: " + mp4PhraserFilePair.getOutputFile());
+//			return false;
+//		}
+//		AACTrackImpl aacTrack = null;
+//		try {
+//			aacTrack = new AACTrackImpl(new FileDataSourceImpl(mp4PhraserFilePair.getInputFile()));
+//		} catch (FileNotFoundException e1) {
+//			System.err.println("this shouldn't happens");
+//			e1.printStackTrace();
+//			return false;
+//		} catch (IOException e1) {
+//			System.err.println("What is this issue?");
+//			e1.printStackTrace();
+//			return false;
+//		}
+//		
+//		var movie = new Movie();
+//		movie.addTrack(aacTrack);
+//		
+//		Container m4aFile = new DefaultMp4Builder().build(movie);
+//		try (FileChannel ch = new FileOutputStream(mp4PhraserFilePair.getOutputFile()).getChannel()){
+//			m4aFile.writeContainer(ch);
+//		} catch (IOException e) {
+//			System.err.println("どうしよう, CXwudi and miku fail to wrap aac to m4a file");
+//			e.printStackTrace();
+//			return false;
+//		}
+//		
+//		try {
+//			aacTrack.close();
+//		} catch (IOException e) {
+//			System.err.println("fail to close input file for mp4praser " + e);
+//			e.printStackTrace();
+//			return false;
+//		}
+//		return true;
+//	}
 	
 	
 }

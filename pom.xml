@@ -32,6 +32,13 @@
 			<version>3.141.59</version>
 		</dependency>
 		
+		<!-- Apache Common Configuration, use for reading .property file -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-configuration2</artifactId>
+            <version>2.5</version>
+        </dependency>
+		
 		<!-- The JAVE (Java Audio Video Encoder) library, which warp and contains a ffmpeg.exe executable file in jar  -->
 		<dependency> <!-- you can just use his ffmpeg.exe if u want -->
 			<groupId>ws.schild</groupId>
@@ -40,20 +47,21 @@
 		</dependency>
 		
 		<!-- Java MP4 Parser, to warp raw .aac file into .m4a file, without re-encoding-->
-		<dependency>
+		<!-- Don't use new version, api changes a lot -->
+		<!-- currently using mp4box.exe in stead of using this library, for better performance -->
+		<!-- <dependency>
 			<groupId>com.googlecode.mp4parser</groupId>
 			<artifactId>isoparser</artifactId>
-			<version>1.1.22</version> <!-- currently using old version, his new version api changes a lot -->
-		</dependency>
-		
+			<version>1.1.22</version> 
+		</dependency> -->
+
 		<!-- Too bad that no maven repository for youtube-dl, have to manually update youtube-dl.exe file in lib/ -->
-        <!-- can also consider warp mp4box.exe, for better performance -->
 	</dependencies>
 	
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>com.lazerycode.selenium</groupId>
+				<groupId>com.lazerycode.selenium</groupId> <!-- plug-in that can download Selenium exe drivers -->
 				<artifactId>driver-binary-downloader-maven-plugin</artifactId>
 				<version>1.0.17</version>
 				<configuration>
@@ -104,7 +112,7 @@
 				</configuration>
 				<executions>
 					<execution> <!-- in eclipse it shows error of the phase, but it has no problem in fact, so ignore it -->
-					    <phase>generate-test-resources</phase> <!-- avaliable phases => https://balamaci.ro/maven-lifecycles-explained/ -->
+					    <phase>generate-resources</phase> <!-- avaliable phases => https://balamaci.ro/maven-lifecycles-explained/ -->
 						<goals>
 							<goal>selenium</goal>
 						</goals>
