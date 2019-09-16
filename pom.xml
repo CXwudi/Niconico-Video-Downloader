@@ -165,16 +165,17 @@
                         <goals>
                             <goal>test</goal><!-- so far we choose to not change the order, but change the order of selenium plugin to the frontier -->
                         </goals>
+                        <configuration>
+		                    <systemPropertyVariables>
+		                        <webdriver.chrome.driver>${webdriver.chrome.driver}</webdriver.chrome.driver>
+		                        <webdriver.opera.driver>${webdriver.opera.driver}</webdriver.opera.driver>
+		                        <webdriver.edge.driver>${webdriver.edge.driver}</webdriver.edge.driver>
+		                    </systemPropertyVariables>
+		                    <skipTests>true</skipTests>
+		                </configuration>
                     </execution>
                 </executions>
-				<configuration>
-					<systemPropertyVariables>
-					    <webdriver.chrome.driver>${webdriver.chrome.driver}</webdriver.chrome.driver>
-                        <webdriver.opera.driver>${webdriver.opera.driver}</webdriver.opera.driver>
-                        <webdriver.edge.driver>${webdriver.edge.driver}</webdriver.edge.driver>
-                    </systemPropertyVariables>
-                    <skipTests>true</skipTests>
-				</configuration>
+				<!-- Learn mavan: <configuration> tab put here will set parameter for all executions in <executions> -->
 			</plugin>
 			
 			<plugin>
@@ -187,27 +188,28 @@
 		           <goals>
 		             <goal>java</goal>
 		           </goals>
+		           <configuration>
+	                 <mainClass>${mainClassToRun}</mainClass>
+	                 <arguments>
+	                 </arguments>
+	                 <systemProperties>
+	                   <systemProperty>
+	                     <key>webdriver.edge.driver</key>
+	                     <value>${webdriver.edge.driver}</value>
+	                   </systemProperty>
+	                   <systemProperty>
+	                     <key>webdriver.opera.driver</key>
+	                     <value>${webdriver.opera.driver}</value>
+	                   </systemProperty>
+	                   <systemProperty>
+	                     <key>webdriver.chrome.driver</key>
+	                     <value>${webdriver.chrome.driver}</value>
+	                   </systemProperty>
+	                 </systemProperties>
+	               </configuration>
 		         </execution>
 		       </executions>
-		       <configuration>
-		         <mainClass>${mainClassToRun}</mainClass>
-		         <arguments>
-		         </arguments>
-		         <systemProperties>
-		           <systemProperty>
-		             <key>webdriver.edge.driver</key>
-		             <value>${webdriver.edge.driver}</value>
-		           </systemProperty>
-		           <systemProperty>
-                     <key>webdriver.opera.driver</key>
-                     <value>${webdriver.opera.driver}</value>
-                   </systemProperty>
-                   <systemProperty>
-                     <key>webdriver.chrome.driver</key>
-                     <value>${webdriver.chrome.driver}</value>
-                   </systemProperty>
-		         </systemProperties>
-		       </configuration>
+		       
 	       </plugin>
 	       
 		</plugins>
