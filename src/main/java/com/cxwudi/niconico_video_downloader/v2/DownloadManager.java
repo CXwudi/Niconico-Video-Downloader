@@ -79,7 +79,5 @@ public class DownloadManager {
 	public void setDriver(NicoDriver driver) {
 		infoGainer.setDriver(driver);
 	}
-	
-	
 
 }

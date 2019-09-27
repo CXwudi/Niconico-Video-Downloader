@@ -17,6 +17,7 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Objects;
+
 /**
  * The video downloader is the main class of downloading Vocaloid PV,
  * and stores them in the correspond folder.
@@ -247,28 +248,8 @@ public class VideoDownloader {
 		}
 		
 	}
-	public static void main(String[] args) {
-//		testFile();
-//		testStream();
-		testDownload();
-	}
 	
-	private static void testDownload() {
-		VideoDownloader v = new VideoDownloader();
-		v.downloadVocaloidPV(new Vsong("sm34200478").setTitle("ビューティフルなフィクション / 初音ミク").setSubDir("").setURL("fake url"));
-		
-	}
-	private static void testStream() {
-		var stdout = new PrintWriter(System.out, true);
-		stdout.println("print from print writer");
-	}
-	private static void testFile() {
-		VideoDownloader v = new VideoDownloader();
-		File video = new File(v.rootDLdir + "\\" + "a video.mp4");
-		System.out.println(video.isFile());
-		System.out.println(video);
-		video = new File(v.rootDLdir, "");
-		System.out.println(new File(v.rootDLdir, "a video.mp4").getParentFile());
+	public static void main(String[] args) {
 	}
 	
 	
