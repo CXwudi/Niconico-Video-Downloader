@@ -18,14 +18,14 @@ import org.openqa.selenium.remote.CapabilityType;
 
 /**
  * the main model of Nico video downloader project, Manage the NicoDriver,
- * it also is the main M part of MVC, contains 2 subsections---{@link TaskManager}, and {@link DownloadManager}
+ * it also is the main M part of MVC, contains 2 subsections---{@link TasksDecider}, and {@link TasksSolver}
  * @author CX无敌
  */
 public class MainModel {
 	
 	private NicoDriver driver;
-	private TaskManager taskManager;
-	private DownloadManager downloadManager;
+	private TasksDecider tasksDecider;
+	private TasksSolver tasksSolver;
 	
 	private TreeSet<Vsong> task, done;
 
@@ -40,8 +40,8 @@ public class MainModel {
 		done = new TreeSet<>();
 		task = new TreeSet<>();
 		
-		taskManager = new TaskManager(driver, task, done);
-		downloadManager = new DownloadManager(driver, task, done);
+		tasksDecider = new TasksDecider(driver, task, done);
+		tasksSolver = new TasksSolver(driver, task, done);
 	}
 	
 
@@ -121,17 +121,17 @@ public class MainModel {
 	}
 
     /**
-	 * @return the taskManager
+	 * @return the tasksDecider
 	 */
-	public TaskManager taskManager() {
-		return taskManager;
+	public TasksDecider tasksDecider() {
+		return tasksDecider;
 	}
 
 	/**
-	 * @return the downloadManager
+	 * @return the tasksSolver
 	 */
-	public DownloadManager downloadManager() {
-		return downloadManager;
+	public TasksSolver tasksSolver() {
+		return tasksSolver;
 	}
 
 	/**

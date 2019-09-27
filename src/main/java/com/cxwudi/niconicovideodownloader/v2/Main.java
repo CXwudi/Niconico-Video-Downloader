@@ -8,13 +8,13 @@ public class Main {
 		MainModel main = new MainModel();
 		main.login("1113421658@qq.com", "2010017980502");
 		main.setupNicoNico();
-		main.taskManager().readRecord();
-		main.taskManager().getTaskAndUpdate();
+		main.tasksDecider().readRecord();
+		main.tasksDecider().getTaskAndUpdate();
 //		main.taskManager().setAllDownload();//WARNING: remove this line to download songs
 //		main.driver().resetDriver(); // no needed if using youtube-dl
 //		main.setupNicoNico(); 
-		DownloadManager manager = main.downloadManager();
-		main.downloadManager().forEachVsongInTask(vsong -> {
+		TasksSolver manager = main.tasksSolver();
+		main.tasksSolver().forEachVsongInTask(vsong -> {
 			
 			if (!manager.fetchInfo(vsong)) {
 				return;

@@ -5,7 +5,7 @@ import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.function.Function;
 /**
- * The main manager for downloading videos and recording them into a file. It will loop through the TreeSet task,
+ * The main class for downloading videos and recording them into a file. It will loop through the TreeSet task,
  * for each Vocaloid Song in this Treeset, the manager will assign InfoGainer, VideoDownloader, and LocalRecorder 
  * to do the whole process for each Vocaloid song.
  * 
@@ -13,14 +13,14 @@ import java.util.function.Function;
  * @author CX无敌
  *
  */
-public class DownloadManager {
+public class TasksSolver {
 	private VideoDownloader downloader;
 	private InfoGainer infoGainer;
 	private LocalRecorder localRecorder;
 	
 	private Set<Vsong> task; //currently use TreeSet
 
-	public DownloadManager(NicoDriver d, Set<Vsong> task, Set<Vsong> update) {
+	public TasksSolver(NicoDriver d, Set<Vsong> task, Set<Vsong> update) {
 		this.task = task;
 		this.downloader = new VideoDownloader();
 		this.infoGainer = new InfoGainer(d);

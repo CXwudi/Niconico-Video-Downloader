@@ -8,20 +8,20 @@ import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 /**
- * The manager that can generate a set of new videos that need to be downloaded 
+ * The decider that can generate a set of new videos that need to be downloaded 
  * by operates two small model---local recorder and list grabber. 
  * 
  * Details of these two small models will be discussed in their class description. 
  * @author CX无敌
  */
-public class TaskManager{
+public class TasksDecider{
 	
 	private LocalReader localReader;			//manage to read collection of downloaded video
 	private NicoListGrabber nicoListGrabber;	//manage to get collection from Niconico douga favorite lists
 	
 	private Set<Vsong> task, done;				//currently use TreeSet
 
-	public TaskManager(NicoDriver d, Set<Vsong> task, Set<Vsong> done) {	
+	public TasksDecider(NicoDriver d, Set<Vsong> task, Set<Vsong> done) {	
 		localReader = new LocalReader();
 		nicoListGrabber = new NicoListGrabber(d);
 		this.task = task;
