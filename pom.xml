@@ -14,7 +14,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.11</maven.compiler.source>
 		<maven.compiler.target>1.11</maven.compiler.target>
-		<mainClassToRun>com.cxwudi.niconico_video_downloader.v2.Main</mainClassToRun>
+		<mainClassToRun>com.cxwudi.niconicovideodownloader.v2.Main</mainClassToRun>
 	</properties>
 
 	<dependencies>

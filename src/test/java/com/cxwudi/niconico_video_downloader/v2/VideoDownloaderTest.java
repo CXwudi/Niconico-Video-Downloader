@@ -7,6 +7,9 @@ import java.io.PrintWriter;
 
 import org.junit.Test;
 
+import com.cxwudi.niconicovideodownloader.v2.VideoDownloader;
+import com.cxwudi.niconicovideodownloader.v2.Vsong;
+
 public class VideoDownloaderTest {
 	@Test
 	public void testDownload() {
