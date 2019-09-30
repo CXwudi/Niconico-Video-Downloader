@@ -12,8 +12,9 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.11</maven.compiler.source>
-		<maven.compiler.target>1.11</maven.compiler.target>
+		<!-- Can not set compile version higher than java 10, otherwise, Maven install will get error -->
+		<maven.compiler.source>1.10</maven.compiler.source>
+		<maven.compiler.target>1.10</maven.compiler.target>
 		<mainClassToRun>com.cxwudi.niconicovideodownloader.v2.Main</mainClassToRun>
 	</properties>
 
