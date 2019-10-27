@@ -16,7 +16,7 @@
     <java.version>11</java.version>
     <maven.compiler.source>1.${java.version}</maven.compiler.source>
     <maven.compiler.target>1.${java.version}</maven.compiler.target>
-    <mainClassToRun>com.cxwudi.niconicovideodownloader.v2.Main</mainClassToRun>
+    <mainClassToRun>com.cxwudi.niconico_videodownloader.Main</mainClassToRun>
   </properties>
 
   <dependencies>
@@ -38,7 +38,7 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-configuration2</artifactId>
-      <version>2.5</version>
+      <version>2.6</version>
     </dependency>
 
     <!-- The JAVE (Java Audio Video Encoder) library, which warp and contains a ffmpeg.exe executable 
@@ -46,7 +46,7 @@
     <dependency> <!-- you can just use his ffmpeg.exe if u want -->
       <groupId>ws.schild</groupId>
       <artifactId>jave-all-deps</artifactId>
-      <version>2.5.1</version>
+      <version>2.6.1</version>
     </dependency>
 
     <!-- Java MP4 Parser, to warp raw .aac file into .m4a file, without re-encoding -->
