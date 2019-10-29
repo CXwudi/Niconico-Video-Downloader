@@ -1,6 +1,6 @@
 package com.cxwudi.side_project.niconico_video_extractor;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.lang.ProcessBuilder.Redirect;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import ws.schild.jave.AudioAttributes;
 import ws.schild.jave.DefaultFFMPEGLocator;

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+
+  <Properties>
+    <Property name="loggerName">logger</Property> <!-- put either logger or class -->
+    <Property name="cyanName">%style{%${loggerName}{1.}}{bright,cyan}</Property>
+    <Property name="colorLevel">%highlight{%-5level}{STYLE=Default}</Property>
+    <Property name="visierLogBackFormat">%date{HH:mm:ss.SSS} [%thread] ${colorLevel} ${cyanName} - %msg%n%throwable</Property>
+    
+    <property name="myCurrentBestFormatter">${visierLogBackFormat}</property>
+  </Properties>
+
+  <Appenders>
+    <Console name="stdout" target="SYSTEM_OUT">
+      <!-- <LevelRangeFilter minLevel="TRACE" maxLevel="WARN" onMatch="ACCEPT" onMismatch="DENY"/> -->
+      <PatternLayout pattern="${myCurrentBestFormatter}"/>
+    </Console>
+  </Appenders>
+
+  <Loggers>
+    <!-- global logger setup-->
+    <Root level="trace">
+      <AppenderRef ref="stdout" /> 
+    </Root>
+  </Loggers>
+  
+</Configuration>

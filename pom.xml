@@ -16,14 +16,17 @@
     <java.version>11</java.version>
     <maven.compiler.source>1.${java.version}</maven.compiler.source>
     <maven.compiler.target>1.${java.version}</maven.compiler.target>
+    <junit.jupiter.version>5.5.2</junit.jupiter.version>
+    
     <mainClassToRun>com.cxwudi.niconico_videodownloader.Main</mainClassToRun>
   </properties>
 
   <dependencies>
+    <!-- Junit 5 Jupiter -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.12</version>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>${junit.jupiter.version}</version>
       <scope>test</scope>
     </dependency>
 

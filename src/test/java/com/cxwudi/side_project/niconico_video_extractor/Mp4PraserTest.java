@@ -1,6 +1,7 @@
 package com.cxwudi.side_project.niconico_video_extractor;
 
-import static org.junit.Assert.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,7 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 //import com.coremedia.iso.boxes.Container;
 //import com.googlecode.mp4parser.FileDataSourceImpl;
