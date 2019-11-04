@@ -44,13 +44,14 @@ class OtherTest {
 	}
 
 	@Test
-	void testReplaceAll(String string) {
+	void testReplaceAll() {
+		String string = "/asd\\ yes ? aaa";
 		System.out.println(string.replaceAll("/", "-").replaceAll("\\\\", "-").replaceAll("\\?", " "));
 		
 	}
 
 	@Test
-	void testCreateFile(Vsong vsong) {
+	void testCreateFile() {
 		File defaultDir = Config.OUTPUT_ROOT_DIR;
 		File video = new File(defaultDir, "testVideo.mp4");
 		try {
