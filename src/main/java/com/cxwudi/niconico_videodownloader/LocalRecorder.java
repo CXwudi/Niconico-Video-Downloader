@@ -20,7 +20,7 @@ public class LocalRecorder {
 	
 	public LocalRecorder(Set<Vsong> update2) {
 		this.update = update2;
-		listDownloadedTxt = new File(new File("data/"), "downloaded.txt");
+		listDownloadedTxt = Config.DOWNLOADED_RECORD_FILE;
 		try {
 			if (!listDownloadedTxt.exists()) {
 				if (!listDownloadedTxt.createNewFile()) {

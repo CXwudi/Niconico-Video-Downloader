@@ -2,7 +2,6 @@ package com.cxwudi.niconico_videodownloader;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,20 +24,19 @@ import java.util.Objects;
  *
  */
 public class VideoDownloader {
-	private final static File defaultDir = new File(System.getProperty("user.home") + "\\Videos");
 	private File rootDLdir;  //user defined download dir
 	/**
 	 * create video downloader with default downloading folder 
 	 */
 	public VideoDownloader() {
-		this(defaultDir.toString());
+		this(Config.OUTPUT_ROOT_DIR.toString());
 	}
 	/**
 	 * create video downloader with user defined downloading folder
 	 * @param rootDLdir the root directory of downloaded video.
 	 */
 	public VideoDownloader(String downloadDir) {
-		defaultDir.mkdirs(); //this step should not make error
+		Config.OUTPUT_ROOT_DIR.mkdirs(); //this step should not make error
 		this.rootDLdir = new File(downloadDir);
 	}
 	/**
@@ -99,10 +97,10 @@ public class VideoDownloader {
 	private void downloadUsingYoutube_dl(Vsong song, File dir) throws IOException{
 		//initialize variables and cmd process
 		var youtube_dlProcessBuilder = new ProcessBuilder(
-				new StringBuilder().append(System.getProperty("user.dir")).append("/lib/youtube-dl.exe").toString(),
+				Config.YOUTUBE_DL_FILE.getAbsolutePath(),
 				"-v",
-				"--username", "\"1113421658@qq.com\"",
-				"--password", "\"2010017980502\"",
+				"--username", new StringBuilder().append('"').append(Config.EMAIL).append('"').toString(),
+				"--password", new StringBuilder().append('"').append(Config.PASSWORD).append('"').toString(),
 				"https://www.nicovideo.jp/watch/" + song.getId(),
 				"-f",
 				"\"best[height<=720]\"");
@@ -195,8 +193,8 @@ public class VideoDownloader {
 			if (!dir.isDirectory()) 
 				throw new SecurityException("Such path name is not a directory");//a fake exception
 		} catch (SecurityException e) {
-			System.err.println(e + "\nCXwudi and miku found that this directory" + dir + "is not avaliable, default directory is set, as " + defaultDir.toString());
-			dir = defaultDir;
+			System.err.println(e + "\nCXwudi and miku found that this directory" + dir + "is not avaliable, default directory is set, as " + Config.OUTPUT_ROOT_DIR.toString());
+			dir = Config.OUTPUT_ROOT_DIR;
 		}
 		
 		return dir;
@@ -244,7 +242,7 @@ public class VideoDownloader {
 		} catch (SecurityException e) {
 			e.printStackTrace();
 			System.err.println("CXwudi and miku found that this directory " + dir + " is not avaliable, plz try again.\nA default directroy D:\\11134\\Download\\Video has been set instead.");
-			this.rootDLdir = defaultDir;
+			this.rootDLdir = Config.OUTPUT_ROOT_DIR;
 		}
 		
 	}

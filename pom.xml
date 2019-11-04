@@ -17,7 +17,9 @@
     <maven.compiler.source>1.${java.version}</maven.compiler.source>
     <maven.compiler.target>1.${java.version}</maven.compiler.target>
     <junit.jupiter.version>5.5.2</junit.jupiter.version>
+    <log4j2.version>2.12.1</log4j2.version>
     
+    <selenium.rootDir>lib/selenium_drivers</selenium.rootDir>
     <mainClassToRun>com.cxwudi.niconico_videodownloader.Main</mainClassToRun>
   </properties>
 
@@ -51,6 +53,33 @@
       <artifactId>jave-all-deps</artifactId>
       <version>2.6.1</version>
     </dependency>
+    
+    <!-- Logger System -->
+    <!-- SFL4J logger facade-->
+    <dependency><!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.28</version>
+    </dependency>
+    
+    <!-- Log4j2 -->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
+      <version>${log4j2.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>${log4j2.version}</version>
+    </dependency>
+    
+    <!-- SLF4J to Log4j2 bridge -->
+    <dependency><!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j-impl -->
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-slf4j-impl</artifactId>
+      <version>${log4j2.version}</version>
+    </dependency>
 
     <!-- Java MP4 Parser, to warp raw .aac file into .m4a file, without re-encoding -->
     <!-- Don't use new version, api changes a lot -->
@@ -67,17 +96,17 @@
 
   <build>
     <plugins>
-      <plugin>
+      <plugin> <!-- selenium driver download plugin -->
         <groupId>com.lazerycode.selenium</groupId> <!-- plug-in that can download Selenium exe drivers -->
         <artifactId>driver-binary-downloader-maven-plugin</artifactId>
         <version>1.0.17</version>
         <configuration>
           <!-- root directory that downloaded driver binaries will be stored in -->
-          <rootStandaloneServerDirectory>lib/selenium_drivers/bin</rootStandaloneServerDirectory>
+          <rootStandaloneServerDirectory>${selenium.rootDir}/bin</rootStandaloneServerDirectory>
           <!-- Where you want to store downloaded zip files -->
-          <downloadedZipFileDirectory>lib/selenium_drivers/zips</downloadedZipFileDirectory>
+          <downloadedZipFileDirectory>${selenium.rootDir}/zips</downloadedZipFileDirectory>
           <!-- Location of a custom repository map -->
-          <customRepositoryMap>lib/selenium_drivers/repo.xml</customRepositoryMap>
+          <customRepositoryMap>${selenium.rootDir}/repo.xml</customRepositoryMap>
           <!-- This will ensure that the plugin only downloads binaries for the current OS, this will 
             override anything specified in the <operatingSystems> configuration -->
           <onlyGetDriversForHostOperatingSystem>true</onlyGetDriversForHostOperatingSystem>
@@ -124,7 +153,7 @@
         </executions>
       </plugin>
 
-      <plugin>
+      <plugin> <!-- write system_config.property file plugin -->
         <groupId>com.internetitem</groupId>
         <artifactId>write-properties-file-maven-plugin</artifactId>
         <version>1.0.1</version>
@@ -157,8 +186,7 @@
         </executions>
       </plugin>
 
-
-      <plugin>
+      <plugin> <!-- if want to configure test, use this plugin -->
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.0.0-M3</version>
@@ -184,7 +212,8 @@
         <!-- Learn mavan: <configuration> tab put here will set parameter for all executions in <executions> -->
       </plugin>
 
-      <plugin>
+<!-- run main class plugin, no longer needed -->
+      <!-- <plugin> 
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
         <version>1.6.0</version>
@@ -215,8 +244,8 @@
             </configuration>
           </execution>
         </executions>
-
-      </plugin>
+      </plugin> -->
+      
       <plugin> <!-- Need this plugin to allow Java 11 -->
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>versions-maven-plugin</artifactId>

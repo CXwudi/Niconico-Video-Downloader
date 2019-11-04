@@ -5,8 +5,9 @@ import java.util.Scanner;
 public class Main {
 
 	public static void main(String[] args) {
+		Config.touch();
 		MainModel main = new MainModel();
-		main.login("1113421658@qq.com", "2010017980502");
+		main.login(Config.EMAIL, Config.PASSWORD);
 		main.setupNicoNico();
 		main.tasksDecider().readRecord();
 		main.tasksDecider().getTaskAndUpdate();
