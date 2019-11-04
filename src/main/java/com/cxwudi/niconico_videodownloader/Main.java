@@ -2,6 +2,9 @@ package com.cxwudi.niconico_videodownloader;
 import java.util.Random;
 import java.util.Scanner;
 
+import com.cxwudi.niconico_videodownloader.solve_tasks.TasksSolver;
+import com.cxwudi.niconico_videodownloader.util.Config;
+
 public class Main {
 
 	public static void main(String[] args) {

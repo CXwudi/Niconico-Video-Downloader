@@ -1,7 +1,9 @@
-package com.cxwudi.niconico_videodownloader;
+package com.cxwudi.niconico_videodownloader.get_tasks;
 
 import java.util.Set;
 import java.util.TreeSet;
+
+import com.cxwudi.niconico_videodownloader.entity.Vsong;
 /**
  * The abstruct collection reader, should have the following functionalities:
  * 1. reading Vocaloid PV collection from a source

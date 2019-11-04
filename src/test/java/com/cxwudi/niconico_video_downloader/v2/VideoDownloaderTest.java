@@ -7,9 +7,9 @@ import java.io.PrintWriter;
 
 import org.junit.jupiter.api.Test;
 
-import com.cxwudi.niconico_videodownloader.DownloadStatus;
-import com.cxwudi.niconico_videodownloader.VideoDownloader;
-import com.cxwudi.niconico_videodownloader.Vsong;
+import com.cxwudi.niconico_videodownloader.entity.Vsong;
+import com.cxwudi.niconico_videodownloader.solve_tasks.VideoDownloader;
+import com.cxwudi.niconico_videodownloader.util.DownloadStatus;
 
 public class VideoDownloaderTest {
 	@Test

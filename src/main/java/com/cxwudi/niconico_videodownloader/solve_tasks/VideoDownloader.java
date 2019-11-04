@@ -1,4 +1,4 @@
-package com.cxwudi.niconico_videodownloader;
+package com.cxwudi.niconico_videodownloader.solve_tasks;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,6 +16,11 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Objects;
+
+import com.cxwudi.niconico_videodownloader.entity.Vsong;
+import com.cxwudi.niconico_videodownloader.util.Config;
+import com.cxwudi.niconico_videodownloader.util.DownloadStatus;
+import com.cxwudi.niconico_videodownloader.util.NicoStringTool;
 
 /**
  * The video downloader is the main class of downloading Vocaloid PV,

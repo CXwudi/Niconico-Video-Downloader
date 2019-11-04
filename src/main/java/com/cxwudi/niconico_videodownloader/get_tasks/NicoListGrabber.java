@@ -1,4 +1,4 @@
-package com.cxwudi.niconico_videodownloader;
+package com.cxwudi.niconico_videodownloader.get_tasks;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -12,6 +12,9 @@ import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebElement;
+
+import com.cxwudi.niconico_videodownloader.entity.NicoDriver;
+import com.cxwudi.niconico_videodownloader.entity.Vsong;
 /**
  * the collection reader that control Chrome browser to navigate Niconico douga mylist page,
  *  and read my Vocaloid collection from it

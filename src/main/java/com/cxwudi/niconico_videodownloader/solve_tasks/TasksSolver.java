@@ -1,9 +1,13 @@
-package com.cxwudi.niconico_videodownloader;
+package com.cxwudi.niconico_videodownloader.solve_tasks;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.function.Function;
+
+import com.cxwudi.niconico_videodownloader.entity.NicoDriver;
+import com.cxwudi.niconico_videodownloader.entity.Vsong;
+import com.cxwudi.niconico_videodownloader.util.DownloadStatus;
 /**
  * The main class for downloading videos and recording them into a file. It will loop through the TreeSet task,
  * for each Vocaloid Song in this Treeset, the manager will assign InfoGainer, VideoDownloader, and LocalRecorder 

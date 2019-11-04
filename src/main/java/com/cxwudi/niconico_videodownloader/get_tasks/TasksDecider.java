@@ -1,4 +1,4 @@
-package com.cxwudi.niconico_videodownloader;
+package com.cxwudi.niconico_videodownloader.get_tasks;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -7,6 +7,9 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+
+import com.cxwudi.niconico_videodownloader.entity.NicoDriver;
+import com.cxwudi.niconico_videodownloader.entity.Vsong;
 /**
  * The decider that can generate a set of new videos that need to be downloaded 
  * by operates two small model---local recorder and list grabber. 

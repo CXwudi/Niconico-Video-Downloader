@@ -1,4 +1,4 @@
-package com.cxwudi.niconico_videodownloader;
+package com.cxwudi.niconico_videodownloader.solve_tasks;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -10,6 +10,9 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
+
+import com.cxwudi.niconico_videodownloader.entity.Vsong;
+import com.cxwudi.niconico_videodownloader.util.Config;
 /**
  * @author CX无敌
  *

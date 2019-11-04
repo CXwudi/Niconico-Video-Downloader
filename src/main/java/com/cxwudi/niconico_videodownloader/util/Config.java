@@ -1,4 +1,4 @@
-package com.cxwudi.niconico_videodownloader;
+package com.cxwudi.niconico_videodownloader.util;
 
 import java.io.File;
 

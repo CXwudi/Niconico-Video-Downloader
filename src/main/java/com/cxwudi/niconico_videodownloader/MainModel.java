@@ -16,6 +16,11 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.CapabilityType;
 
+import com.cxwudi.niconico_videodownloader.entity.NicoDriver;
+import com.cxwudi.niconico_videodownloader.entity.Vsong;
+import com.cxwudi.niconico_videodownloader.get_tasks.TasksDecider;
+import com.cxwudi.niconico_videodownloader.solve_tasks.TasksSolver;
+
 /**
  * the main model of Nico video downloader project, Manage the NicoDriver,
  * it also is the main M part of MVC, contains 2 subsections---{@link TasksDecider}, and {@link TasksSolver}

@@ -1,6 +1,8 @@
-package com.cxwudi.niconico_videodownloader;
+package com.cxwudi.niconico_videodownloader.entity;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.cxwudi.niconico_videodownloader.util.NicoStringTool;
 
 
 /**

@@ -1,4 +1,4 @@
-package com.cxwudi.niconico_videodownloader;
+package com.cxwudi.niconico_videodownloader.solve_tasks;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -6,6 +6,9 @@ import java.util.Random;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
+
+import com.cxwudi.niconico_videodownloader.entity.NicoDriver;
+import com.cxwudi.niconico_videodownloader.entity.Vsong;
 /**
  * Grab information about this song from niconico webpage
  * @author CX无敌

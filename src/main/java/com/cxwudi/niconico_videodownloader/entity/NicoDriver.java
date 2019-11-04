@@ -1,4 +1,4 @@
-package com.cxwudi.niconico_videodownloader;
+package com.cxwudi.niconico_videodownloader.entity;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -55,13 +55,16 @@ public class NicoDriver implements WebDriver{
 		chromeDriver = new ChromeDriver(service, options);
 		setupDriver();
 	}
+	
+	private static final int IMPLICIT_WAIT = 20;
+	private static final int PAGELOAD_TIMEOUT = 30;
 
 	private void setupDriver() {
         chromeDriver.manage().deleteAllCookies();
         //chromeDriver.manage().window().maximize();
         //synchronization between this application and the website pages, so that my codes can wait for the web elements to come up, then do the work.
-        chromeDriver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-        chromeDriver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
+        chromeDriver.manage().timeouts().implicitlyWait(IMPLICIT_WAIT, TimeUnit.SECONDS);
+        chromeDriver.manage().timeouts().pageLoadTimeout(PAGELOAD_TIMEOUT, TimeUnit.SECONDS);
     }
 	
 	/**
