@@ -11,3 +11,5 @@ Selenium: https://www.seleniumhq.org/
 
 And also thanks for the ChromeDriver that provided by Google
 ChromeDriver: https://sites.google.com/a/chromium.org/chromedriver/
+
+Currently this project only supports Windows and only support GoogleChrome, since I only use them
