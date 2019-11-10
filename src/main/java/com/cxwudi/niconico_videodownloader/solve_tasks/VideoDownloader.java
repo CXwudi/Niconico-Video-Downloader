@@ -69,12 +69,12 @@ public class VideoDownloader {
 			logger.info("download success");
 		}  catch (IOException e) {
 			e.printStackTrace();
-			logger.info("どうしよう!!!!, CXwudi and Miku failed to start the process on downloading " + song.getTitle() + " from " + song.getURL());
+			logger.error("どうしよう!!!!, CXwudi and Miku failed to start the process on downloading " + song.getTitle() + " from " + song.getURL());
 			return FAIL_DOWNLOAD;
 		} 
 		
 		if (song.getId().contains("nm")) {
-			logger.info("since we don't grab the info for nm-id video " + song.getId() + ", no renaming action performed, but file was download");
+			logger.warn("since we don't grab the info for nm-id video " + song.getId() + ", no renaming action performed, but file was download");
 			return FAIL_RENAME;
 		}
 		
@@ -87,12 +87,12 @@ public class VideoDownloader {
 				logger.info("rename success");
 				return SUCCESS;
 			} else {
-				logger.info("rename fail:(, renamed file might already exists");
+				logger.warn("rename fail:(, renamed file might already exists");
 				return FAIL_RENAME;
 			}
 			
 		} else { //although so-id and pure-number id are same, but youtube-dl rename the file with the input id
-			logger.info("VideoDownloader.downloadVocaloidPV() fail to find the downloaded video file");
+			logger.warn("VideoDownloader.downloadVocaloidPV() fail to find the downloaded video file");
 			return DownloadStatus.FAIL_UNKNOWN;
 		}
 	}
@@ -117,6 +117,7 @@ public class VideoDownloader {
 				"\"best[height<=720]\"");
 		//set the download directory to the proper subfolder, for example, 20xx年V家新曲
 		youtube_dlProcessBuilder.directory(dir);
+		//logger.debug("start running youtube-dl command: \n{}", youtube_dlProcessBuilder.command());
 		
 		//start the process
 		Process youtube_dlProcess = youtube_dlProcessBuilder.start();
@@ -126,12 +127,12 @@ public class VideoDownloader {
 		
 		var stdOutThread = new Thread(() -> {
 			syncStream(youtube_dlProcess.getInputStream(), stdOutStrBuilder, System.out);
-		});
+		}, "StdOut");
 		stdOutThread.start();
 		
 		var stdErrThread = new Thread(() -> {
 			syncStream(youtube_dlProcess.getErrorStream(), stdErrStrBuilder, System.err);
-		});
+		}, "StdErr");
 		stdErrThread.start();
 		
 		//redirect java stdin to cmd input, and type cmd command to invoke downloading process

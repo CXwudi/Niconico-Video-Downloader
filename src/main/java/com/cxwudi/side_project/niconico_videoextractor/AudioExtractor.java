@@ -3,17 +3,18 @@ package com.cxwudi.side_project.niconico_videoextractor;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
+import java.lang.invoke.MethodHandles;
 import java.util.LinkedList;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.cxwudi.side_project.niconico_videoextractor.ExtractTaskThread.MiddleFileMismatchException;
 
@@ -56,6 +57,8 @@ public class AudioExtractor {
 		this.outputRoot = outputRoot;
 		this.folders = folders;
 	}
+	
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	/**
 	 * like what it said, it simply just do job LOL
 	 * @throws Exception
@@ -126,16 +129,16 @@ public class AudioExtractor {
 					taskThreads.add(taskThread);
 				}
 			} else {
-				System.err.println("Invalid directory, Miku and CXwudi are very angry, skip!! " + inputFolder.toString());
+				logger.error("Invalid directory, Miku and CXwudi are very angry, skip!! " + inputFolder.toString());
 			}
 	
 		}
 	
-		System.out.println("we have these following ffmpeg tasks:");
+		logger.info("we have these following ffmpeg tasks:");
 		for (var abstractAudioTask : taskThreads) {
-			System.out.println(abstractAudioTask);
+			logger.info("{}", abstractAudioTask);
 		}
-		System.out.println("in total " + taskThreads.size() + " of them");
+		logger.info("in total " + taskThreads.size() + " of them");
 	
 		return taskThreads;
 	}

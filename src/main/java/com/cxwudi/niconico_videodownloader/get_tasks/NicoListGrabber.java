@@ -120,7 +120,7 @@ public class NicoListGrabber extends CollectionReader{
 			logger.error(e + "\nCXwudi and Miku failed to get list info due to web server problem, we are trying again");
 			return getOneFolderCollection(id, folderName);
 		} catch (InterruptedException e) {
-			logger.error(e + "\nthis shouldn't happen");
+			logger.error("{}\nthis shouldn't happen", e);
 		} catch (UnhandledAlertException e) {
 			//there was a time where an alert window was pop up and broke the code,
 			//so this catch statement is applied to handle this

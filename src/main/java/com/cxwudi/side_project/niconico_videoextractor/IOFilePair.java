@@ -1,13 +1,13 @@
 package com.cxwudi.side_project.niconico_videoextractor;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.nio.file.Files;
-import java.time.ZonedDateTime;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.Objects;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * A pair of files representing an input file and an output file.
  * Typically used for representing an input/output files of a {@link Process}.
@@ -27,6 +27,8 @@ public class IOFilePair implements Comparable<IOFilePair>{
 		this.inputFile = inputFile;
 		this.outputFile = outputFile;
 	}
+	
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	/**
 	 * check if the input file exists and is a file
@@ -54,7 +56,7 @@ public class IOFilePair implements Comparable<IOFilePair>{
 			try {
 				Files.delete(inputFile.toPath());
 			} catch (IOException e) {
-				System.err.println("fail to delete input file, " + e.toString());
+				logger.error("fail to delete input file, {}", e);
 				return false;
 			} //didn't use deleteIfExist, it return false if file not found
 		}
@@ -70,7 +72,7 @@ public class IOFilePair implements Comparable<IOFilePair>{
 			try {
 				Files.delete(outputFile.toPath());
 			} catch (IOException e) {
-				System.err.println("fail to delete output file, " + e.toString());
+				logger.error("fail to delete output file, {}", e);
 				return false;
 			} //didn't use deleteIfExist, it return false if file not found
 		}

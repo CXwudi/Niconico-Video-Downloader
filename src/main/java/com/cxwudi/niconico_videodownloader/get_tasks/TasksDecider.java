@@ -37,15 +37,15 @@ public class TasksDecider{
 	 * Assign localRecord and NicoListGrabber to read their own Vocaloid Songs Collection.
 	 */
 	public void readRecord() {
-		Thread a = new Thread(localReader::readRecord);
-		Thread b = new Thread(nicoListGrabber::readRecord);
+		Thread a = new Thread(localReader::readRecord, "localReader-thread");
+		Thread b = new Thread(nicoListGrabber::readRecord, "onlineReader-thread");
 		a.start();
 		b.start();
 		try {
 			a.join();
 			b.join();
 		} catch (InterruptedException e) {
-			logger.error(e + "\nthis shouldn't happen");
+			logger.error("{}\nthis shouldn't happen", e);
 		}
 	}
 	
