@@ -8,6 +8,8 @@ import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import org.openqa.selenium.chrome.ChromeDriver;
+
 import com.cxwudi.niconico_videodownloader.entity.NicoDriver;
 import com.cxwudi.niconico_videodownloader.entity.Vsong;
 /**
@@ -24,7 +26,7 @@ public class TasksDecider{
 	
 	private Set<Vsong> task, done;				//currently use TreeSet
 
-	public TasksDecider(NicoDriver d, Set<Vsong> task, Set<Vsong> done) {	
+	public TasksDecider(NicoDriver<ChromeDriver> d, Set<Vsong> task, Set<Vsong> done) {	
 		localReader = new LocalReader();
 		nicoListGrabber = new NicoListGrabber(d);
 		this.task = task;

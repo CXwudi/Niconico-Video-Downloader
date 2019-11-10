@@ -12,6 +12,7 @@ import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 import com.cxwudi.niconico_videodownloader.entity.NicoDriver;
 import com.cxwudi.niconico_videodownloader.entity.Vsong;
@@ -23,15 +24,15 @@ import com.cxwudi.niconico_videodownloader.entity.Vsong;
  *
  */
 public class NicoListGrabber extends CollectionReader{
-	private NicoDriver driver;
+	private NicoDriver<ChromeDriver> driver;
 
 	
-	public NicoListGrabber(NicoDriver d) {
+	public NicoListGrabber(NicoDriver<ChromeDriver> d) {
 		super();
 		driver = d;
 	}
 
-	public void setDriver(NicoDriver driver) {
+	public void setDriver(NicoDriver<ChromeDriver> driver) {
 		this.driver = driver;
 	}
 

@@ -32,27 +32,12 @@ import org.openqa.selenium.chrome.ChromeOptions;
  *  getWindowHandle() used for switching tab
  *  getWindowHandles() used for switching tab as well
  */
-public class NicoDriver implements WebDriver{
+public class NicoDriver<D extends WebDriver> implements WebDriver{
 	
-	private ChromeDriver chromeDriver;
+	private D webDriver;
 
-	public NicoDriver() {
-		chromeDriver = new ChromeDriver();
-		setupDriver();
-	}
-
-	public NicoDriver(ChromeDriverService service) {
-		chromeDriver = new ChromeDriver(service);
-		setupDriver();
-	}
-
-	public NicoDriver(ChromeOptions options) {
-		chromeDriver = new ChromeDriver(options);
-		setupDriver();
-	}
-
-	public NicoDriver(ChromeDriverService service, ChromeOptions options) {
-		chromeDriver = new ChromeDriver(service, options);
+	public NicoDriver(D underlayingDriver) {
+		webDriver = underlayingDriver;
 		setupDriver();
 	}
 	
@@ -60,61 +45,44 @@ public class NicoDriver implements WebDriver{
 	private static final int PAGELOAD_TIMEOUT = 30;
 
 	private void setupDriver() {
-        chromeDriver.manage().deleteAllCookies();
-        //chromeDriver.manage().window().maximize();
+        webDriver.manage().deleteAllCookies();
+        //webDriver.manage().window().maximize();
         //synchronization between this application and the website pages, so that my codes can wait for the web elements to come up, then do the work.
-        chromeDriver.manage().timeouts().implicitlyWait(IMPLICIT_WAIT, TimeUnit.SECONDS);
-        chromeDriver.manage().timeouts().pageLoadTimeout(PAGELOAD_TIMEOUT, TimeUnit.SECONDS);
+        webDriver.manage().timeouts().implicitlyWait(IMPLICIT_WAIT, TimeUnit.SECONDS);
+        webDriver.manage().timeouts().pageLoadTimeout(PAGELOAD_TIMEOUT, TimeUnit.SECONDS);
     }
 	
 	/**
-	 * @return the real chromeDriver inside the wrapper class
+	 * @return the real webDriver inside the wrapper class
 	 */
-	public ChromeDriver getChromeDriver() {
-		return chromeDriver;
+	public D getRealDriver() {
+		return webDriver;
 	}
 
 	/**
-	 * @param chromeDriver the chromeDriver to set
-	 * @Warnning this setter doesn't delete and quit the old chromeDriver, better do {@code getDriver().quit()}
+	 * @param webDriver the webDriver to set
+	 * @Warnning this setter doesn't delete and quit the old webDriver, better do {@code getDriver().quit()}
 	 * before using {@code setDriver()}.
 	 */
-	public void setChromeDriver(ChromeDriver driver) {
-		this.chromeDriver = driver;
+	public void setRealDriver(D driver) {
+		this.webDriver = driver;
 	}
 
 	/**
 	 * Simply just close the browser and reopen a new one.
 	 */
-	public void resetDriver() {
+	public void resetDriver(D driver) {
 		quit();
-		chromeDriver = new ChromeDriver();
+		webDriver = driver;
 		setupDriver();
 	}
 
-	public void resetDriver(ChromeDriverService service) {
-		quit();
-		chromeDriver = new ChromeDriver(service);
-		setupDriver();
-	}
-
-	public void resetDriver(ChromeOptions options) {
-		quit();
-		chromeDriver = new ChromeDriver(options);
-		setupDriver();
-	}
-
-	public void resetDriver(ChromeDriverService service, ChromeOptions options) {
-		quit();
-		chromeDriver = new ChromeDriver(service, options);
-		setupDriver();
-	}
 	@Override
 	public void get(String url) {
 		
 		while (true) {
 			try {
-				chromeDriver.get(url);
+				webDriver.get(url);
 				System.out.println("load website " + url + " success");
 				Thread.sleep(100 + new Random().nextInt(400));
 				return;
@@ -128,17 +96,17 @@ public class NicoDriver implements WebDriver{
 	}
 	
 	public void originGet(String url) {
-		chromeDriver.get(url);
+		webDriver.get(url);
 	}
 	
 	@Override
 	public String getCurrentUrl() {
-		return chromeDriver.getCurrentUrl();
+		return webDriver.getCurrentUrl();
 	}
 
 	@Override
 	public String getTitle() {
-		return chromeDriver.getTitle();
+		return webDriver.getTitle();
 	}
 	
 	@Override
@@ -146,7 +114,7 @@ public class NicoDriver implements WebDriver{
 		int i = 0;
 		while (true) {
 			try {
-				return chromeDriver.findElement(by);
+				return webDriver.findElement(by);
 			} catch (TimeoutException e) {
 				System.err.println("find element " + by.toString() + " timeout:( ");
 				if (i++ < 2) System.out.println("don't worry, CXwudi and miku are going to try again and make it work!!");
@@ -173,7 +141,7 @@ public class NicoDriver implements WebDriver{
 		int i = 0;
 		while (true) {
 			try {
-				return chromeDriver.findElements(by);
+				return webDriver.findElements(by);
 			} catch (TimeoutException e) {
 				System.err.println("find elements" + by.toString() + " timeout:( ");
 				if (i++ < 2) System.out.println("don't worry, CXwudi and miku are going to try again and make it work!!");
@@ -198,47 +166,47 @@ public class NicoDriver implements WebDriver{
 	@Override
 	public void quit() {
 	    try {
-			chromeDriver.manage().deleteAllCookies();
+			webDriver.manage().deleteAllCookies();
 		} catch (Exception e) {
 			System.err.println("fail to delete all cookies before quiting brower");
 			e.printStackTrace();
 		}
-	    chromeDriver.quit();
-	    chromeDriver = null;
+	    webDriver.quit();
+	    webDriver = null;
 	}
 	
 	@Override
 	public String getPageSource() {
-		return chromeDriver.getPageSource();
+		return webDriver.getPageSource();
 	}
 
 	@Override
 	public void close() {
-		chromeDriver.close();
+		webDriver.close();
 	}
 
 	@Override
 	public Set<String> getWindowHandles() {
-		return chromeDriver.getWindowHandles();
+		return webDriver.getWindowHandles();
 	}
 
 	@Override
 	public String getWindowHandle() {
-		return chromeDriver.getWindowHandle();
+		return webDriver.getWindowHandle();
 	}
 
 	@Override
 	public TargetLocator switchTo() {
-		return chromeDriver.switchTo();
+		return webDriver.switchTo();
 	}
 
 	@Override
 	public Navigation navigate() {
-		return chromeDriver.navigate();
+		return webDriver.navigate();
 	}
 
 	@Override
 	public Options manage() {
-		return chromeDriver.manage();
+		return webDriver.manage();
 	}
 }

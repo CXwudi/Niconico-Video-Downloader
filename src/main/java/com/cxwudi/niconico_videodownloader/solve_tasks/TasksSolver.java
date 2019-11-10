@@ -5,6 +5,8 @@ import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import org.openqa.selenium.chrome.ChromeDriver;
+
 import com.cxwudi.niconico_videodownloader.entity.NicoDriver;
 import com.cxwudi.niconico_videodownloader.entity.Vsong;
 import com.cxwudi.niconico_videodownloader.util.DownloadStatus;
@@ -24,7 +26,7 @@ public class TasksSolver {
 	
 	private Set<Vsong> task; //currently use TreeSet
 
-	public TasksSolver(NicoDriver d, Set<Vsong> task, Set<Vsong> update) {
+	public TasksSolver(NicoDriver<ChromeDriver> d, Set<Vsong> task, Set<Vsong> update) {
 		this.task = task;
 		this.downloader = new VideoDownloader();
 		this.infoGainer = new InfoGainer(d);

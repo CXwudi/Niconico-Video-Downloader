@@ -28,7 +28,7 @@ import com.cxwudi.niconico_videodownloader.solve_tasks.TasksSolver;
  */
 public class MainModel {
 	
-	private NicoDriver driver;
+	private NicoDriver<ChromeDriver> driver;
 	private TasksDecider tasksDecider;
 	private TasksSolver tasksSolver;
 	
@@ -38,7 +38,7 @@ public class MainModel {
 		ChromeOptions co = new ChromeOptions();
 		co.addArguments("--mute-audio");
 		//co.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.ACCEPT);
-		driver  = new NicoDriver();
+		driver  = new NicoDriver<>(new ChromeDriver(co));
 		//WARNING don't write done = task = new TreeSet<>(); 
 		//this gonna make two pointers point to the same one TreeSet, which is bad.
 		done = new TreeSet<>();
@@ -94,7 +94,7 @@ public class MainModel {
 		
 		//change language under Japan region.
 		try {
-			((JavascriptExecutor) driver.getChromeDriver()).executeScript("return window.stop");
+			((JavascriptExecutor) driver.getRealDriver()).executeScript("return window.stop");
 			var lanElement = driver.findElement(By.cssSelector("span.CountrySelector-item.CountrySelector-currentItem[data-value='en-us']"));
 			if (lanElement == null) lanElement = driver.findElement(By.cssSelector("span.CountrySelector-item.CountrySelector-currentItem[data-value='zh-tw']"));
 			

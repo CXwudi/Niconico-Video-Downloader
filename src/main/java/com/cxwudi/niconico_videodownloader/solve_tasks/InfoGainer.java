@@ -6,6 +6,7 @@ import java.util.Random;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 import com.cxwudi.niconico_videodownloader.entity.NicoDriver;
 import com.cxwudi.niconico_videodownloader.entity.Vsong;
@@ -15,13 +16,13 @@ import com.cxwudi.niconico_videodownloader.entity.Vsong;
  *
  */
 public class InfoGainer {
-	private NicoDriver driver;
+	private NicoDriver<ChromeDriver> driver;
 
-	public InfoGainer(NicoDriver d) {
+	public InfoGainer(NicoDriver<ChromeDriver> d) {
 		this.driver = d;
 	}
 	
-	public void setDriver(NicoDriver driver) {
+	public void setDriver(NicoDriver<ChromeDriver> driver) {
 		this.driver = driver;
 	}
 
