@@ -3,6 +3,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.SplittableRandom;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
@@ -35,9 +36,11 @@ import org.slf4j.LoggerFactory;
 public class NicoDriver<D extends WebDriver> implements WebDriver{
 	
 	private D webDriver;
+	private SplittableRandom random;
 
 	public NicoDriver(D underlayingDriver) {
 		webDriver = underlayingDriver;
+		random = new SplittableRandom();
 		setupDriver();
 	}
 	
@@ -84,7 +87,7 @@ public class NicoDriver<D extends WebDriver> implements WebDriver{
 			try {
 				webDriver.get(url);
 				logger.info("load website " + url + " success");
-				Thread.sleep(100L + new Random().nextInt(400));
+				Thread.sleep(random.nextInt(100, 400));
 				return;
 			} catch (TimeoutException e) {
 				logger.info("load website " + url + " timeout:( ");
@@ -123,7 +126,7 @@ public class NicoDriver<D extends WebDriver> implements WebDriver{
 					throw e;
 				}
 				try {
-					Thread.sleep(100L + new Random().nextInt(100));
+					Thread.sleep(random.nextInt(100, 100));
 				} catch (InterruptedException e1) {
 					logger.error("{}\nthis shouldn't happen", e);
 				}
