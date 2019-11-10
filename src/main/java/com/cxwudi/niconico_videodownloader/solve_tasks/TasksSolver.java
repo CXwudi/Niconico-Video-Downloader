@@ -1,9 +1,7 @@
 package com.cxwudi.niconico_videodownloader.solve_tasks;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import org.openqa.selenium.chrome.ChromeDriver;
 

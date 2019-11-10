@@ -1,20 +1,13 @@
 package com.cxwudi.niconico_videodownloader;
 
-import java.util.Random;
-import java.util.Scanner;
 import java.util.TreeSet;
-import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.UnexpectedAlertBehaviour;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.CapabilityType;
 
 import com.cxwudi.niconico_videodownloader.entity.NicoDriver;
 import com.cxwudi.niconico_videodownloader.entity.Vsong;
@@ -120,7 +113,7 @@ public class MainModel {
 	/**
 	 * @return the driver
 	 */
-	public NicoDriver driver() {
+	public NicoDriver<ChromeDriver> driver() {
 		return driver;
 	}
 

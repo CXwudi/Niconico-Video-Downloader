@@ -1,11 +1,8 @@
 package com.cxwudi.niconico_videodownloader.get_tasks;
 
-import java.util.Iterator;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.function.Function;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.chrome.ChromeDriver;

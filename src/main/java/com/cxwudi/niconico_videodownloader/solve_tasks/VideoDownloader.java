@@ -1,4 +1,9 @@
 package com.cxwudi.niconico_videodownloader.solve_tasks;
+import static com.cxwudi.niconico_videodownloader.util.DownloadStatus.FAIL_DOWNLOAD;
+import static com.cxwudi.niconico_videodownloader.util.DownloadStatus.FAIL_INITIAL;
+import static com.cxwudi.niconico_videodownloader.util.DownloadStatus.FAIL_RENAME;
+import static com.cxwudi.niconico_videodownloader.util.DownloadStatus.SUCCESS;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -7,14 +12,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.lang.ProcessBuilder.Redirect;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
-import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.Objects;
 
 import com.cxwudi.niconico_videodownloader.entity.Vsong;
@@ -52,7 +51,7 @@ public class VideoDownloader {
 	 */
 	public DownloadStatus downloadVocaloidPV(Vsong song) {
 		Objects.requireNonNull(song);
-		if (song.getId().equals("")) return DownloadStatus.FAIL_INITIAL;
+		if (song.getId().equals("")) return FAIL_INITIAL;
 		File file = makeDirForDownloadingVideoFile(song);//get the directory
 		
 		System.out.println("It's show time for Youtube-dl");
@@ -64,12 +63,12 @@ public class VideoDownloader {
 		}  catch (IOException e) {
 			e.printStackTrace();
 			System.err.println("どうしよう!!!!, CXwudi and Miku failed to start the process on downloading " + song.getTitle() + " from " + song.getURL());
-			return DownloadStatus.FAIL_DOWNLOAD;
+			return FAIL_DOWNLOAD;
 		} 
 		
 		if (song.getId().contains("nm")) {
 			System.out.println("since we don't grab the info for nm-id video " + song.getId() + ", no renaming action performed, but file was download");
-			return DownloadStatus.FAIL_RENAME;
+			return FAIL_RENAME;
 		}
 		
 		File[] videoFiles = file.listFiles( (dir, aFile) -> {
@@ -79,10 +78,10 @@ public class VideoDownloader {
 			var videoFile = videoFiles[0];
 			if (videoFile.renameTo(new File(videoFile.getParentFile(), generateFileName(song)))) {
 				System.out.println("rename success");
-				return DownloadStatus.SUCCESS;
+				return SUCCESS;
 			} else {
 				System.err.println("rename fail:(, renamed file might already exists");
-				return DownloadStatus.FAIL_RENAME;
+				return FAIL_RENAME;
 			}
 			
 		} else { //although so-id and pure-number id are same, but youtube-dl rename the file with the input id
