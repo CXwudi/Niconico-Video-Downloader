@@ -84,13 +84,13 @@ public class NicoDriver<D extends WebDriver> implements WebDriver{
 			try {
 				webDriver.get(url);
 				logger.info("load website " + url + " success");
-				Thread.sleep(100 + new Random().nextInt(400));
+				Thread.sleep(100L + new Random().nextInt(400));
 				return;
 			} catch (TimeoutException e) {
 				logger.info("load website " + url + " timeout:( ");
 				logger.info("don't worry, CXwudi and miku are going to refrash the webpage and make it work!!\"");
 			} catch (InterruptedException e) {
-				logger.info(e + "\nthis shouldn't happen");
+				logger.error("{}\nthis shouldn't happen", e);
 			}
 		}
 	}
@@ -123,13 +123,13 @@ public class NicoDriver<D extends WebDriver> implements WebDriver{
 					throw e;
 				}
 				try {
-					Thread.sleep(100 + new Random().nextInt(100));
+					Thread.sleep(100L + new Random().nextInt(100));
 				} catch (InterruptedException e1) {
-					logger.info(e + "\nthis shouldn't happen");
+					logger.error("{}\nthis shouldn't happen", e);
 				}
 
 			} catch (NoSuchElementException e) {
-				logger.info("Oh NO, we can't find element " + by.toString() + " , (maybe) get perpared for NullPointerException 😂");
+				logger.warn("Oh NO, we can't find element " + by.toString() + " , (maybe) get perpared for NullPointerException 😂");
 				return null;
 			}
 		} 
@@ -152,7 +152,7 @@ public class NicoDriver<D extends WebDriver> implements WebDriver{
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e1) {
-					logger.info(e + "\nthis shouldn't happen");
+					logger.error("{}\nthis shouldn't happen", e);
 				}
 
 			}
