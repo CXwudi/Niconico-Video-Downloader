@@ -12,9 +12,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.lang.invoke.MethodHandles;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.util.Objects;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.cxwudi.niconico_videodownloader.entity.Vsong;
 import com.cxwudi.niconico_videodownloader.util.Config;
@@ -43,6 +47,9 @@ public class VideoDownloader {
 		Config.OUTPUT_ROOT_DIR.mkdirs(); //this step should not make error
 		this.rootDLdir = new File(downloadDir);
 	}
+	
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
 	/**
 	 * Download the Vocaloid Song and rename it properly. 
 	 * it's a warper function of {@link #downloadUsingYoutube_dl(Vsong, File)} 
@@ -54,20 +61,20 @@ public class VideoDownloader {
 		if (song.getId().equals("")) return FAIL_INITIAL;
 		File file = makeDirForDownloadingVideoFile(song);//get the directory
 		
-		System.out.println("It's show time for Youtube-dl");
+		logger.info("It's show time for Youtube-dl");
 		try {
 			downloadUsingYoutube_dl(song, file);
 			//downloadUsingStream(song, file);
 			//downloadUsingNIO(song, file);
-			System.out.println("download success");
+			logger.info("download success");
 		}  catch (IOException e) {
 			e.printStackTrace();
-			System.err.println("どうしよう!!!!, CXwudi and Miku failed to start the process on downloading " + song.getTitle() + " from " + song.getURL());
+			logger.info("どうしよう!!!!, CXwudi and Miku failed to start the process on downloading " + song.getTitle() + " from " + song.getURL());
 			return FAIL_DOWNLOAD;
 		} 
 		
 		if (song.getId().contains("nm")) {
-			System.out.println("since we don't grab the info for nm-id video " + song.getId() + ", no renaming action performed, but file was download");
+			logger.info("since we don't grab the info for nm-id video " + song.getId() + ", no renaming action performed, but file was download");
 			return FAIL_RENAME;
 		}
 		
@@ -77,15 +84,15 @@ public class VideoDownloader {
 		if (videoFiles.length > 0) {
 			var videoFile = videoFiles[0];
 			if (videoFile.renameTo(new File(videoFile.getParentFile(), generateFileName(song)))) {
-				System.out.println("rename success");
+				logger.info("rename success");
 				return SUCCESS;
 			} else {
-				System.err.println("rename fail:(, renamed file might already exists");
+				logger.info("rename fail:(, renamed file might already exists");
 				return FAIL_RENAME;
 			}
 			
 		} else { //although so-id and pure-number id are same, but youtube-dl rename the file with the input id
-			System.out.println("VideoDownloader.downloadVocaloidPV() fail to find the downloaded video file");
+			logger.info("VideoDownloader.downloadVocaloidPV() fail to find the downloaded video file");
 			return DownloadStatus.FAIL_UNKNOWN;
 		}
 	}
@@ -157,7 +164,7 @@ public class VideoDownloader {
 		//if the downloading process does not hit 100.0%, or returning error, then restart the process to continue.
 		//this is a very useful code to handle niconico website occasionally return HTTP 403 forbidden.
 		if (stdErrStrBuilder.toString().contains("ERROR") || state < 100) {
-			System.out.println("Don't worry, CXwudi and Miku will retry downloading again from " + state + "%");
+			logger.info("Don't worry, CXwudi and Miku will retry downloading again from " + state + "%");
 			downloadUsingYoutube_dl(song, dir);
 		}
 		
@@ -197,7 +204,7 @@ public class VideoDownloader {
 			if (!dir.isDirectory()) 
 				throw new SecurityException("Such path name is not a directory");//a fake exception
 		} catch (SecurityException e) {
-			System.err.println(e + "\nCXwudi and miku found that this directory" + dir + "is not avaliable, default directory is set, as " + Config.OUTPUT_ROOT_DIR.toString());
+			logger.info(e + "\nCXwudi and miku found that this directory" + dir + "is not avaliable, default directory is set, as " + Config.OUTPUT_ROOT_DIR.toString());
 			dir = Config.OUTPUT_ROOT_DIR;
 		}
 		
@@ -223,7 +230,7 @@ public class VideoDownloader {
 				.replace("アニメ", "").replace("MV", "").replace("PV", "")
 				.replace("[]", "").replace("【】", "");
 		fileNameString = NicoStringTool.fixFileName(fileNameString);
-		System.out.println("file name: " + fileNameString);
+		logger.info("file name: " + fileNameString);
 		return fileNameString;
 	}
 	
@@ -245,7 +252,7 @@ public class VideoDownloader {
 			this.rootDLdir = dir;
 		} catch (SecurityException e) {
 			e.printStackTrace();
-			System.err.println("CXwudi and miku found that this directory " + dir + " is not avaliable, plz try again.\nA default directroy D:\\11134\\Download\\Video has been set instead.");
+			logger.info("CXwudi and miku found that this directory " + dir + " is not avaliable, plz try again.\nA default directroy D:\\11134\\Download\\Video has been set instead.");
 			this.rootDLdir = Config.OUTPUT_ROOT_DIR;
 		}
 		
@@ -270,7 +277,7 @@ public class VideoDownloader {
 				var output = new FileOutputStream(file);) { // create FileOutputStream for the above file.
 	
 			// start downloading process
-			System.out.println("start downloading");
+			logger.info("start downloading");
 			byte[] buffer = new byte[1024];
 			int count = 0;
 			int size = 0;
@@ -278,11 +285,11 @@ public class VideoDownloader {
 				output.write(buffer, 0, count);
 				size += count;
 			}
-			System.out.println("file size = " + size);
+			logger.info("file size = " + size);
 			if (file.renameTo(new File(file.getParentFile(), generateFileName(song)))) {
-				System.out.println(file.getName() + " done, yeah!!");
+				logger.info(file.getName() + " done, yeah!!");
 			} else {
-				System.out.println(file.getName() + " done, but rename fail :(");
+				logger.info(file.getName() + " done, but rename fail :(");
 			}
 		}
 	}
@@ -291,14 +298,14 @@ public class VideoDownloader {
 	private void downloadUsingNIO(Vsong song, File file) throws IOException {
 		 var rbc = Channels.newChannel(new URL(song.getURL()).openStream());
 		 var output = new FileOutputStream(file);
-		 System.out.println("start downloading");
+		 logger.info("start downloading");
 		 output.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
 		 output.close();
 	     rbc.close();
 		if (file.renameTo(new File(file.getParentFile(), generateFileName(song)))) {
-			System.out.println(file.getName() + " done, yeah!!");
+			logger.info(file.getName() + " done, yeah!!");
 		} else {
-			System.out.println(file.getName() + " done, but rename fail :(");
+			logger.info(file.getName() + " done, but rename fail :(");
 		}
 	}
 

@@ -2,11 +2,15 @@ package com.cxwudi.niconico_videodownloader.solve_tasks;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.cxwudi.niconico_videodownloader.entity.Vsong;
 import com.cxwudi.niconico_videodownloader.util.Config;
@@ -24,7 +28,7 @@ public class LocalRecorder {
 		try {
 			if (!listDownloadedTxt.exists()) {
 				if (!listDownloadedTxt.createNewFile()) {
-					System.err.println("unable to create new downloader.txt");
+					logger.warn("unable to create new downloader.txt");
 				}
 			}
 		} catch (IOException e) {
@@ -53,8 +57,10 @@ public class LocalRecorder {
 				writer.println(sb.toString());
 			}
 		} catch (IOException e) {
-			System.err.println(e + "\nthis shouldn't happen");
+			logger.info(e + "\nthis shouldn't happen");
 		} 
 	}
+	
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 }

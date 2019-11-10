@@ -1,5 +1,9 @@
 package com.cxwudi.niconico_videodownloader;
+import java.lang.invoke.MethodHandles;
 import java.util.Random;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.cxwudi.niconico_videodownloader.solve_tasks.TasksSolver;
 import com.cxwudi.niconico_videodownloader.util.Config;
@@ -25,7 +29,7 @@ public class Main {
 			
 			switch (manager.downloadOneVocaloidPV(vsong)) {
 				case SUCCESS:
-					System.out.println("done");
+					logger.info("done");
 				break;
 				case FAIL_RENAME:
 					//do nothing
@@ -36,26 +40,27 @@ public class Main {
 					
 			manager.markDone(vsong);
 			manager.triggerRecord(); //if the currentRuntime.addShutdownHook works in eclipse, then we don't need this line
-			System.out.println("record updated");
+			logger.info("record updated");
 			
 			try {
 				Thread.sleep(1000L + new Random().nextInt(3000));
 			} catch (InterruptedException e) {
-				System.err.println(e + "\n this should not happen");
+				logger.error("\n {} this should not happen", e);
 			}
 			
 		});
-		System.err.println("おめでとう、全部ダウンロードを終わった");
+		logger.warn("おめでとう、全部ダウンロードを終わった");
 		main.driver().quit();
 	}
-
+	
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 }
 
 
 //legacy code
 /*while (true) {
 	manager.fetchInfo(vsong);
-	if (!manager.downloadOneVocaloidPV(vsong)) System.out.println(vsong + "doesn't exist!!, plz skip");
+	if (!manager.downloadOneVocaloidPV(vsong)) logger.info(vsong + "doesn't exist!!, plz skip");
 	
 	var scanner = new Scanner(System.in);
 	String answer = "";
@@ -64,11 +69,11 @@ public class Main {
 		answer = scanner.nextLine();
 	}
 	if (answer.equalsIgnoreCase("y")) {
-		System.out.println("Good, CXwudi and Miku are moving to next file");
+		logger.info("Good, CXwudi and Miku are moving to next file");
 		manager.markDone(vsong);
 		manager.triggerRecord();// we add this line for now
 		break;
 	} else {
-		System.out.println("Okay, CXwudi and Miku will re-download this song :/");
+		logger.info("Okay, CXwudi and Miku will re-download this song :/");
 	}
 }*/

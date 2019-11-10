@@ -1,4 +1,5 @@
 package com.cxwudi.niconico_videodownloader.entity;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -9,6 +10,8 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * NicoDriver is a WebDriver that contains a ChromeDriver that is optimized for Niconico video website, nicovideo.jp
@@ -80,14 +83,14 @@ public class NicoDriver<D extends WebDriver> implements WebDriver{
 		while (true) {
 			try {
 				webDriver.get(url);
-				System.out.println("load website " + url + " success");
+				logger.info("load website " + url + " success");
 				Thread.sleep(100 + new Random().nextInt(400));
 				return;
 			} catch (TimeoutException e) {
-				System.err.println("load website " + url + " timeout:( ");
-				System.out.println("don't worry, CXwudi and miku are going to refrash the webpage and make it work!!\"");
+				logger.info("load website " + url + " timeout:( ");
+				logger.info("don't worry, CXwudi and miku are going to refrash the webpage and make it work!!\"");
 			} catch (InterruptedException e) {
-				System.err.println(e + "\nthis shouldn't happen");
+				logger.info(e + "\nthis shouldn't happen");
 			}
 		}
 	}
@@ -113,20 +116,20 @@ public class NicoDriver<D extends WebDriver> implements WebDriver{
 			try {
 				return webDriver.findElement(by);
 			} catch (TimeoutException e) {
-				System.err.println("find element " + by.toString() + " timeout:( ");
-				if (i++ < 2) System.out.println("don't worry, CXwudi and miku are going to try again and make it work!!");
+				logger.info("find element " + by.toString() + " timeout:( ");
+				if (i++ < 2) logger.info("don't worry, CXwudi and miku are going to try again and make it work!!");
 				else {
-					System.err.println("Oh NO, we really failed :(");
+					logger.info("Oh NO, we really failed :(");
 					throw e;
 				}
 				try {
 					Thread.sleep(100 + new Random().nextInt(100));
 				} catch (InterruptedException e1) {
-					System.err.println(e + "\nthis shouldn't happen");
+					logger.info(e + "\nthis shouldn't happen");
 				}
 
 			} catch (NoSuchElementException e) {
-				System.err.println("Oh NO, we can't find element " + by.toString() + " , (maybe) get perpared for NullPointerException 😂");
+				logger.info("Oh NO, we can't find element " + by.toString() + " , (maybe) get perpared for NullPointerException 😂");
 				return null;
 			}
 		} 
@@ -140,16 +143,16 @@ public class NicoDriver<D extends WebDriver> implements WebDriver{
 			try {
 				return webDriver.findElements(by);
 			} catch (TimeoutException e) {
-				System.err.println("find elements" + by.toString() + " timeout:( ");
-				if (i++ < 2) System.out.println("don't worry, CXwudi and miku are going to try again and make it work!!");
+				logger.info("find elements" + by.toString() + " timeout:( ");
+				if (i++ < 2) logger.info("don't worry, CXwudi and miku are going to try again and make it work!!");
 				else {
-					System.err.println("Oh NO, we really failed :(");
+					logger.info("Oh NO, we really failed :(");
 					throw e;
 				}
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e1) {
-					System.err.println(e + "\nthis shouldn't happen");
+					logger.info(e + "\nthis shouldn't happen");
 				}
 
 			}
@@ -165,7 +168,7 @@ public class NicoDriver<D extends WebDriver> implements WebDriver{
 	    try {
 			webDriver.manage().deleteAllCookies();
 		} catch (Exception e) {
-			System.err.println("fail to delete all cookies before quiting brower");
+			logger.info("fail to delete all cookies before quiting brower");
 			e.printStackTrace();
 		}
 	    webDriver.quit();
@@ -206,4 +209,7 @@ public class NicoDriver<D extends WebDriver> implements WebDriver{
 	public Options manage() {
 		return webDriver.manage();
 	}
+	
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
 }

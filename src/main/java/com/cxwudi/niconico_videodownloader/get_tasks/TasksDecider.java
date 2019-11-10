@@ -1,11 +1,14 @@
 package com.cxwudi.niconico_videodownloader.get_tasks;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.cxwudi.niconico_videodownloader.entity.NicoDriver;
 import com.cxwudi.niconico_videodownloader.entity.Vsong;
@@ -42,7 +45,7 @@ public class TasksDecider{
 			a.join();
 			b.join();
 		} catch (InterruptedException e) {
-			System.err.println(e + "\nthis shouldn't happen");
+			logger.error(e + "\nthis shouldn't happen");
 		}
 	}
 	
@@ -74,8 +77,8 @@ public class TasksDecider{
 		
 		if (map.get(true) != null) done.addAll(map.get(true));
 		if (map.get(false) != null) task.addAll(map.get(false));
-		System.out.println("PV that needed to be downloaded: \n" + task + "\ntotally " + task.size() + " PVs");
-		System.out.println("PV that already been downloaded: \n" + done + "\ntotally " + done.size() + " PVs");
+		logger.info("PV that needed to be downloaded: \n" + task + "\ntotally " + task.size() + " PVs");
+		logger.info("PV that already been downloaded: \n" + done + "\ntotally " + done.size() + " PVs");
 		return true;
 	}
 	/**
@@ -89,7 +92,7 @@ public class TasksDecider{
 		return true;
 	}
 	
-	public void setDriver(NicoDriver driver) {
+	public void setDriver(NicoDriver<ChromeDriver> driver) {
 		nicoListGrabber.setDriver(driver);
 	}
 	/**
@@ -118,4 +121,5 @@ public class TasksDecider{
 		return done;
 	}
 	
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 }

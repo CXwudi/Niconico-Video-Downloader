@@ -1,5 +1,7 @@
 package com.cxwudi.niconico_videodownloader;
 
+import java.lang.invoke.MethodHandles;
+import java.util.Set;
 import java.util.TreeSet;
 
 import org.openqa.selenium.By;
@@ -8,6 +10,8 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.cxwudi.niconico_videodownloader.entity.NicoDriver;
 import com.cxwudi.niconico_videodownloader.entity.Vsong;
@@ -25,7 +29,7 @@ public class MainModel {
 	private TasksDecider tasksDecider;
 	private TasksSolver tasksSolver;
 	
-	private TreeSet<Vsong> task, done;
+	private Set<Vsong> task, done;
 
 	public MainModel() {
 		ChromeOptions co = new ChromeOptions();
@@ -49,10 +53,10 @@ public class MainModel {
 		ps.sendKeys(password);
 		ps.submit();
 		if (driver.getCurrentUrl().contains("www.nicovideo.jp")) {
-			System.out.println("login success");
+			logger.info("login success");
 			return true;
 		} else {
-			System.out.println("login fail");
+			logger.warn("login fail");
 			return false;
 		}
 	}
@@ -64,7 +68,7 @@ public class MainModel {
 				driver.get("http://www.nicovideo.jp/");
 			}
 		} catch (TimeoutException e) {
-			System.err.println("get current url may fail");
+			logger.error("get current url may fail");
 		}
 		
 		//change area, no longer available after 2019 April
@@ -76,12 +80,12 @@ public class MainModel {
 //				areaElement.click();
 //				Thread.sleep(50);
 //				driver.findElement(By.cssSelector("a.selectType.JP")).click();
-//				System.out.println("change region success");
+//				logger.info("change region success");
 //			} else {
-//				System.out.println("already in Japan region");
+//				logger.info("already in Japan region");
 //			}
 //		} catch (TimeoutException | InterruptedException e) {
-//			System.err.println("change region may fail");
+//			logger.error("change region may fail");
 //			isSuccess = false;
 //		}
 		
@@ -96,13 +100,13 @@ public class MainModel {
 				lanElement.click();
 				Thread.sleep(50);
 				driver.findElement(By.cssSelector("li.CountrySelector-item[data-type='language'][data-value='ja-jp']")).click();
-				System.out.println("change language success");
+				logger.info("change language success");
 			} else {
-				System.out.println("already in Japanese");
+				logger.info("already in Japanese");
 			}
 			isSuccess = true;
 		} catch (TimeoutException | InterruptedException e) {
-			System.err.println("change language may fail");
+			logger.warn("change language may fail");
 			isSuccess = false;
 		}
 		
@@ -134,28 +138,28 @@ public class MainModel {
 	/**
 	 * @return the task
 	 */
-	public TreeSet<Vsong> getTask() {
+	public Set<Vsong> getTask() {
 		return task;
 	}
 
 	/**
 	 * @param task the task to set
 	 */
-	public void setTask(TreeSet<Vsong> task) {
+	public void setTask(Set<Vsong> task) {
 		this.task = task;
 	}
 
 	/**
 	 * @return the done
 	 */
-	public TreeSet<Vsong> getUpdate() {
+	public Set<Vsong> getUpdate() {
 		return done;
 	}
 
 	/**
 	 * @param done the done to set
 	 */
-	public void setUpdate(TreeSet<Vsong> update) {
+	public void setUpdate(Set<Vsong> update) {
 		this.done = update;
 	}
 
@@ -163,4 +167,5 @@ public class MainModel {
 		Main.main(args);
 	}
 
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 }

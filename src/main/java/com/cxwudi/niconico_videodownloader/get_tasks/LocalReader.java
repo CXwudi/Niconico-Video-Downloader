@@ -4,6 +4,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.cxwudi.niconico_videodownloader.entity.Vsong;
 import com.cxwudi.niconico_videodownloader.util.Config;
@@ -23,7 +27,7 @@ public class LocalReader extends CollectionReader{
 		try {
 			if (!listDownloadedTxt.exists()) {
 				if (!listDownloadedTxt.createNewFile()) {
-					System.err.println("unable to create new downloader.txt");
+					logger.error("unable to create new downloader.txt");
 				}
 			}
 		} catch (IOException e) {
@@ -41,29 +45,15 @@ public class LocalReader extends CollectionReader{
 				String[] detialArray = i.split("------");
 				collection.add(new Vsong(detialArray[0] ,detialArray[1]));
 			}
-			System.out.println("local record is: " + collection);
-			reader.close();
+			logger.info("local record is: \n{}", collection);
 			isDone = true;
 		} catch (IOException e) {
-			System.err.println("this shouldn't happen");
-			e.printStackTrace();
+			logger.error("exception shouldn't happen in reading records: \n{}", e);
 			isDone = false;
 		}
 		
 	}
 
-
-	public static void main(String[] args) throws IOException {
-		testReading();
-	}
-	public static void testReading() {
-		LocalReader localReader = new LocalReader();
-		//Map<String, String> map = localRecorder.getIsDownloaded();
-		System.out.println(new File(new File("."), "downloaded.txt").getAbsolutePath());
-		System.out.println(System.getProperty("user.dir"));
-		localReader.readRecord();
-		System.out.println(localReader.getCollection());
-		
-	}
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 }

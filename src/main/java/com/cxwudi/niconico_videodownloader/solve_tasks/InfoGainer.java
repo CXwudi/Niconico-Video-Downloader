@@ -1,4 +1,5 @@
 package com.cxwudi.niconico_videodownloader.solve_tasks;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -7,6 +8,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.cxwudi.niconico_videodownloader.entity.NicoDriver;
 import com.cxwudi.niconico_videodownloader.entity.Vsong;
@@ -33,7 +36,7 @@ public class InfoGainer {
 	 */
 	public boolean fetchInfo(Vsong song) {
 		if (song == null) {
-			System.err.println("song is null, CXwudi and Miku just skip this one");
+			logger.info("song is null, CXwudi and Miku just skip this one");
 			return false;
 		}
 		String videoURL = "";
@@ -44,55 +47,55 @@ public class InfoGainer {
 		try {
 			driver.get("http://www.nicovideo.jp/watch/" + song.getId());
 			//driver.navigate().refresh();
-			System.out.println("website opened");
+			logger.info("website opened");
 			Thread.sleep(700 + new Random().nextInt(300));
 			//some check
 			if (song.getId().contains("nm")) {
-				System.err.println("nm-id video unsupported, not gonna grab info for" + song.getId());
+				logger.info("nm-id video unsupported, not gonna grab info for" + song.getId());
 				return true;
 			}
 			if (driver.containsElements(By.cssSelector("div.mb16p4"))) {
-    			System.err.println("fake webpage, CXwudi and Miku are very ANGRY and wanna exits :(");
+    			logger.info("fake webpage, CXwudi and Miku are very ANGRY and wanna exits :(");
     			return false;
     		}
 			
 			
 			videoTitle = driver.findElement(By.cssSelector("h1.VideoTitle")).getText();
-			System.out.println("title: " + videoTitle);
+			logger.info("title: {}", videoTitle);
 			
 			videoURL = driver.findElement(By.id("MainVideoPlayer")).findElement(By.cssSelector("video")).getAttribute("src");
-			System.out.println("url reached: " + videoURL);
+			logger.info("url reached: {}", videoURL);
 			
 			List<WebElement> producer = driver.findElements(By.cssSelector("a.Link.VideoOwnerInfo-pageLink"));
-			if (producer.size() == 0) { //that means it's a non-sm id, like nm-id or pure number id (2019)
+			if (producer.isEmpty()) { //that means it's a non-sm id, like nm-id or pure number id (2019)
 				producerName = driver.findElement(By.cssSelector("a.Link.ChannelInfo-pageLink")).getText();
 			} else {
 				producerName = producer.get(0).getText();
 				producerName = producerName.substring(0, producerName.length() - 3);
 			}
-			System.out.println("producer name: " + producerName);
+			logger.info("producer name: {}", producerName);
 			
 			WebElement tagContainer = driver.findElement(By.cssSelector("ul.TagList"));
 			List<WebElement> tagElements = tagContainer.findElements(By.cssSelector("a.Link.TagItem-name"));
 			for (WebElement tagElement : tagElements) {
 				tags.add(tagElement.getText());
 			}
-			System.out.println("tags: " + tags);
+			logger.info("tags: {}", tags);
 			//driver.findElement(By.cssSelector("div.ControllerButton-inner")).click();//start the video, fake the server
 		} catch (TimeoutException e) {
 			e.printStackTrace();
-			System.err.println("CXwudi and Miku failed due to TimeoutException, we are trying again");
+			logger.info("CXwudi and Miku failed due to TimeoutException, we are trying again");
 			return fetchInfo(song);
 		} catch (InterruptedException e) {
-			System.err.println(e + "\nthis shouldn't happen at InfoGainer.fetchInfo()");
+			logger.info(e + "\nthis shouldn't happen at InfoGainer.fetchInfo()");
 			return false;
 		}
 		if (videoURL == null || videoURL.equals("") || producerName.equals("") || tags.isEmpty() || videoTitle.equals("")) {
-			System.err.println("CXwudi and Miku failed to get some video info, we are trying again");
+			logger.info("CXwudi and Miku failed to get some video info, we are trying again");
 			return fetchInfo(song);
 		} else {
 			song.setProducerName(producerName).setURL(videoURL).setTagsList(tags).setTitle(videoTitle);
-			System.out.println("SEE!! CXwudi and miku get the video info, here is it:\n" + song);
+			logger.info("SEE!! CXwudi and miku get the video info, here is it:\n" + song);
 			return true;
 		}
 	}
@@ -113,5 +116,7 @@ public class InfoGainer {
 		main.downloadManager().fetchInfo(new Vsong(123123123, ""));
 		main.downloadManager().fetchInfo(new Vsong(32461412, ""));*/
 	}
+	
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 }
