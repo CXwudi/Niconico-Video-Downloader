@@ -82,7 +82,7 @@ public class TasksSolver {
 		localRecorder.writeRecord();
 	}
 
-	public void setDriver(NicoDriver driver) {
+	public void setDriver(NicoDriver<ChromeDriver> driver) {
 		infoGainer.setDriver(driver);
 	}
 
