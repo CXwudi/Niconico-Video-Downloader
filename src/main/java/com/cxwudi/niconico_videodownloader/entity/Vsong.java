@@ -75,8 +75,8 @@ public class Vsong implements Comparable<Vsong>{
 		return new StringBuilder()
 				.append("\n[Song: ").append(title)
 				.append(", ID: ").append(id)
-				.append(producerName == "" ? "" : ", Producer: ").append(producerName)
-				.append(subDir == "" ? "" : ", Folder: ").append(subDir)
+				.append(producerName.equals("") ? "" : ", Producer: ").append(producerName)
+				.append(subDir.equals("") ? "" : ", Folder: ").append(subDir)
 				// .append(", status: ").append(isDownloaded ? "done" : "to be downloaded")
 				.append("]")
 				.toString();
