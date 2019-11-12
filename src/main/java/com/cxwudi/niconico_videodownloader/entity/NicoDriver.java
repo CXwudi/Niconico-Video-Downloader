@@ -56,7 +56,7 @@ public class NicoDriver implements WebDriver{
     }
 	
 	/**
-	 * @param <D> the actual type of the real webDriver
+	 * @param <D> the actual type of the real webDriver, if unspecific, return WebDriver type
 	 * @return the real webDriver inside the wrapper class
 	 */
 	@SuppressWarnings("unchecked" )
