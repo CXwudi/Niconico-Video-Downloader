@@ -25,7 +25,7 @@ import com.cxwudi.niconico_videodownloader.solve_tasks.TasksSolver;
  */
 public class MainModel {
 	
-	private NicoDriver<ChromeDriver> driver;
+	private NicoDriver driver;
 	private TasksDecider tasksDecider;
 	private TasksSolver tasksSolver;
 	
@@ -35,7 +35,7 @@ public class MainModel {
 		ChromeOptions co = new ChromeOptions();
 		co.addArguments("--mute-audio");
 		//co.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.ACCEPT);
-		driver  = new NicoDriver<>(new ChromeDriver(co));
+		driver  = new NicoDriver(new ChromeDriver(co));
 		//WARNING don't write done = task = new TreeSet<>(); 
 		//this gonna make two pointers point to the same one TreeSet, which is bad.
 		done = new TreeSet<>();
@@ -117,7 +117,7 @@ public class MainModel {
 	/**
 	 * @return the driver
 	 */
-	public NicoDriver<ChromeDriver> driver() {
+	public NicoDriver driver() {
 		return driver;
 	}
 

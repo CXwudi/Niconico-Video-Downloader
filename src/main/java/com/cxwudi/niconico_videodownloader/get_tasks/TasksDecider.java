@@ -26,7 +26,7 @@ public class TasksDecider{
 	
 	private Set<Vsong> task, done;				//currently use TreeSet
 
-	public TasksDecider(NicoDriver<ChromeDriver> d, Set<Vsong> task, Set<Vsong> done) {	
+	public TasksDecider(NicoDriver d, Set<Vsong> task, Set<Vsong> done) {	
 		localReader = new LocalReader();
 		nicoListGrabber = new NicoListGrabber(d);
 		this.task = task;
@@ -92,7 +92,7 @@ public class TasksDecider{
 		return true;
 	}
 	
-	public void setDriver(NicoDriver<ChromeDriver> driver) {
+	public void setDriver(NicoDriver driver) {
 		nicoListGrabber.setDriver(driver);
 	}
 	/**

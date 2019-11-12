@@ -33,12 +33,12 @@ import org.slf4j.LoggerFactory;
  *  getWindowHandle() used for switching tab
  *  getWindowHandles() used for switching tab as well
  */
-public class NicoDriver<D extends WebDriver> implements WebDriver{
+public class NicoDriver implements WebDriver{
 	
-	private D webDriver;
+	private WebDriver webDriver;
 	private SplittableRandom random;
 
-	public NicoDriver(D underlayingDriver) {
+	public NicoDriver(WebDriver underlayingDriver) {
 		webDriver = underlayingDriver;
 		random = new SplittableRandom();
 		setupDriver();
@@ -56,10 +56,12 @@ public class NicoDriver<D extends WebDriver> implements WebDriver{
     }
 	
 	/**
+	 * @param <D> the actual type of the real webDriver
 	 * @return the real webDriver inside the wrapper class
 	 */
-	public D getRealDriver() {
-		return webDriver;
+	@SuppressWarnings("unchecked" )
+	public <D extends WebDriver> D getRealDriver() {
+		return (D) webDriver;
 	}
 
 	/**
@@ -67,14 +69,14 @@ public class NicoDriver<D extends WebDriver> implements WebDriver{
 	 * @Warnning this setter doesn't delete and quit the old webDriver, better do {@code getDriver().quit()}
 	 * before using {@code setDriver()}.
 	 */
-	public void setRealDriver(D driver) {
+	public void setRealDriver(WebDriver driver) {
 		this.webDriver = driver;
 	}
 
 	/**
 	 * Simply just close the browser and reopen a new one.
 	 */
-	public void resetDriver(D driver) {
+	public void resetDriver(WebDriver driver) {
 		quit();
 		webDriver = driver;
 		setupDriver();

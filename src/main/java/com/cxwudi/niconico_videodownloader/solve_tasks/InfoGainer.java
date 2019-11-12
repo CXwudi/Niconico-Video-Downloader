@@ -19,13 +19,13 @@ import com.cxwudi.niconico_videodownloader.entity.Vsong;
  *
  */
 public class InfoGainer {
-	private NicoDriver<ChromeDriver> driver;
+	private NicoDriver driver;
 
-	public InfoGainer(NicoDriver<ChromeDriver> d) {
+	public InfoGainer(NicoDriver d) {
 		this.driver = d;
 	}
 	
-	public void setDriver(NicoDriver<ChromeDriver> driver) {
+	public void setDriver(NicoDriver driver) {
 		this.driver = driver;
 	}
 

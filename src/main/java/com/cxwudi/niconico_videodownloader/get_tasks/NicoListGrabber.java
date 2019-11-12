@@ -26,15 +26,15 @@ import com.cxwudi.niconico_videodownloader.entity.Vsong;
  *
  */
 public class NicoListGrabber extends CollectionReader{
-	private NicoDriver<ChromeDriver> driver;
+	private NicoDriver driver;
 
 	
-	public NicoListGrabber(NicoDriver<ChromeDriver> d) {
+	public NicoListGrabber(NicoDriver d) {
 		super();
 		driver = d;
 	}
 
-	public void setDriver(NicoDriver<ChromeDriver> driver) {
+	public void setDriver(NicoDriver driver) {
 		this.driver = driver;
 	}
 

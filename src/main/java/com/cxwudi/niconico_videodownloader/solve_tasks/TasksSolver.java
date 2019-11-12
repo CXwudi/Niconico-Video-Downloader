@@ -24,7 +24,7 @@ public class TasksSolver {
 	
 	private Set<Vsong> task; //currently use TreeSet
 
-	public TasksSolver(NicoDriver<ChromeDriver> d, Set<Vsong> task, Set<Vsong> update) {
+	public TasksSolver(NicoDriver d, Set<Vsong> task, Set<Vsong> update) {
 		this.task = task;
 		this.downloader = new VideoDownloader();
 		this.infoGainer = new InfoGainer(d);
@@ -80,7 +80,7 @@ public class TasksSolver {
 		localRecorder.writeRecord();
 	}
 
-	public void setDriver(NicoDriver<ChromeDriver> driver) {
+	public void setDriver(NicoDriver driver) {
 		infoGainer.setDriver(driver);
 	}
 
