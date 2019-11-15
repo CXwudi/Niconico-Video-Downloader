@@ -157,7 +157,7 @@ public class MainModel {
 	}
 
 	/**
-	 * @param done the done to set
+	 * @param update the done to set
 	 */
 	public void setUpdate(Set<Vsong> update) {
 		this.done = update;
