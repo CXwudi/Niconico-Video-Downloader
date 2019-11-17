@@ -20,7 +20,7 @@
     <log4j2.version>2.12.1</log4j2.version>
     
     <selenium.rootDir>lib/selenium_drivers</selenium.rootDir>
-    <mainClassToRun>com.cxwudi.niconico_videodownloader.Main</mainClassToRun>
+    <init.mainClass>com.cxwudi.niconico_videodownloader.setup.WriteConfigFileByMaven</init.mainClass>
   </properties>
 
   <dependencies>
@@ -44,6 +44,11 @@
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-configuration2</artifactId>
       <version>2.6</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-beanutils</groupId>
+      <artifactId>commons-beanutils</artifactId>
+      <version>1.9.4</version>
     </dependency>
 
     <!-- The JAVE (Java Audio Video Encoder) library, which warp and contains a ffmpeg.exe executable 
@@ -161,7 +166,42 @@
         </executions>
       </plugin>
 
-      <plugin> <!-- write system_config.property file plugin -->
+      <!-- run main class plugin, no longer needed -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.6.0</version>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>java</goal>
+            </goals>
+            <configuration>
+              <mainClass>${init.mainClass}</mainClass>
+              <arguments>
+              </arguments>
+              <systemProperties>
+                <systemProperty>
+                  <key>webdriver.edge.driver</key>
+                  <value>${webdriver.edge.driver}</value>
+                </systemProperty>
+                <systemProperty>
+                  <key>webdriver.opera.driver</key>
+                  <value>${webdriver.opera.driver}</value>
+                </systemProperty>
+                <systemProperty>
+                  <key>webdriver.chrome.driver</key>
+                  <value>${webdriver.chrome.driver}</value>
+                </systemProperty>
+              </systemProperties>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- write a property file plugin, no longer needed-->
+      <!-- <plugin>
         <groupId>com.internetitem</groupId>
         <artifactId>write-properties-file-maven-plugin</artifactId>
         <version>1.0.1</version>
@@ -192,7 +232,7 @@
             </configuration>
           </execution>
         </executions>
-      </plugin>
+      </plugin> -->
 
       <plugin> <!-- if want to configure test, use this plugin -->
         <groupId>org.apache.maven.plugins</groupId>
@@ -219,40 +259,6 @@
         </executions>
         <!-- Learn mavan: <configuration> tab put here will set parameter for all executions in <executions> -->
       </plugin>
-
-<!-- run main class plugin, no longer needed -->
-      <!-- <plugin> 
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.6.0</version>
-        <executions>
-          <execution>
-            <phase>test</phase>
-            <goals>
-              <goal>java</goal>
-            </goals>
-            <configuration>
-              <mainClass>${mainClassToRun}</mainClass>
-              <arguments>
-              </arguments>
-              <systemProperties>
-                <systemProperty>
-                  <key>webdriver.edge.driver</key>
-                  <value>${webdriver.edge.driver}</value>
-                </systemProperty>
-                <systemProperty>
-                  <key>webdriver.opera.driver</key>
-                  <value>${webdriver.opera.driver}</value>
-                </systemProperty>
-                <systemProperty>
-                  <key>webdriver.chrome.driver</key>
-                  <value>${webdriver.chrome.driver}</value>
-                </systemProperty>
-              </systemProperties>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin> -->
       
       <plugin> <!-- Need this plugin to allow Java 11 -->
         <groupId>org.codehaus.mojo</groupId>

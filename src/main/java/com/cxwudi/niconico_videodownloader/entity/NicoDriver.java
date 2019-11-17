@@ -1,18 +1,14 @@
 package com.cxwudi.niconico_videodownloader.entity;
+
+import org.openqa.selenium.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.invoke.MethodHandles;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.SplittableRandom;
 import java.util.concurrent.TimeUnit;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * NicoDriver is a WebDriver that contains a ChromeDriver that is optimized for Niconico video website, nicovideo.jp
@@ -65,7 +61,7 @@ public class NicoDriver implements WebDriver{
 	}
 
 	/**
-	 * @param webDriver the webDriver to set
+	 * @param driver the webDriver to set
 	 * @Warnning this setter doesn't delete and quit the old webDriver, better do {@code getDriver().quit()}
 	 * before using {@code setDriver()}.
 	 */
