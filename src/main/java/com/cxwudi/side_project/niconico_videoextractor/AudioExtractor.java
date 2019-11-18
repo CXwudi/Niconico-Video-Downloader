@@ -1,6 +1,12 @@
 package com.cxwudi.side_project.niconico_videoextractor;
 
 
+import com.cxwudi.side_project.niconico_videoextractor.ExtractTaskThread.MiddleFileMismatchException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ws.schild.jave.AudioAttributes;
+import ws.schild.jave.EncodingAttributes;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
@@ -12,14 +18,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.cxwudi.side_project.niconico_videoextractor.ExtractTaskThread.MiddleFileMismatchException;
-
-import ws.schild.jave.AudioAttributes;
-import ws.schild.jave.EncodingAttributes;
 /**
  * A small script to extract audio tracks from multiple PV video files.
  * It support mp4 and flv format, indeed, it should support all video with aac audio track.
@@ -43,19 +41,16 @@ public class AudioExtractor {
 	 */
 	private static final int MAX_HOLD = 1024;
 
-	private File inputRoot;
 	private File outputRoot;
-	private File[] folders;
+	private File[] inputFolders;
 
 	/**
-	 * @param inputRoot
 	 * @param outputRoot
-	 * @param folders
+	 * @param inputFolders
 	 */
-	public AudioExtractor(File inputRoot, File[] folders, File outputRoot) {
-		this.inputRoot = inputRoot;
+	public AudioExtractor(File[] inputFolders, File outputRoot) {
 		this.outputRoot = outputRoot;
-		this.folders = folders;
+		this.inputFolders = inputFolders;
 	}
 	
 	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -83,7 +78,6 @@ public class AudioExtractor {
 				.collect(Collectors.toList());
 	}
 	/**
-	 * @param ffmpegTasks
 	 * @return
 	 * @throws MiddleFileMismatchException 
 	 */
@@ -98,9 +92,8 @@ public class AudioExtractor {
 		attributes.setVideoAttributes(null);
 		
 		// for each folder in folders
-		for (File subDir : folders) {
-			var inputFolder = new File(inputRoot, subDir.getName());
-			var outputFolder = new File(outputRoot, subDir.getName());
+		for (File inputFolder : inputFolders) {
+			var outputFolder = new File(outputRoot, inputFolder.getName());
 	
 			if (inputFolder.isDirectory()) {
 				String[] songNameArray = inputFolder.list();
@@ -110,14 +103,15 @@ public class AudioExtractor {
 					var inputFile = new File(inputFolder, inputSongFileName);
 					
 					// remove the .mp4 or .flv extension, and add .aac
-					String outputAACFileName = inputSongFileName.substring(0, inputSongFileName.length() - 4) + ".aac";
+					var songName = inputSongFileName.substring(0, inputSongFileName.length() - 4);
+					String outputAACFileName = songName + ".aac";
 					var outputAACFile = new File(outputFolder, outputAACFileName);
 					
 					//create first i/o file apir
 					var ffmpegIOFilePair = new IOFilePair(inputFile, outputAACFile);
 					
 					// remove the .aac, and add .m4a
-					String outputM4AFileName = inputSongFileName.substring(0, inputSongFileName.length() - 4) + ".m4a";
+					String outputM4AFileName = songName + ".m4a";
 					var outputM4AFile = new File(outputFolder, outputM4AFileName);
 					//create second i/o file apir
 					var mp4praserIOFilePair = new IOFilePair(outputAACFile, outputM4AFile);

@@ -12,6 +12,10 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.lang.invoke.MethodHandles;
 
+/**
+ * A scripting class just for writing our selenium drivers location
+ * @author CX无敌
+ */
 public class WriteConfigFileByMaven {
 
     private static File systemConfigFile = new File("data/system_config.properties");
