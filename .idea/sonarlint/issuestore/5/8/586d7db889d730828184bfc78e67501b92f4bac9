@@ -1,15 +1,0 @@
-
-Nsquid:S2629["7Use the built-in formatting to construct this argument.(ÇÈÏì
-]squid:S2142a"FEither re-interrupt this method or rethrow the "InterruptedException".(ä ¹€
-vsquid:S1192b"ZDefine a constant instead of duplicating this literal "{}\nthis shouldn't happen" 3 times.(ıÖ§Áúÿÿÿÿ
-Ysquid:S3457—"AFormat specifiers should be used instead of string concatenation.(‚«¸Ó
-^squid:S2142Ÿ"FEither re-interrupt this method or rethrow the "InterruptedException".(‘í†
-Vsquid:UselessImportCheck"-Remove this unused import 'java.util.Random'.(èøÉ›ùÿÿÿÿ
-Wsquid:S3457|"AFormat specifiers should be used instead of string concatenation.(ıìN
-gsquid:CommentedOutCodeLine4"<This block of commented-out lines of code should be removed.(¨²ñ°şÿÿÿÿ
-]squid:S3457_"AFormat specifiers should be used instead of string concatenation.(¶¢İÎúÿÿÿÿ
-Xsquid:S3457["AFormat specifiers should be used instead of string concatenation.(ÇÈÏì
-hsquid:S1192_"LDefine a constant instead of duplicating this literal " timeout:( " 3 times.(¶¢İÎúÿÿÿÿ
-@squid:S1148±"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
-^squid:S2142„"FEither re-interrupt this method or rethrow the "InterruptedException".(‘í†
-Ysquid:S3457‰"AFormat specifiers should be used instead of string concatenation.(„åÏå
