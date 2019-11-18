@@ -123,7 +123,7 @@ public class AudioExtractor {
 					taskThreads.add(taskThread);
 				}
 			} else {
-				logger.error("Invalid directory, Miku and CXwudi are very angry, skip!! " + inputFolder.toString());
+				logger.warn("Invalid directory, Miku and CXwudi are very angry, skip!! " + inputFolder.toString());
 			}
 	
 		}

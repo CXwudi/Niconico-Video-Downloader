@@ -1,13 +1,14 @@
 package com.cxwudi.side_project.niconico_videoextractor;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ws.schild.jave.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;
 import java.lang.invoke.MethodHandles;
 import java.util.Objects;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 //import com.coremedia.iso.boxes.Container;
 //import com.googlecode.mp4parser.FileDataSourceImpl;
@@ -15,15 +16,7 @@ import org.slf4j.LoggerFactory;
 //import com.googlecode.mp4parser.authoring.builder.DefaultMp4Builder;
 //import com.googlecode.mp4parser.authoring.tracks.AACTrackImpl;
 
-import ws.schild.jave.Encoder;
-import ws.schild.jave.EncoderException;
-import ws.schild.jave.EncoderProgressListener;
-import ws.schild.jave.EncodingAttributes;
-import ws.schild.jave.InputFormatException;
-import ws.schild.jave.MultimediaInfo;
-import ws.schild.jave.MultimediaObject;
-
-public class ExtractTaskThread implements Runnable, Comparable<ExtractTaskThread>{
+public class ExtractTaskThread implements Runnable{
 
 	private IOFilePair ffmpegFilePair;
 	private IOFilePair mp4PhraserFilePair;
@@ -112,9 +105,7 @@ public class ExtractTaskThread implements Runnable, Comparable<ExtractTaskThread
 	
 				@Override
 				public void message(String message) {
-					logger.error("message: ");
-					logger.error(message);
-	
+					logger.error("message: \n{}", message);
 				}
 			});
 			
@@ -187,11 +178,6 @@ public class ExtractTaskThread implements Runnable, Comparable<ExtractTaskThread
 	public long getInputFileLastModify() {
 		return ffmpegFilePair.getInputFile().lastModified();
 
-	}
-
-	@Override
-	public int compareTo(ExtractTaskThread o) {
-		return this.ffmpegFilePair.compareTo(o.ffmpegFilePair);
 	}
 
 	@Override
