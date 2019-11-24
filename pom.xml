@@ -16,7 +16,6 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <!-- Can not set compile version higher than java 10, otherwise, Maven install will get error -->
     <java.version>11</java.version>
     <maven.compiler.source>1.${java.version}</maven.compiler.source>
     <maven.compiler.target>1.${java.version}</maven.compiler.target>
@@ -26,8 +25,10 @@
     <lib.dir>lib</lib.dir>
     <data.dir>data</data.dir>
     <selenium.rootDir>${lib.dir}/selenium_drivers</selenium.rootDir>
+    <release.dir>release</release.dir>
     <dependencies.dir>package</dependencies.dir>
     <init.mainClass>com.cxwudi.niconico_videodownloader.setup.WriteConfigFileByMaven</init.mainClass>
+    <copyResources.mainClass>com.cxwudi.niconico_videodownloader.setup.CopyFilesForRelease</copyResources.mainClass>
     <niconico_downloader.mainClass>com.cxwudi.niconico_videodownloader.Main</niconico_downloader.mainClass>
   </properties>
 
@@ -57,6 +58,13 @@
       <groupId>commons-beanutils</groupId>
       <artifactId>commons-beanutils</artifactId>
       <version>1.9.4</version>
+    </dependency>
+
+    <!-- Apache Common IO, used to replace maven-resource-plugin to copy properties file un-touch -->
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.6</version>
     </dependency>
 
     <!-- The JAVE (Java Audio Video Encoder) library, which warp and contains a ffmpeg.exe executable 
@@ -175,6 +183,7 @@
         <version>1.6.0</version>
         <executions>
           <execution>
+            <id>setup-selenium-properties</id>
             <phase>generate-sources</phase>
             <goals>
               <goal>java</goal>
@@ -198,6 +207,21 @@
                   <value>${webdriver.chrome.driver}</value>
                 </systemProperty>
               </systemProperties>
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy-resources</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>java</goal>
+            </goals>
+            <configuration>
+              <mainClass>${copyResources.mainClass}</mainClass>
+              <arguments> <!-- first argument is the destination root dir, all rest of them are input dirs-->
+                <argument>${release.dir}</argument>
+                <argument>${data.dir}</argument>
+                <argument>${lib.dir}</argument>
+              </arguments>
             </configuration>
           </execution>
         </executions>
@@ -261,7 +285,7 @@
               <goal>copy-dependencies</goal>
             </goals>
             <configuration>
-              <outputDirectory>${project.build.directory}/${dependencies.dir}</outputDirectory>
+              <outputDirectory>${release.dir}/${dependencies.dir}</outputDirectory>
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>false</overWriteSnapshots>
               <overWriteIfNewer>true</overWriteIfNewer>
@@ -276,6 +300,7 @@
         <artifactId>maven-jar-plugin</artifactId>
         <version>3.1.2</version>
         <configuration>
+          <outputDirectory>${release.dir}</outputDirectory>
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
@@ -287,7 +312,7 @@
       </plugin>
 
       <!--  with the maven-resources-plugin, copy lib/ and data/ into ${project.build.directory}  -->
-      <plugin>
+      <!-- <plugin>
         <artifactId>maven-resources-plugin</artifactId>
         <version>3.1.0</version>
         <executions>
@@ -298,7 +323,7 @@
               <goal>copy-resources</goal>
             </goals>
             <configuration>
-              <outputDirectory>${project.build.directory}/${lib.dir}</outputDirectory>
+              <outputDirectory>${release.dir}/${lib.dir}</outputDirectory>
               <resources>
                 <resource>
                   <directory>${lib.dir}/</directory>
@@ -313,11 +338,10 @@
               <goal>copy-resources</goal>
             </goals>
             <configuration>
-              <outputDirectory>${project.build.directory}/${data.dir}</outputDirectory>
+              <outputDirectory>${release.dir}/${data.dir}</outputDirectory>
               <resources>
                 <resource>
                   <directory>${data.dir}/</directory>
-                  <!-- don't use filtering, it will corrupt binary files-->
                 </resource>
               </resources>
             </configuration>
@@ -330,7 +354,7 @@
             <nonFilteredFileExtension>zip</nonFilteredFileExtension>
           </nonFilteredFileExtensions>
         </configuration>
-      </plugin>
+      </plugin> -->
 
     </plugins>
 

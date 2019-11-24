@@ -1,5 +1,6 @@
 /bin/
 /target/
+/release/
 **/.idea/workspace.xml
 **/.idea/tasks.xml
 *.iws
