@@ -1,16 +1,15 @@
 package com.cxwudi.niconico_videodownloader.get_tasks;
 
+import com.cxwudi.niconico_videodownloader.entity.Vsong;
+import com.cxwudi.niconico_videodownloader.util.Config;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.cxwudi.niconico_videodownloader.entity.Vsong;
-import com.cxwudi.niconico_videodownloader.util.Config;
 /**
  * the collection reader that read a local file to get a collection of downloaded Vocaloid videos list
  * @see CollectionReader
@@ -23,7 +22,7 @@ public class LocalReader extends CollectionReader{
 
 	public LocalReader() {
 		super();
-		listDownloadedTxt = Config.DOWNLOADED_RECORD_FILE;
+		listDownloadedTxt = Config.getDownloadedList();
 		try {
 			if (!listDownloadedTxt.exists()) {
 				if (!listDownloadedTxt.createNewFile()) {

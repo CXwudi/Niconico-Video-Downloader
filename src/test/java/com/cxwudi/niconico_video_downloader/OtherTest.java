@@ -1,6 +1,7 @@
-package com.cxwudi.niconico_video_downloader.v2;
+package com.cxwudi.niconico_video_downloader;
 
-import static org.junit.jupiter.api.Assertions.*;
+import com.cxwudi.niconico_videodownloader.util.Config;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,11 +10,6 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.stream.IntStream;
-
-import org.junit.jupiter.api.Test;
-
-import com.cxwudi.niconico_videodownloader.entity.Vsong;
-import com.cxwudi.niconico_videodownloader.util.Config;
 
 class OtherTest {
 
@@ -52,7 +48,7 @@ class OtherTest {
 
 	@Test
 	void testCreateFile() {
-		File defaultDir = Config.OUTPUT_ROOT_DIR;
+		File defaultDir = Config.getRootOutputDir();
 		File video = new File(defaultDir, "testVideo.mp4");
 		try {
 			video.createNewFile();

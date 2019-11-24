@@ -1,15 +1,14 @@
 /**
  * 
  */
-package com.cxwudi.niconico_video_downloader.v2;
+package com.cxwudi.niconico_video_downloader;
 
-import static org.junit.jupiter.api.Assertions.*;
+import com.cxwudi.niconico_videodownloader.get_tasks.LocalReader;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
-import org.junit.jupiter.api.Test;
-
-import com.cxwudi.niconico_videodownloader.get_tasks.LocalReader;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author CX无敌

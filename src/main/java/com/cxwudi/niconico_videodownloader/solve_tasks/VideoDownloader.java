@@ -1,29 +1,19 @@
 package com.cxwudi.niconico_videodownloader.solve_tasks;
-import static com.cxwudi.niconico_videodownloader.util.DownloadStatus.FAIL_DOWNLOAD;
-import static com.cxwudi.niconico_videodownloader.util.DownloadStatus.FAIL_INITIAL;
-import static com.cxwudi.niconico_videodownloader.util.DownloadStatus.FAIL_RENAME;
-import static com.cxwudi.niconico_videodownloader.util.DownloadStatus.SUCCESS;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.lang.invoke.MethodHandles;
-import java.net.URL;
-import java.nio.channels.Channels;
-import java.util.Objects;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.cxwudi.niconico_videodownloader.entity.Vsong;
 import com.cxwudi.niconico_videodownloader.util.Config;
 import com.cxwudi.niconico_videodownloader.util.DownloadStatus;
 import com.cxwudi.niconico_videodownloader.util.NicoStringTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.lang.invoke.MethodHandles;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.util.Objects;
+
+import static com.cxwudi.niconico_videodownloader.util.DownloadStatus.*;
 
 /**
  * The video downloader is the main class of downloading Vocaloid PV,
@@ -37,14 +27,14 @@ public class VideoDownloader {
 	 * create video downloader with default downloading folder 
 	 */
 	public VideoDownloader() {
-		this(Config.OUTPUT_ROOT_DIR.toString());
+		this(Config.getRootOutputDir().toString());
 	}
 	/**
 	 * create video downloader with user defined downloading folder
-	 * @param rootDLdir the root directory of downloaded video.
+	 * @param downloadDir the root directory of downloaded video.
 	 */
 	public VideoDownloader(String downloadDir) {
-		Config.OUTPUT_ROOT_DIR.mkdirs(); //this step should not make error
+		Config.getRootOutputDir().mkdirs(); //this step should not make error
 		this.rootDLdir = new File(downloadDir);
 	}
 	
@@ -108,17 +98,18 @@ public class VideoDownloader {
 	private void downloadUsingYoutube_dl(Vsong song, File dir) throws IOException{
 		//initialize variables and cmd process
 		var youtube_dlProcessBuilder = new ProcessBuilder(
-				Config.YOUTUBE_DL_FILE.getAbsolutePath(),
+				Config.getYoutube_dlFile().getAbsolutePath(),
 				"-v",
-				"--username", new StringBuilder().append('"').append(Config.EMAIL).append('"').toString(),
-				"--password", new StringBuilder().append('"').append(Config.PASSWORD).append('"').toString(),
+				"--username", new StringBuilder().append('"').append(Config.getEmail()).append('"').toString(),
+				"--password", new StringBuilder().append('"').append(Config.getPassword()).append('"').toString(),
 				"https://www.nicovideo.jp/watch/" + song.getId(),
 				"-f",
 				"\"best[height<=720]\"");
 		//set the download directory to the proper subfolder, for example, 20xx年V家新曲
 		youtube_dlProcessBuilder.directory(dir);
-		//logger.debug("start running youtube-dl command: \n{}", youtube_dlProcessBuilder.command());
-		
+		logger.debug("start running youtube-dl command: \n{}", youtube_dlProcessBuilder.command());
+		logger.debug("Vsong file saved to {}", dir.getAbsolutePath());
+
 		//start the process
 		Process youtube_dlProcess = youtube_dlProcessBuilder.start();
 		//redirect output/error stream of cmd to java stdout/stderr
@@ -205,8 +196,9 @@ public class VideoDownloader {
 			if (!dir.isDirectory()) 
 				throw new SecurityException("Such path name is not a directory");//a fake exception
 		} catch (SecurityException e) {
-			logger.info(e + "\nCXwudi and miku found that this directory" + dir + "is not avaliable, default directory is set, as " + Config.OUTPUT_ROOT_DIR.toString());
-			dir = Config.OUTPUT_ROOT_DIR;
+			logger.info(e + "\nCXwudi and miku found that this directory" + dir +
+					"is not avaliable, default directory is set, as " + Config.getRootOutputDir());
+			dir = Config.getRootOutputDir();
 		}
 		
 		return dir;
@@ -253,8 +245,9 @@ public class VideoDownloader {
 			this.rootDLdir = dir;
 		} catch (SecurityException e) {
 			e.printStackTrace();
-			logger.info("CXwudi and miku found that this directory " + dir + " is not avaliable, plz try again.\nA default directroy D:\\11134\\Download\\Video has been set instead.");
-			this.rootDLdir = Config.OUTPUT_ROOT_DIR;
+			logger.info("CXwudi and miku found that this directory " + dir + " is not avaliable, plz try again.\n" +
+					"A default directroy " + Config.getRootOutputDir() + " has been set instead.");
+			this.rootDLdir = Config.getRootOutputDir();
 		}
 		
 	}

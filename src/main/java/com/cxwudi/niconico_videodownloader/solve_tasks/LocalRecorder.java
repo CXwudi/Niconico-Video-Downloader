@@ -1,19 +1,13 @@
 package com.cxwudi.niconico_videodownloader.solve_tasks;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.lang.invoke.MethodHandles;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.TreeSet;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.cxwudi.niconico_videodownloader.entity.Vsong;
 import com.cxwudi.niconico_videodownloader.util.Config;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.lang.invoke.MethodHandles;
+import java.util.*;
 /**
  * @author CX无敌
  *
@@ -24,7 +18,7 @@ public class LocalRecorder {
 	
 	public LocalRecorder(Set<Vsong> update2) {
 		this.update = update2;
-		listDownloadedTxt = Config.DOWNLOADED_RECORD_FILE;
+		listDownloadedTxt = Config.getDownloadedList();
 		try {
 			if (!listDownloadedTxt.exists()) {
 				if (!listDownloadedTxt.createNewFile()) {
@@ -49,7 +43,7 @@ public class LocalRecorder {
 		inverseOrderSet.addAll(update);
 		//LearnJava: whenever we open a txt file to read or write, we first open the FileIO, then BufferIO
 		//if writing txt, we add one more warp, PrintWriter
-		try (PrintWriter writer = new PrintWriter(listDownloadedTxt)){
+		try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(listDownloadedTxt)), true)){
 			for (Iterator<Vsong> iterator = inverseOrderSet.iterator(); iterator.hasNext();) {
 				Vsong vsong = iterator.next();
 				StringBuilder sb = new StringBuilder();

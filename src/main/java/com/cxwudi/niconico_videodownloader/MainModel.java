@@ -1,9 +1,10 @@
 package com.cxwudi.niconico_videodownloader;
 
-import java.lang.invoke.MethodHandles;
-import java.util.Set;
-import java.util.TreeSet;
-
+import com.cxwudi.niconico_videodownloader.entity.NicoDriver;
+import com.cxwudi.niconico_videodownloader.entity.Vsong;
+import com.cxwudi.niconico_videodownloader.get_tasks.TasksDecider;
+import com.cxwudi.niconico_videodownloader.solve_tasks.TasksSolver;
+import com.cxwudi.niconico_videodownloader.util.Config;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.TimeoutException;
@@ -13,10 +14,9 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.cxwudi.niconico_videodownloader.entity.NicoDriver;
-import com.cxwudi.niconico_videodownloader.entity.Vsong;
-import com.cxwudi.niconico_videodownloader.get_tasks.TasksDecider;
-import com.cxwudi.niconico_videodownloader.solve_tasks.TasksSolver;
+import java.lang.invoke.MethodHandles;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * the main model of Nico video downloader project, Manage the NicoDriver,
@@ -46,11 +46,11 @@ public class MainModel {
 	}
 	
 
-	public boolean login(String email, String password) {
+	public boolean login() {
 		driver.get("https://account.nicovideo.jp/login");
-		driver.findElement(By.id("input__mailtel")).sendKeys(email);
+		driver.findElement(By.id("input__mailtel")).sendKeys(Config.getEmail());
 		WebElement ps = driver.findElement(By.id("input__password"));
-		ps.sendKeys(password);
+		ps.sendKeys(Config.getPassword());
 		ps.submit();
 		if (driver.getCurrentUrl().contains("www.nicovideo.jp")) {
 			logger.info("login success");

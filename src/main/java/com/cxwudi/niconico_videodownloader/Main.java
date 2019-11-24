@@ -1,19 +1,19 @@
 package com.cxwudi.niconico_videodownloader;
-import java.lang.invoke.MethodHandles;
-import java.util.Random;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.cxwudi.niconico_videodownloader.solve_tasks.TasksSolver;
 import com.cxwudi.niconico_videodownloader.util.Config;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.invoke.MethodHandles;
+import java.util.Random;
 
 public class Main {
 
 	public static void main(String[] args) {
 		Config.touch();
 		MainModel main = new MainModel();
-		main.login(Config.EMAIL, Config.PASSWORD);
+		main.login();
 		main.setupNicoNico();
 		main.tasksDecider().readRecord();
 		main.tasksDecider().getTaskAndUpdate();
