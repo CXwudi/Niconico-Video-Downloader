@@ -12,20 +12,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class VideoDownloaderTest {
 	@Test
-	public void testDownload() {
+	void testDownload() {
 		VideoDownloader v = new VideoDownloader();
 		var status = v.downloadVocaloidPV(new Vsong("sm35129416")
 				.setTitle("【MV】ラッキー☆オーブ feat. 初音ミク by emon(Tes.) 【MIKU EXPO 5th】").setSubDir("").setURL("fake url"));
 		assertTrue(status == DownloadStatus.SUCCESS);
 	}
 	@Test
-	public void testStream() {
+	void testStream() {
 		var stdout = new PrintWriter(System.out, true);
 		stdout.println("print from print writer");
 		assertTrue(true);
 	}
 	@Test
-	public void testFile() {
+	void testFile() {
 		VideoDownloader v = new VideoDownloader();
 		File video = new File(v.getDownloadDir() + "\\" + "a video.mp4");
 		System.out.println(video.isFile());

@@ -11,6 +11,8 @@ import java.util.Scanner;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.stream.IntStream;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 class OtherTest {
 
 	@Test
@@ -21,7 +23,7 @@ class OtherTest {
 		Date after = new Date();
 		System.out.println(after.getTime() - now.getTime());
 		System.out.println(aList.size());
-
+		assertTrue(true);
 	}
 
 	@Test
@@ -30,20 +32,21 @@ class OtherTest {
 		var scanner = new Scanner(System.in);
 		System.out.println(scanner.nextLine());
 		scanner.close();
+		assertTrue(true);
 	}
 
 	@Test
 	void testRandom() {
 		System.out.println(20000 + new Random().nextInt(5000));
 		System.out.println(new Random(20000).nextInt(5000));
-		
+		assertTrue(true);
 	}
 
 	@Test
 	void testReplaceAll() {
 		String string = "/asd\\ yes ? aaa";
 		System.out.println(string.replaceAll("/", "-").replaceAll("\\\\", "-").replaceAll("\\?", " "));
-		
+		assertTrue(true);
 	}
 
 	@Test
@@ -52,9 +55,11 @@ class OtherTest {
 		File video = new File(defaultDir, "testVideo.mp4");
 		try {
 			video.createNewFile();
+			video.deleteOnExit();
 		} catch (IOException e) {
 			System.err.println(e);
 		}
+		assertTrue(video.exists());
 	}
 
 }
