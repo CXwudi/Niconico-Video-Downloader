@@ -1,6 +1,6 @@
 package com.cxwudi.niconico_video_downloader;
 
-import com.cxwudi.niconico_videodownloader.util.Config;
+import com.cxwudi.niconico_videodownloader.setup.Config;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;

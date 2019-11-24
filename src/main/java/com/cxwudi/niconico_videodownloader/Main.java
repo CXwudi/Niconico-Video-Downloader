@@ -1,7 +1,7 @@
 package com.cxwudi.niconico_videodownloader;
 
+import com.cxwudi.niconico_videodownloader.setup.Config;
 import com.cxwudi.niconico_videodownloader.solve_tasks.TasksSolver;
-import com.cxwudi.niconico_videodownloader.util.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

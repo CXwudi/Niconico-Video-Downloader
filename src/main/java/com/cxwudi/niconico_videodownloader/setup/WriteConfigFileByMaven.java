@@ -45,7 +45,7 @@ public class WriteConfigFileByMaven {
         for (var property: sysProp.entrySet()) {
             var keyStr = String.valueOf(property.getKey());
             var valueStr = String.valueOf(property.getValue());
-            logger.info("get property: {} = {}", keyStr, valueStr);
+//            logger.debug("get property: {} = {}", keyStr, valueStr);
             if (keyStr.contains("driver")){
                 var resolvedStr = valueStr.replace(currentDir + "\\", "");
                 config.setProperty(keyStr, resolvedStr);

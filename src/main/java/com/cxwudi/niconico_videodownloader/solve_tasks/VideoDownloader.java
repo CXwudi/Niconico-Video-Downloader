@@ -1,7 +1,7 @@
 package com.cxwudi.niconico_videodownloader.solve_tasks;
 
 import com.cxwudi.niconico_videodownloader.entity.Vsong;
-import com.cxwudi.niconico_videodownloader.util.Config;
+import com.cxwudi.niconico_videodownloader.setup.Config;
 import com.cxwudi.niconico_videodownloader.util.DownloadStatus;
 import com.cxwudi.niconico_videodownloader.util.NicoStringTool;
 import org.slf4j.Logger;

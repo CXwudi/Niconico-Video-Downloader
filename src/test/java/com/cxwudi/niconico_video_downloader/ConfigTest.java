@@ -1,6 +1,6 @@
 package com.cxwudi.niconico_video_downloader;
 
-import com.cxwudi.niconico_videodownloader.util.Config;
+import com.cxwudi.niconico_videodownloader.setup.Config;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.slf4j.Logger;
@@ -34,5 +34,7 @@ public class ConfigTest {
         logger.debug(Config.getRootOutputDir().toString());
         logger.debug("root output exists: {}", Config.getRootOutputDir().exists());
         logger.debug(Config.getDownloadedList().toString());
+        logger.debug(Config.getYoutubeDlFile().toString());
+        assertTrue(true);
     }
 }

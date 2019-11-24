@@ -48,7 +48,6 @@
 		<level name="Maven: commons-logging:commons-logging:1.2" value="project"/>
 		<level name="Maven: commons-beanutils:commons-beanutils:1.9.4" value="project"/>
 		<level name="Maven: commons-collections:commons-collections:3.2.2" value="project"/>
-		<level name="Maven: commons-io:commons-io:2.6" value="project"/>
 		<level name="Maven: ws.schild:jave-all-deps:2.7.1" value="project"/>
 		<level name="Maven: ws.schild:jave-core:2.7.1" value="project"/>
 		<level name="Maven: ws.schild:jave-nativebin-win32:2.7.1" value="project"/>
