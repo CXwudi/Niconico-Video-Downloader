@@ -40,7 +40,7 @@ public class Config {
 	private static final LazyVar<File> YOUTUBE_DL_FILE = new LazyVar<>(
 			() -> new File(config.getString("youtube-dl"))
 	);
-	public static File getYoutube_dlFile() {return YOUTUBE_DL_FILE.get();}
+	public static File getYoutubeDlFile() {return YOUTUBE_DL_FILE.get();}
 	
 	static {
 		Parameters params = new Parameters();

@@ -22,9 +22,13 @@
     <maven.compiler.target>1.${java.version}</maven.compiler.target>
     <junit.jupiter.version>5.5.2</junit.jupiter.version>
     <log4j2.version>2.12.1</log4j2.version>
-    
-    <selenium.rootDir>lib/selenium_drivers</selenium.rootDir>
+
+    <lib.dir>lib</lib.dir>
+    <data.dir>data</data.dir>
+    <selenium.rootDir>${lib.dir}/selenium_drivers</selenium.rootDir>
+    <dependencies.dir>package</dependencies.dir>
     <init.mainClass>com.cxwudi.niconico_videodownloader.setup.WriteConfigFileByMaven</init.mainClass>
+    <niconico_downloader.mainClass>com.cxwudi.niconico_videodownloader.Main</niconico_downloader.mainClass>
   </properties>
 
   <dependencies>
@@ -155,6 +159,7 @@
         </configuration>
         <executions>
           <execution> <!-- in eclipse it shows error of the phase, but it has no problem in fact, so ignore it -->
+            <id>download-selenium</id>
             <phase>generate-sources</phase> <!-- avaliable phases => https://balamaci.ro/maven-lifecycles-explained/ -->
             <goals>
               <goal>selenium</goal>
@@ -163,7 +168,7 @@
         </executions>
       </plugin>
 
-      <!-- run main class plugin, no longer needed -->
+      <!-- run main class plugin, to write selenium system properties into property file -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
@@ -179,6 +184,7 @@
               <arguments>
               </arguments>
               <systemProperties>
+                <!-- values will be resolved by selenium binary downloader plugin-->
                 <systemProperty>
                   <key>webdriver.edge.driver</key>
                   <value>${webdriver.edge.driver}</value>
@@ -196,40 +202,6 @@
           </execution>
         </executions>
       </plugin>
-
-      <!-- write a property file plugin, no longer needed-->
-      <!-- <plugin>
-        <groupId>com.internetitem</groupId>
-        <artifactId>write-properties-file-maven-plugin</artifactId>
-        <version>1.0.1</version>
-        <executions>
-          <execution>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>write-properties-file</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${project.basedir}/data</outputDirectory>
-              <filename>system_config.properties</filename>
-              <properties>
-                <property>
-                  <name>webdriver.edge.driver</name>
-                  <value>${webdriver.edge.driver}</value>
-                </property>
-                <property>
-                  <name>webdriver.opera.driver</name>
-                  <value>${webdriver.opera.driver}</value>
-                </property>
-                <property>
-                  <name>webdriver.chrome.driver</name>
-                  <value>${webdriver.chrome.driver}</value>
-                </property>
-              </properties>
-              <comment>Niconico Video Downloader Selenium drivers location</comment>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin> -->
 
       <plugin> <!-- if want to configure test, use this plugin -->
         <groupId>org.apache.maven.plugins</groupId>
@@ -272,6 +244,91 @@
         <version>3.8.1</version>
         <configuration>
           <release>${java.version}</release>
+        </configuration>
+      </plugin>
+
+      <!-- following two plugin can generate executable jar with linked dependency jars-->
+      <!-- move maven dependencies jar to a folder -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.1.1</version>
+        <executions>
+          <execution>
+            <id>copy-dependencies</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/${dependencies.dir}</outputDirectory>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>false</overWriteSnapshots>
+              <overWriteIfNewer>true</overWriteIfNewer>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- with the maven-dependency-plugin, link these dependencies into jar's MF file -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.1.2</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <classpathPrefix>${dependencies.dir}/</classpathPrefix>
+              <mainClass>${niconico_downloader.mainClass}</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+
+      <!--  with the maven-resources-plugin, copy lib/ and data/ into ${project.build.directory}  -->
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>copy-lib</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/${lib.dir}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${lib.dir}/</directory>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy-data</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/${data.dir}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${data.dir}/</directory>
+                  <!-- don't use filtering, it will corrupt binary files-->
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <nonFilteredFileExtensions>
+            <nonFilteredFileExtension>exe</nonFilteredFileExtension>
+            <nonFilteredFileExtension>properties</nonFilteredFileExtension>
+            <nonFilteredFileExtension>zip</nonFilteredFileExtension>
+          </nonFilteredFileExtensions>
         </configuration>
       </plugin>
 

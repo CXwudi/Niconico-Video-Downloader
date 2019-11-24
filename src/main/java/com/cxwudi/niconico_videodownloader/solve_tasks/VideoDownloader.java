@@ -98,7 +98,7 @@ public class VideoDownloader {
 	private void downloadUsingYoutube_dl(Vsong song, File dir) throws IOException{
 		//initialize variables and cmd process
 		var youtube_dlProcessBuilder = new ProcessBuilder(
-				Config.getYoutube_dlFile().getAbsolutePath(),
+				Config.getYoutubeDlFile().getAbsolutePath(),
 				"-v",
 				"--username", new StringBuilder().append('"').append(Config.getEmail()).append('"').toString(),
 				"--password", new StringBuilder().append('"').append(Config.getPassword()).append('"').toString(),
