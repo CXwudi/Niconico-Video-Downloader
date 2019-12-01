@@ -91,7 +91,7 @@ public class NicoDriver implements WebDriver{
 				logger.info("load website " + url + " timeout:( ");
 				logger.info("don't worry, CXwudi and miku are going to refrash the webpage and make it work!!\"");
 			} catch (InterruptedException e) {
-				logger.error("{}\nthis shouldn't happen", e);
+				logger.error("this shouldn't happen", e);
 			}
 		}
 	}
@@ -126,7 +126,7 @@ public class NicoDriver implements WebDriver{
 				try {
 					Thread.sleep(random.nextInt(100, 100));
 				} catch (InterruptedException e1) {
-					logger.error("{}\nthis shouldn't happen", e);
+					logger.error("this shouldn't happen", e);
 				}
 
 			} catch (NoSuchElementException e) {
@@ -153,7 +153,7 @@ public class NicoDriver implements WebDriver{
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e1) {
-					logger.error("{}\nthis shouldn't happen", e);
+					logger.error("this shouldn't happen", e);
 				}
 
 			}

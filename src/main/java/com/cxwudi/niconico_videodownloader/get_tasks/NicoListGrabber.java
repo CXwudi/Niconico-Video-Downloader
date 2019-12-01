@@ -1,23 +1,17 @@
 package com.cxwudi.niconico_videodownloader.get_tasks;
 
+import com.cxwudi.niconico_videodownloader.entity.NicoDriver;
+import com.cxwudi.niconico_videodownloader.entity.Vsong;
+import org.openqa.selenium.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeSet;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.UnhandledAlertException;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.cxwudi.niconico_videodownloader.entity.NicoDriver;
-import com.cxwudi.niconico_videodownloader.entity.Vsong;
 /**
  * the collection reader that control Chrome browser to navigate Niconico douga mylist page,
  *  and read my Vocaloid collection from it
@@ -120,7 +114,7 @@ public class NicoListGrabber extends CollectionReader{
 			logger.error(e + "\nCXwudi and Miku failed to get list info due to web server problem, we are trying again");
 			return getOneFolderCollection(id, folderName);
 		} catch (InterruptedException e) {
-			logger.error("{}\nthis shouldn't happen", e);
+			logger.error("this shouldn't happen", e);
 		} catch (UnhandledAlertException e) {
 			//there was a time where an alert window was pop up and broke the code,
 			//so this catch statement is applied to handle this

@@ -51,7 +51,7 @@ public class LocalRecorder {
 				writer.println(sb.toString());
 			}
 		} catch (IOException e) {
-			logger.error("{}\nthis shouldn't happen", e);
+			logger.error("this shouldn't happen", e);
 		} 
 	}
 	

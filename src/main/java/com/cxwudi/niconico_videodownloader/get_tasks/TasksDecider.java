@@ -1,17 +1,15 @@
 package com.cxwudi.niconico_videodownloader.get_tasks;
 
+import com.cxwudi.niconico_videodownloader.entity.NicoDriver;
+import com.cxwudi.niconico_videodownloader.entity.Vsong;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.invoke.MethodHandles;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.cxwudi.niconico_videodownloader.entity.NicoDriver;
-import com.cxwudi.niconico_videodownloader.entity.Vsong;
 /**
  * The decider that can generate a set of new videos that need to be downloaded 
  * by operates two small model---local recorder and list grabber. 
@@ -45,7 +43,7 @@ public class TasksDecider{
 			a.join();
 			b.join();
 		} catch (InterruptedException e) {
-			logger.error("{}\nthis shouldn't happen", e);
+			logger.error("this shouldn't happen", e);
 		}
 	}
 	

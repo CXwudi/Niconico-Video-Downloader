@@ -1,18 +1,17 @@
 package com.cxwudi.niconico_videodownloader.solve_tasks;
+
+import com.cxwudi.niconico_videodownloader.entity.NicoDriver;
+import com.cxwudi.niconico_videodownloader.entity.Vsong;
+import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.cxwudi.niconico_videodownloader.entity.NicoDriver;
-import com.cxwudi.niconico_videodownloader.entity.Vsong;
 /**
  * Grab information about this song from niconico webpage
  * @author CX无敌
@@ -48,7 +47,7 @@ public class InfoGainer {
 			driver.get("http://www.nicovideo.jp/watch/" + song.getId());
 			//driver.navigate().refresh();
 			logger.info("website opened");
-			Thread.sleep(700 + new Random().nextInt(300));
+			Thread.sleep(700L + new Random().nextInt(300));
 			//some check
 			if (song.getId().contains("nm")) {
 				logger.info("nm-id video unsupported, not gonna grab info for" + song.getId());
