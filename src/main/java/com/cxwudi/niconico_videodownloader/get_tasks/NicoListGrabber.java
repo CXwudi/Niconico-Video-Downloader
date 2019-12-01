@@ -111,14 +111,14 @@ public class NicoListGrabber extends CollectionReader{
 			logger.info("Collection \"" + folderName + "\" has following songs: \n{}", folder);
 			
 		} catch (StaleElementReferenceException | TimeoutException e) {
-			logger.error(e + "\nCXwudi and Miku failed to get list info due to web server problem, we are trying again");
+			logger.error("CXwudi and Miku failed to get list info due to web server problem, we are trying again", e);
 			return getOneFolderCollection(id, folderName);
 		} catch (InterruptedException e) {
 			logger.error("this shouldn't happen", e);
 		} catch (UnhandledAlertException e) {
 			//there was a time where an alert window was pop up and broke the code,
 			//so this catch statement is applied to handle this
-			logger.error(e + "\nA popup stops CXwudi and Miku to get list info, we are trying again");
+			logger.error("A popup stops CXwudi and Miku to get list info, we are trying again", e);
 			driver.switchTo().alert().accept();
 			return getOneFolderCollection(id, folderName);
 		}
@@ -139,8 +139,7 @@ public class NicoListGrabber extends CollectionReader{
 			try {
 				Thread.sleep(300);
 			} catch (InterruptedException e) {
-				logger.error(e + "\nthis should not happen in NicoListGrabber.hasNextPage()");
-				e.printStackTrace();
+				logger.error("this should not happen in NicoListGrabber.hasNextPage()", e);
 			}
 			return true;
 		}
