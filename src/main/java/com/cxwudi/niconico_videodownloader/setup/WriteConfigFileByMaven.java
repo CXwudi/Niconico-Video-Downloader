@@ -35,7 +35,7 @@ public class WriteConfigFileByMaven {
         }
         catch(ConfigurationException cex)
         {
-            logger.error("Can not get configuration\n {}", cex);
+            logger.error("Can not get configuration\n", cex);
         }
     }
 
@@ -56,7 +56,7 @@ public class WriteConfigFileByMaven {
         try {
             builder.save();
         } catch (ConfigurationException e) {
-            logger.error("Can not save config file\n{}", e);
+            logger.error("Can not save config file\n", e);
         }
     }
 
