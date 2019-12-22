@@ -3,6 +3,7 @@ package com.cxwudi.niconico_videodownloader.solve_tasks;
 import com.cxwudi.niconico_videodownloader.entity.NicoDriver;
 import com.cxwudi.niconico_videodownloader.entity.Vsong;
 import com.cxwudi.niconico_videodownloader.entity.VsongDownloadTask;
+import com.cxwudi.niconico_videodownloader.solve_tasks.downloader.YoutubeDLVideoDownloader;
 import com.cxwudi.niconico_videodownloader.util.DownloadStatus;
 
 import java.util.Iterator;

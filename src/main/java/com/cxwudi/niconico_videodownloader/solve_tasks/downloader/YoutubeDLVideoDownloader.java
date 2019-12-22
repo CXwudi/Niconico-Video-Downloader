@@ -1,4 +1,4 @@
-package com.cxwudi.niconico_videodownloader.solve_tasks;
+package com.cxwudi.niconico_videodownloader.solve_tasks.downloader;
 
 import com.cxwudi.niconico_videodownloader.entity.Vsong;
 import com.cxwudi.niconico_videodownloader.entity.VsongDownloadTask;
@@ -20,22 +20,7 @@ import static com.cxwudi.niconico_videodownloader.util.DownloadStatus.*;
  *
  */
 public class YoutubeDLVideoDownloader {
-	private File rootDLdir;  //user defined download dir
-	/**
-	 * create video downloader with default downloading folder 
-	 */
-	public YoutubeDLVideoDownloader() {
-		this(Config.getRootOutputDir().toString());
-	}
-	/**
-	 * create video downloader with user defined downloading folder
-	 * @param downloadDir the root directory of downloaded video.
-	 */
-	public YoutubeDLVideoDownloader(String downloadDir) {
-		var rootDLdir = new File(downloadDir);
-		rootDLdir.mkdirs(); //this step should not make error
-		this.rootDLdir = rootDLdir;
-	}
+	public YoutubeDLVideoDownloader(){}
 	
 	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -163,31 +148,6 @@ public class YoutubeDLVideoDownloader {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	/**
-	 * @return the current root directory that set to download
-	 */
-	public File getDownloadDir() {
-		return rootDLdir;
-	}
-	/**
-	 * @param downloadDir the rootDLdir to set. if error happens, then default dir will be used instead.
-	 */
-	public void setDownloadDir(String downloadDir) {
-		File dir = new File(downloadDir);
-		try {
-			if (dir.isDirectory()) 
-				if (!dir.mkdirs()) throw new SecurityException("fail to make directory");
-			else throw new SecurityException("Such path name is not a directory");
-			this.rootDLdir = dir;
-		} catch (SecurityException e) {
-			e.printStackTrace();
-			logger.info("CXwudi and miku found that this directory " + dir + " is not avaliable, plz try again.\n" +
-					"A default directroy " + Config.getRootOutputDir() + " has been set instead.");
-			this.rootDLdir = Config.getRootOutputDir();
-		}
-		
 	}
 
 //	/**

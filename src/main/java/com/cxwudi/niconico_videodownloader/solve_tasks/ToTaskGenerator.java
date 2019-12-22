@@ -11,7 +11,9 @@ import java.io.File;
 import java.lang.invoke.MethodHandles;
 
 /**
- * This class receive a Vsong instance, and package it into a DownloadTask
+ * This class receive a Vsong instance, and package it into a DownloadTask.
+ * It will setup the folder that the song will be download to, and the proper filename that
+ * is used to store the song
  * @author CX无敌
  */
 public class ToTaskGenerator {
