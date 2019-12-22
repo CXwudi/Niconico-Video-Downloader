@@ -26,8 +26,10 @@ public class Main {
 			if (!manager.fetchInfo(vsong)) {
 				return;
 			}
+
+			var task = manager.convertVsongToTask(vsong);
 			
-			switch (manager.downloadOneVocaloidPV(vsong)) {
+			switch (manager.downloadOneVocaloidPV(task)) {
 				case SUCCESS:
 					logger.info("done");
 				break;
@@ -40,7 +42,6 @@ public class Main {
 					
 			manager.markDone(vsong);
 			manager.triggerRecord(); //if the currentRuntime.addShutdownHook works in eclipse, then we don't need this line
-			logger.info("record updated");
 			
 			try {
 				Thread.sleep(1000L + new Random().nextInt(3000));

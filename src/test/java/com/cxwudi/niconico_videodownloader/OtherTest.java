@@ -1,4 +1,4 @@
-package com.cxwudi.niconico_video_downloader;
+package com.cxwudi.niconico_videodownloader;
 
 import com.cxwudi.niconico_videodownloader.setup.Config;
 import org.junit.jupiter.api.Test;

@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 /**
@@ -49,10 +50,6 @@ public class InfoGainer {
 			logger.info("website opened");
 			Thread.sleep(700L + new Random().nextInt(300));
 			//some check
-			if (song.getId().contains("nm")) {
-				logger.info("nm-id video unsupported, not gonna grab info for" + song.getId());
-				return true;
-			}
 			if (driver.containsElements(By.cssSelector("div.mb16p4"))) {
     			logger.info("fake webpage, CXwudi and Miku are very ANGRY and wanna exits :(");
     			return false;
@@ -82,11 +79,10 @@ public class InfoGainer {
 			logger.info("tags: {}", tags);
 			//driver.findElement(By.cssSelector("div.ControllerButton-inner")).click();//start the video, fake the server
 		} catch (TimeoutException e) {
-			e.printStackTrace();
-			logger.info("CXwudi and Miku failed due to TimeoutException, we are trying again");
+			logger.info("CXwudi and Miku failed due to TimeoutException, we are trying again\n{}", Arrays.toString(e.getStackTrace()));
 			return fetchInfo(song);
 		} catch (InterruptedException e) {
-			logger.info(e + "\nthis shouldn't happen at InfoGainer.fetchInfo()");
+			logger.error("this shouldn't happen at InfoGainer.fetchInfo()", e);
 			return false;
 		}
 		if (videoURL == null || videoURL.equals("") || producerName.equals("") || tags.isEmpty() || videoTitle.equals("")) {
@@ -99,22 +95,22 @@ public class InfoGainer {
 		}
 	}
 
-	public static void main(String[] args) {
-		/*MainModel main = new MainModel(new NicoDriver());
-		main.login();
-		main.setupNicoNico();
-		
-		  Object ret = ((JavascriptExecutor)main.driver()).executeAsyncScript(
-		  "var request = new XMLHttpRequest();" +
-		  "request.onreadystatechange = function() {" +
-		  "		if (request.readyState === 4) {" +
-		  "			return request.status;" + "		}" + "};" +
-		  "request.open(\"GET\", \"http://www.nicovideo.jp/watch/sm" + 123123123 +
-		  "\", true);" + "request.send();" );
-		 
-		main.downloadManager().fetchInfo(new Vsong(123123123, ""));
-		main.downloadManager().fetchInfo(new Vsong(32461412, ""));*/
-	}
+//	public static void main(String[] args) {
+//		/*MainModel main = new MainModel(new NicoDriver());
+//		main.login();
+//		main.setupNicoNico();
+//
+//		  Object ret = ((JavascriptExecutor)main.driver()).executeAsyncScript(
+//		  "var request = new XMLHttpRequest();" +
+//		  "request.onreadystatechange = function() {" +
+//		  "		if (request.readyState === 4) {" +
+//		  "			return request.status;" + "		}" + "};" +
+//		  "request.open(\"GET\", \"http://www.nicovideo.jp/watch/sm" + 123123123 +
+//		  "\", true);" + "request.send();" );
+//
+//		main.downloadManager().fetchInfo(new Vsong(123123123, ""));
+//		main.downloadManager().fetchInfo(new Vsong(32461412, ""));*/
+//	}
 	
 	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

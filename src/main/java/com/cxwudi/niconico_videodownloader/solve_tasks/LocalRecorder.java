@@ -50,6 +50,7 @@ public class LocalRecorder {
 				sb.append(vsong.getId()).append("------").append(vsong.getTitle());
 				writer.println(sb.toString());
 			}
+			logger.info("{} updated", listDownloadedTxt);
 		} catch (IOException e) {
 			logger.error("this shouldn't happen", e);
 		} 

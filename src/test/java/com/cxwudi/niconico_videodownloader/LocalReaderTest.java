@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.cxwudi.niconico_video_downloader;
+package com.cxwudi.niconico_videodownloader;
 
 import com.cxwudi.niconico_videodownloader.get_tasks.LocalReader;
 import org.junit.jupiter.api.Test;

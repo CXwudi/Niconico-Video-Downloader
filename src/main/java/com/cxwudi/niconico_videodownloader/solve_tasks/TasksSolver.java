@@ -1,13 +1,13 @@
 package com.cxwudi.niconico_videodownloader.solve_tasks;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.function.Consumer;
-
-import org.openqa.selenium.chrome.ChromeDriver;
 
 import com.cxwudi.niconico_videodownloader.entity.NicoDriver;
 import com.cxwudi.niconico_videodownloader.entity.Vsong;
+import com.cxwudi.niconico_videodownloader.entity.VsongDownloadTask;
 import com.cxwudi.niconico_videodownloader.util.DownloadStatus;
+
+import java.util.Iterator;
+import java.util.Set;
+import java.util.function.Consumer;
 /**
  * The main class for downloading videos and recording them into a file. It will loop through the TreeSet task,
  * for each Vocaloid Song in this Treeset, the manager will assign InfoGainer, VideoDownloader, and LocalRecorder 
@@ -18,17 +18,19 @@ import com.cxwudi.niconico_videodownloader.util.DownloadStatus;
  *
  */
 public class TasksSolver {
-	private VideoDownloader downloader;
+	private YoutubeDLVideoDownloader downloader;
 	private InfoGainer infoGainer;
 	private LocalRecorder localRecorder;
+	private ToTaskGenerator toTaskGenerator;
 	
 	private Set<Vsong> task; //currently use TreeSet
 
 	public TasksSolver(NicoDriver d, Set<Vsong> task, Set<Vsong> update) {
 		this.task = task;
-		this.downloader = new VideoDownloader();
+		this.downloader = new YoutubeDLVideoDownloader();
 		this.infoGainer = new InfoGainer(d);
 		this.localRecorder = new LocalRecorder(update);
+		this.toTaskGenerator = new ToTaskGenerator();
 		//Learn java: addShutdownHook can tell java application to do something after the application is shut down
 		//However, eclipse red button terminal the application with SIGKILL but not SIGTERM, so addShutdownHook doesn't work in eclipse
 		Runtime.getRuntime().addShutdownHook(new Thread(this::triggerRecord));
@@ -39,16 +41,7 @@ public class TasksSolver {
 			c.accept(iterator.next());
 		}
 	}
-	
-	public void downloadVocaloidPVs() {
-		for (Iterator<Vsong> iterator = task.iterator(); iterator.hasNext();) {
-			Vsong vsong = iterator.next();
-			fetchInfo(vsong);
-			if (downloadOneVocaloidPV(vsong) == DownloadStatus.SUCCESS)
-				markDone(vsong);
-			triggerRecord();//we add this line for now
-		}
-	}
+
 	/**
 	 * @param song the Vocaloid song to be filled.
 	 * @return {@code true} iff {@link InfoGainer#fetchInfo(Vsong)} return true.
@@ -61,7 +54,7 @@ public class TasksSolver {
 	 * @param song
 	 * @return {@code SUCCESS} if the download process success, otherwise, return others {@link DownloadStatus}.
 	 */
-	public DownloadStatus downloadOneVocaloidPV(Vsong song) {
+	public DownloadStatus downloadOneVocaloidPV(VsongDownloadTask song) {
 		return downloader.downloadVocaloidPV(song);
 	}
 	/**
@@ -80,8 +73,33 @@ public class TasksSolver {
 		localRecorder.writeRecord();
 	}
 
+	/**
+	 * Convert a Vsong that had field been filled up to a VsongDownloadTask for VideoDownloader to download the song
+	 * @param song the input vsong
+	 * @return
+	 */
+	public VsongDownloadTask convertVsongToTask(Vsong song){
+		return toTaskGenerator.vsongToTask(song);
+	}
+
 	public void setDriver(NicoDriver driver) {
 		infoGainer.setDriver(driver);
 	}
+
+	/**
+	 * @deprecated not encourage to use, plz use forEachVsongInTask
+	 */
+	@Deprecated
+	public void downloadVocaloidPVs() {
+		for (Iterator<Vsong> iterator = task.iterator(); iterator.hasNext();) {
+			Vsong vsong = iterator.next();
+			fetchInfo(vsong);
+			var task = toTaskGenerator.vsongToTask(vsong);
+			if (downloadOneVocaloidPV(task) == DownloadStatus.SUCCESS)
+				markDone(vsong);
+			triggerRecord();//we add this line for now
+		}
+	}
+
 
 }
