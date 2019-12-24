@@ -39,6 +39,11 @@ public class LocalRecorder {
 	}
 	
 	public void writeRecord() {
+		if (update.isEmpty()) {
+			//this can happen if program starts and terminates before localReader reads the downloaded list
+			logger.warn("Don't call LocalRecorder.writeRecord when updated set are empty, ignoring...");
+			return;
+		}
 		var inverseOrderSet = new TreeSet<Vsong>(Comparator.reverseOrder());
 		inverseOrderSet.addAll(update);
 		//LearnJava: whenever we open a txt file to read or write, we first open the FileIO, then BufferIO

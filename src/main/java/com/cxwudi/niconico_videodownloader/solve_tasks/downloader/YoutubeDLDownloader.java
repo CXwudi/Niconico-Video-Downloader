@@ -1,62 +1,22 @@
 package com.cxwudi.niconico_videodownloader.solve_tasks.downloader;
 
 import com.cxwudi.niconico_videodownloader.entity.Vsong;
-import com.cxwudi.niconico_videodownloader.entity.VsongDownloadTask;
 import com.cxwudi.niconico_videodownloader.setup.Config;
-import com.cxwudi.niconico_videodownloader.util.DownloadStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.lang.invoke.MethodHandles;
-import java.util.Objects;
-
-import static com.cxwudi.niconico_videodownloader.util.DownloadStatus.*;
 
 /**
- * The video downloader is the main class of downloading Vocaloid PV,
- * and stores them in the correspond folder.
+ * An implementation of {@link AbstractVideoDownloader} that drives youtube-dl to download the Vocaloid PV
  * @author CX无敌
- *
  */
-public class YoutubeDLVideoDownloader {
-	public YoutubeDLVideoDownloader(){}
+public class YoutubeDLDownloader extends AbstractVideoDownloader {
+	public YoutubeDLDownloader(){}
 	
 	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	/**
-	 * Download the Vocaloid Song and rename it properly. 
-	 * it's a warper function of {@link #downloadUsingYoutube_dl}
-	 * @param task the download task to be performed
-	 * @return {@code SUCCESS} if the Vocaloid PV file is downloaded and renamed, otherwise, return others {@link DownloadStatus}.
-	 */
-	public DownloadStatus downloadVocaloidPV(VsongDownloadTask task) {
-		Objects.requireNonNull(task);
-		if (task.getSong().getId().equals("")) return FAIL_INITIAL;
-		var song = task.getSong();
-		var file = task.getOutputDir();
-		var songFileName = task.getFileName();
-		
-		logger.info("It's show time for Youtube-dl");
-		try {
-			downloadUsingYoutube_dl(song, file, songFileName);
-			//downloadUsingStream(song, file);
-			//downloadUsingNIO(song, file);
-			if (task.getVsongFile().exists()){
-				logger.info("download success");
-				return SUCCESS;
-			} else {
-				logger.warn("Oh no, CXwudi and Miku fail to find download file {}, download process may fail ", task.getVsongFile().toString());
-				return FAIL_DOWNLOAD;
-			}
-
-		}  catch (IOException e) {
-			e.printStackTrace();
-			logger.error("どうしよう!!!!, CXwudi and Miku failed to start the process on downloading " + song.getTitle() + " from " + song.getURL(), e);
-			return FAIL_DOWNLOAD;
-		}
-	}
-	
 	/**
 	 * The core honor function that download videos from a niconico website denoted by vsong obj
 	 * it use 3rd library executable downloader, youtube-dl to achieve the download process.
@@ -65,7 +25,8 @@ public class YoutubeDLVideoDownloader {
 	 * @param dir the directory of where the video to be download.
 	 * @throws IOException
 	 */
-	private void downloadUsingYoutube_dl(Vsong song, File dir, String fileName) throws IOException{
+	@Override
+	protected void downloadImpl(Vsong song, File dir, String fileName) throws IOException{
 		//initialize variables and cmd process
 		var youtube_dlProcessBuilder = new ProcessBuilder(
 				Config.getYoutubeDlFile().getAbsolutePath(),
@@ -128,7 +89,7 @@ public class YoutubeDLVideoDownloader {
 		//this is a very useful code to handle niconico website occasionally return HTTP 403 forbidden.
 		if (stdErrStrBuilder.toString().contains("ERROR") || state < 100) {
 			logger.info("Don't worry, CXwudi and Miku will retry downloading again from " + state + "%");
-			downloadUsingYoutube_dl(song, dir, fileName);
+			downloadImpl(song, dir, fileName);
 		}
 		
 	}

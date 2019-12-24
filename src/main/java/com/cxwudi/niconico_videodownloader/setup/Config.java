@@ -1,5 +1,6 @@
 package com.cxwudi.niconico_videodownloader.setup;
 
+import com.cxwudi.niconico_videodownloader.solve_tasks.downloader.DLMethodNamesEnum;
 import com.cxwudi.niconico_videodownloader.util.LazyVar;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.FileBasedConfiguration;
@@ -49,6 +50,16 @@ public class Config {
 			() -> new File(systemConfig.getString("youtube-dl"))
 	);
 	public static File getYoutubeDlFile() {return YOUTUBE_DL_FILE.get();}
+
+	private static final LazyVar<File> IDM_FILE = new LazyVar<>(
+			() -> new File(systemConfig.getString("idm"))
+	);
+	public static File getIdmFile() { return IDM_FILE.get();}
+
+	private static final LazyVar<DLMethodNamesEnum> DOWNLOADER_METHOD = new LazyVar<>(
+			() -> DLMethodNamesEnum.getMethodByName(systemConfig.getString("downloadMethod"))
+	);
+	public static DLMethodNamesEnum getDownloadMethod(){ return DOWNLOADER_METHOD.get(); }
 
 	public static final void touch() {/*simply invoke the static block above*/}
 

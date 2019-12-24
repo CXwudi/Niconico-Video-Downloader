@@ -1,3 +1,6 @@
- .\youtube-dl.exe -v --username <user> --password <ps> https://www.nicovideo.jp/watch/<id>
- --get-url                  just get a download url
- -f best[height<=720]       for getting 720p only11
+.\youtube-dl.exe -v --username <user> --password <ps> https://www.nicovideo.jp/watch/<id>
+-o <name.%(ext)s>           download to specific file with automatic extension
+--get-url                   just get a download url
+--get-thumbnail             just get a url for thumbnail
+-f best[height<=720]        for getting 720p only
+-x -k                       extract audio from video and keep video

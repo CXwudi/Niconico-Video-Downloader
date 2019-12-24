@@ -3,9 +3,16 @@ package com.cxwudi.niconico_videodownloader.solve_tasks;
 import com.cxwudi.niconico_videodownloader.entity.NicoDriver;
 import com.cxwudi.niconico_videodownloader.entity.Vsong;
 import com.cxwudi.niconico_videodownloader.entity.VsongDownloadTask;
-import com.cxwudi.niconico_videodownloader.solve_tasks.downloader.YoutubeDLVideoDownloader;
+import com.cxwudi.niconico_videodownloader.setup.Config;
+import com.cxwudi.niconico_videodownloader.solve_tasks.downloader.AbstractVideoDownloader;
+import com.cxwudi.niconico_videodownloader.solve_tasks.downloader.DLMethodNamesEnum;
+import com.cxwudi.niconico_videodownloader.solve_tasks.downloader.IDMwithYoutubeDLDownloader;
+import com.cxwudi.niconico_videodownloader.solve_tasks.downloader.YoutubeDLDownloader;
 import com.cxwudi.niconico_videodownloader.util.DownloadStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -19,7 +26,7 @@ import java.util.function.Consumer;
  *
  */
 public class TasksSolver {
-	private YoutubeDLVideoDownloader downloader;
+	private AbstractVideoDownloader downloader;
 	private InfoGainer infoGainer;
 	private LocalRecorder localRecorder;
 	private ToTaskGenerator toTaskGenerator;
@@ -28,13 +35,36 @@ public class TasksSolver {
 
 	public TasksSolver(NicoDriver d, Set<Vsong> task, Set<Vsong> update) {
 		this.task = task;
-		this.downloader = new YoutubeDLVideoDownloader();
+		this.downloader = getDownloader(Config.getDownloadMethod());
 		this.infoGainer = new InfoGainer(d);
 		this.localRecorder = new LocalRecorder(update);
 		this.toTaskGenerator = new ToTaskGenerator();
 		//Learn java: addShutdownHook can tell java application to do something after the application is shut down
 		//However, eclipse red button terminal the application with SIGKILL but not SIGTERM, so addShutdownHook doesn't work in eclipse
 		Runtime.getRuntime().addShutdownHook(new Thread(this::triggerRecord));
+	}
+
+	/**
+	 * get the proper downloader implementation for this {@link TasksSolver}
+	 * @param methodName the enum of method name
+	 * @return a downloader instance
+	 */
+	private AbstractVideoDownloader getDownloader(DLMethodNamesEnum methodName){
+		switch (methodName){
+			case YOUTUBE_DL: //use youtube-dl only
+				return new YoutubeDLDownloader();
+			case IDM:
+				var idmFile = Config.getIdmFile();
+				if (idmFile.exists()) {
+					return new IDMwithYoutubeDLDownloader();
+				} else {
+					logger.error("CXwudi and Miku cannot find the IDMan.exe file in {}, using default youtube-dl downloader now 😂", idmFile.toString());
+					return AbstractVideoDownloader.getDefaultDownloader();
+				}
+			default: logger.error("CXwudi and Miku can not supported downloader method: {}, using default youtube-dl downloader now 😂",
+					Config.getDownloadMethod());
+				return AbstractVideoDownloader.getDefaultDownloader();
+		}
 	}
 	
 	public void forEachVsongInTask(Consumer<Vsong> c) {
@@ -86,6 +116,8 @@ public class TasksSolver {
 	public void setDriver(NicoDriver driver) {
 		infoGainer.setDriver(driver);
 	}
+
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	/**
 	 * @deprecated not encourage to use, plz use forEachVsongInTask
