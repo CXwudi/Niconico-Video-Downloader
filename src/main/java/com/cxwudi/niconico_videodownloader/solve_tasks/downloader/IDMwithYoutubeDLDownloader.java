@@ -101,7 +101,7 @@ public class IDMwithYoutubeDLDownloader extends AbstractVideoDownloader {
                 "/p", dir.getAbsolutePath(),
                 "/f", fileName,
                 "/n");
-        idmPB.start();
+        idmPB.start(); //this process will fork a new process and return immediately
 
         try {
             return waitUntilFileIsHere(targetFile);
@@ -115,7 +115,7 @@ public class IDMwithYoutubeDLDownloader extends AbstractVideoDownloader {
 
     /**
      * Since there is no way for Java project to know the progress and status of IDM process,
-     * and the IDM temp file is in a secret folder when hashed folder name. (It's still possible to get that temp file,
+     * and the IDM temp file is in a secret folder with hashed folder name. (It's still possible to get that temp file,
      * but it's not worth to spend that effort to do it)
      *
      * So we can only check if targetFile is existed periodically. It will do check once per second, until 1 min 40 se gone
