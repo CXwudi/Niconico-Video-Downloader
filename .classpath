@@ -67,9 +67,9 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: ws.schild:jave-nativebin-linux64:2.7.1"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: ws.schild:jave-nativebin-osx64:2.7.1"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.slf4j:slf4j-api:1.7.28"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.apache.logging.log4j:log4j-api:2.12.1"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.apache.logging.log4j:log4j-core:2.12.1"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.apache.logging.log4j:log4j-slf4j-impl:2.12.1"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.apache.logging.log4j:log4j-api:2.13.0"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.apache.logging.log4j:log4j-core:2.13.0"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.apache.logging.log4j:log4j-slf4j-impl:2.13.0"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: com.lmax:disruptor:3.4.2"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

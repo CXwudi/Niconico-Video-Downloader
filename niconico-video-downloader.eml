@@ -56,9 +56,9 @@
 		<level name="Maven: ws.schild:jave-nativebin-linux64:2.7.1" value="project"/>
 		<level name="Maven: ws.schild:jave-nativebin-osx64:2.7.1" value="project"/>
 		<level name="Maven: org.slf4j:slf4j-api:1.7.28" value="project"/>
-		<level name="Maven: org.apache.logging.log4j:log4j-api:2.12.1" value="project"/>
-		<level name="Maven: org.apache.logging.log4j:log4j-core:2.12.1" value="project"/>
-		<level name="Maven: org.apache.logging.log4j:log4j-slf4j-impl:2.12.1" value="project"/>
+		<level name="Maven: org.apache.logging.log4j:log4j-api:2.13.0" value="project"/>
+		<level name="Maven: org.apache.logging.log4j:log4j-core:2.13.0" value="project"/>
+		<level name="Maven: org.apache.logging.log4j:log4j-slf4j-impl:2.13.0" value="project"/>
 		<level name="Maven: com.lmax:disruptor:3.4.2" value="project"/>
 	</levels>
 </component>
