@@ -2,6 +2,7 @@ package com.cxwudi.niconico_videodownloader.solve_tasks.downloader;
 
 import com.cxwudi.niconico_videodownloader.entity.Vsong;
 import com.cxwudi.niconico_videodownloader.setup.Config;
+import com.cxwudi.niconico_videodownloader.util.DownloadStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,43 +24,44 @@ public class YoutubeDLDownloader extends AbstractVideoDownloader {
 	 * thanks for the awesome 3rd library from https://github.com/rg3/youtube-dl
 	 * @param song the song to downloaded
 	 * @param dir the directory of where the video to be download.
+	 * @return {@link DownloadStatus#SUCCESS} always (hence this downloader is very strong to successfully download video)
 	 * @throws IOException
 	 */
 	@Override
-	protected void downloadImpl(Vsong song, File dir, String fileName) throws IOException{
+	protected DownloadStatus downloadImpl(Vsong song, File dir, String fileName) throws IOException{
 		//initialize variables and cmd process
-		var youtube_dlProcessBuilder = new ProcessBuilder(
+		var youtubeDLProcessBuilder = new ProcessBuilder(
 				Config.getYoutubeDlFile().getAbsolutePath(),
 				"-v",
-				"--username", new StringBuilder().append('"').append(Config.getEmail()).append('"').toString(),
-				"--password", new StringBuilder().append('"').append(Config.getPassword()).append('"').toString(),
+				"--username", '"' + Config.getEmail() + '"',
+				"--password", '"' + Config.getPassword() + '"',
 				"https://www.nicovideo.jp/watch/" + song.getId(),
 				"-o", fileName,
 				"-f",
 				"\"best[height<=720]\"");
 		//set the download directory to the proper subfolder, for example, 20xx年V家新曲
-		youtube_dlProcessBuilder.directory(dir);
-		logger.debug("start running youtube-dl command: \n{}", youtube_dlProcessBuilder.command());
+		youtubeDLProcessBuilder.directory(dir);
+		logger.debug("start running youtube-dl command: \n{}", youtubeDLProcessBuilder.command());
 		logger.debug("Vsong file saved to {}", dir.getAbsolutePath());
 
 		//start the process
-		Process youtube_dlProcess = youtube_dlProcessBuilder.start();
+		Process youtubeDlProcess = youtubeDLProcessBuilder.start();
 		//redirect output/error stream of cmd to java stdout/stderr
 		var stdOutStrBuilder = new StringBuilder();
 		var stdErrStrBuilder = new StringBuilder();
 		
 		var stdOutThread = new Thread(() -> {
-			syncStream(youtube_dlProcess.getInputStream(), stdOutStrBuilder, System.out);
+			syncStream(youtubeDlProcess.getInputStream(), stdOutStrBuilder, System.out);
 		}, "StdOut");
 		stdOutThread.start();
 		
 		var stdErrThread = new Thread(() -> {
-			syncStream(youtube_dlProcess.getErrorStream(), stdErrStrBuilder, System.err);
+			syncStream(youtubeDlProcess.getErrorStream(), stdErrStrBuilder, System.err);
 		}, "StdErr");
 		stdErrThread.start();
 		
 		//redirect java stdin to cmd input, and type cmd command to invoke downloading process
-//		var stdIn = new PrintWriter(youtube_dlProcess.getOutputStream());
+//		var stdIn = new PrintWriter(youtubeDlProcess.getOutputStream());
 //		//stdIn.println("echo " + file.toString());
 //		stdIn.println(new StringBuilder().append(System.getProperty("user.dir")).append("/youtube-dl -v")
 //				.append(" --username \"1113421658@qq.com\"").append(" --password \"2010017980502\"")
@@ -69,7 +71,7 @@ public class YoutubeDLDownloader extends AbstractVideoDownloader {
 		
 		//wait for the downloading process
 		try {
-			youtube_dlProcess.waitFor();
+			youtubeDlProcess.waitFor();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -89,7 +91,9 @@ public class YoutubeDLDownloader extends AbstractVideoDownloader {
 		//this is a very useful code to handle niconico website occasionally return HTTP 403 forbidden.
 		if (stdErrStrBuilder.toString().contains("ERROR") || state < 100) {
 			logger.info("Don't worry, CXwudi and Miku will retry downloading again from " + state + "%");
-			downloadImpl(song, dir, fileName);
+			return downloadImpl(song, dir, fileName);
+		} else {
+			return DownloadStatus.SUCCESS;
 		}
 		
 	}

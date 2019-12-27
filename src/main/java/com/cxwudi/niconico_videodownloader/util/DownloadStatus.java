@@ -2,13 +2,12 @@ package com.cxwudi.niconico_videodownloader.util;
 
 /**
  * An helper enum to indicate the download process result, they are
- * {@code SUCCESS, FAIL_INITIAL, FAIL_DOWNLOAD, FAIL_RENAME, FAIL_UNKNOWN}
+ * {@code SUCCESS, FAIL_INITIAL, FAIL_DOWNLOAD, UNKNOWN_STATUS}
  * @author CX无敌
  *
  */
 public enum DownloadStatus {
 	SUCCESS, 
 	FAIL_INITIAL, FAIL_DOWNLOAD, //hard failure
-	FAIL_RENAME, //soft failure
-	FAIL_UNKNOWN //don't know what's wrong
+	UNKNOWN_STATUS; //soft failure, don't know if the download success or not
 }

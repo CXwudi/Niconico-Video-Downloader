@@ -31,13 +31,21 @@ public class Main {
 			
 			switch (manager.downloadOneVocaloidPV(task)) {
 				case SUCCESS:
-					logger.info("done");
-				break;
-				case FAIL_RENAME:
-					//do nothing
-				break;
-			default: //fail initial and fail download
-				return;
+					logger.info("Yeah φ(゜▽゜*)♪, CXwudi and Miku successfully download {}", task.getFileName());
+					break;
+				case UNKNOWN_STATUS:
+					logger.warn("Oh no, CXwudi and Miku fail to know if we finished downloading {} or not", task.getFileName());
+					break;
+				case FAIL_INITIAL:
+					logger.error("どうしよう!!!!, CXwudi and Miku failed to start the process on downloading {}",
+							task.getFileName());
+					return;
+				case FAIL_DOWNLOAD:
+					logger.error("どうしよう!!!!, CXwudi and Miku failed to download {}", task.getFileName());
+					return;
+				default:
+					logger.error("Unknown error reached here");
+					return;
 			} 
 					
 			manager.markDone(vsong);

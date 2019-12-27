@@ -66,16 +66,16 @@ public class ToTaskGenerator {
      */
     private String generateFileName(Vsong song) {
         String title = song.getTitle();
+        if (title.equals("")) return song.getId() + ".mp4";
+
         var fileNameBuilder = new StringBuilder(title);
         if (!song.getProducerName().equals("") && !title.contains(song.getProducerName())) {
             fileNameBuilder.append("【")
                     .append(song.getProducerName())
                     .append("】");
         }
-        if (fileNameBuilder.equals("")) fileNameBuilder.append(song.getId());
-        fileNameBuilder.append(".mp4");
 
-        var fileNameString = fileNameBuilder.toString()
+        var fileNameString = fileNameBuilder.append(".mp4").toString()
                 .replace("オリジナル曲", "").replace("オリジナル", "")
                 .replace("アニメ", "").replace("MV", "").replace("PV", "")
                 .replace("[]", "").replace("【】", "");
