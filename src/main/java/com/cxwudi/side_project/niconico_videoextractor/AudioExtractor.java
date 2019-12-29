@@ -87,10 +87,6 @@ public class AudioExtractor {
 		var audio = new AudioAttributes();
 		audio.setCodec(AudioAttributes.DIRECT_STREAM_COPY);
 		
-		var attributes = new EncodingAttributes();
-		attributes.setAudioAttributes(audio);
-		attributes.setVideoAttributes(null);
-		
 		// for each folder in folders
 		for (File inputFolder : inputFolders) {
 			var outputFolder = new File(outputRoot, inputFolder.getName());
@@ -117,6 +113,9 @@ public class AudioExtractor {
 					var mp4praserIOFilePair = new IOFilePair(outputAACFile, outputM4AFile);
 					
 					//create task
+					var attributes = new EncodingAttributes();
+					attributes.setAudioAttributes(audio);
+					attributes.setVideoAttributes(null);
 					var taskThread = new ExtractTaskThread(ffmpegIOFilePair, mp4praserIOFilePair);
 					taskThread.setEncodingAttributes(attributes);
 					

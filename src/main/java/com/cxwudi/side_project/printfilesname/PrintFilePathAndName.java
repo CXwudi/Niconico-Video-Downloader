@@ -8,26 +8,26 @@ import java.util.stream.Collectors;
 public class PrintFilePathAndName {
 
 	public static void main(String[] args) {
-		String path = "C:\\Users\\11134\\Videos\\2019年V家新曲合集\\2010年V家可能好听新曲";   
+		String path = "D:\\11134\\Videos\\2019 截图用-我最喜欢的";
         getFile(path);   
 	}
 	
 	public static void getFile(String path) {
-		File file = new File(path); 
+		File dir = new File(path);
 		// get the folder list
-		File[] array = file.listFiles(); 
+		File[] array = dir.listFiles();
 		//sort by modify date, increasing order
 		array = Arrays.stream(array).collect(Collectors.toMap(Function.identity(), File::lastModified))
 				.entrySet().stream()
 				.sorted((t1, t2) -> t1.getValue() - t2.getValue() < 0 ? -1 : 1)
 				.map(Entry::getKey)
 				.collect(Collectors.toList()).toArray(new File[0]);
-		
-		
-		for(int i=0;i<array.length;i++){
-			if(array[i].isFile()){ 
+
+
+		for (File file : array) {
+			if (file.isFile()) {
 				// only take file name
-				System.out.println(array[i].getName());
+				System.out.println(file.getName());
 				// take file path and name
 				//System.out.println("#####" + array[i]);
 				// take file path and name
