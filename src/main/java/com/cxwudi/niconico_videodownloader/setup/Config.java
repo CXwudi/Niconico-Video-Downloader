@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.lang.invoke.MethodHandles;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * The global class to store any system configuration and user configuration, including selenium system properties,
@@ -61,9 +63,29 @@ public class Config {
 	);
 	public static DLMethodNamesEnum getDownloadMethod(){ return DOWNLOADER_METHOD.get(); }
 
+	//input.includeList.containString
+	private static final LazyVar<List<String>> INCLUDE_LIST_CONTAIN_STRINGS = new LazyVar<>(
+			() -> {
+				var flatStr = userConfig.getString("input.includeList.containString");
+				return Arrays.asList(flatStr.split(","));
+			}
+	);
+	public static List<String> getIncludedListContainStrings() { return INCLUDE_LIST_CONTAIN_STRINGS.get(); }
+
+	//input.excludeList.containString
+	private static final LazyVar<List<String>> EXCLUDE_LIST_CONTAIN_STRINGS = new LazyVar<>(
+			() -> {
+				var flatStr = userConfig.getString("input.excludeList.containString");
+				return Arrays.asList(flatStr.split(","));
+			}
+	);
+	public static List<String> getExcludedListContainStrings() { return EXCLUDE_LIST_CONTAIN_STRINGS.get(); }
+
 	public static final void touch() {/*simply invoke the static block above*/}
 
 	static {
+		//don't forget to set UTF-8 to support Chinese and Japanese
+		FileBasedConfigurationBuilder.setDefaultEncoding(PropertiesConfiguration.class, "UTF-8");
 		Parameters params = new Parameters();
 
 		setupSystemConfig(params);
@@ -90,7 +112,7 @@ public class Config {
 		}
 		catch(ConfigurationException cex)
 		{
-			logger.error("Can not get configuration", cex);
+			logger.error("Can not get user configuration", cex);
 		}
 	}
 
@@ -105,7 +127,7 @@ public class Config {
 		}
 		catch(ConfigurationException cex)
 		{
-			logger.error("Can not get configuration", cex);
+			logger.error("Can not get system configuration", cex);
 		}
 	}
 

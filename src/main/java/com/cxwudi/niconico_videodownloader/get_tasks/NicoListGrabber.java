@@ -2,6 +2,7 @@ package com.cxwudi.niconico_videodownloader.get_tasks;
 
 import com.cxwudi.niconico_videodownloader.entity.NicoDriver;
 import com.cxwudi.niconico_videodownloader.entity.Vsong;
+import com.cxwudi.niconico_videodownloader.setup.Config;
 import org.openqa.selenium.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,8 +58,9 @@ public class NicoListGrabber extends CollectionReader{
 				String id = webElement.getAttribute("id");
 				logger.info("List id found: {}", id);
 				String folderName = webElement.findElement(By.cssSelector("span")).getText();
-				if (folderName.contains("2019")) {
-					myLists.put(id.substring(id.lastIndexOf('_') + 1, id.length()), folderName);
+				if (Config.getIncludedListContainStrings().stream().anyMatch(folderName::contains) &&
+						Config.getExcludedListContainStrings().stream().noneMatch(folderName::contains)) {
+					myLists.put(id.substring(id.lastIndexOf('_') + 1), folderName);
 				}
 				
 			}

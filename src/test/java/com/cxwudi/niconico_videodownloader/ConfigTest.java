@@ -38,6 +38,8 @@ public class ConfigTest {
         logger.debug("root output exists: {}", Config.getRootOutputDir().exists());
         logger.debug(Config.getDownloadedList().toString());
         logger.debug(Config.getYoutubeDlFile().toString());
+        logger.debug(Config.getIncludedListContainStrings().toString());
+        logger.debug(Config.getExcludedListContainStrings().toString());
         assertTrue(true);
     }
 

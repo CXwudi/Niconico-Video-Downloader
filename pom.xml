@@ -136,8 +136,8 @@
             linux, osx) -->
           <operatingSystems>
             <windows>true</windows>
-            <linux>true</linux>
-            <mac>true</mac>
+            <linux>false</linux>
+            <mac>false</mac>
           </operatingSystems>
           <!-- Download 32bit binaries -->
           <thirtyTwoBitBinaries>true</thirtyTwoBitBinaries>
@@ -196,14 +196,17 @@
                 <!-- values will be resolved by selenium binary downloader plugin-->
                 <systemProperty>
                   <key>webdriver.edge.driver</key>
+                  <!--suppress UnresolvedMavenProperty -->
                   <value>${webdriver.edge.driver}</value>
                 </systemProperty>
                 <systemProperty>
                   <key>webdriver.opera.driver</key>
+                  <!--suppress UnresolvedMavenProperty -->
                   <value>${webdriver.opera.driver}</value>
                 </systemProperty>
                 <systemProperty>
                   <key>webdriver.chrome.driver</key>
+                  <!--suppress UnresolvedMavenProperty -->
                   <value>${webdriver.chrome.driver}</value>
                 </systemProperty>
               </systemProperties>
