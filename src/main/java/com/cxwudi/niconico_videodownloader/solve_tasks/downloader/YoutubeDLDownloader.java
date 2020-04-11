@@ -60,15 +60,6 @@ public class YoutubeDLDownloader extends AbstractVideoDownloader {
 		}, "StdErr");
 		stdErrThread.start();
 		
-		//redirect java stdin to cmd input, and type cmd command to invoke downloading process
-//		var stdIn = new PrintWriter(youtubeDlProcess.getOutputStream());
-//		//stdIn.println("echo " + file.toString());
-//		stdIn.println(new StringBuilder().append(System.getProperty("user.dir")).append("/youtube-dl -v")
-//				.append(" --username \"1113421658@qq.com\"").append(" --password \"2010017980502\"")
-//				.append(" https://www.nicovideo.jp/watch/").append(song.getId())
-//				.append(" -f \"best[height<=720]\""));
-//		stdIn.close();
-		
 		//wait for the downloading process
 		try {
 			youtubeDlProcess.waitFor();
@@ -118,8 +109,7 @@ public class YoutubeDLDownloader extends AbstractVideoDownloader {
 //	/**
 //	 * @Deprecated
 //	 * This method is unstable after 2018 April when Niconico web site has updated that allows
-//	 * account-free video watching. From then on, video url sometime receive HTTP 403 forbidden that
-//	 * cause the on-going downloading process stops.
+//	 * account-free video watching. From then on, video url will receive HTTP 403 if the heartbeat is not received every 60s
 //	 * @param song vsong to download
 //	 * @param file folder of vsong
 //	 * @throws IOException
