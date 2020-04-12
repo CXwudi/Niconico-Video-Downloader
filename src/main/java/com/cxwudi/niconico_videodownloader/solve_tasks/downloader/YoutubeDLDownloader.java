@@ -37,8 +37,9 @@ public class YoutubeDLDownloader extends AbstractVideoDownloader {
 				"--password", '"' + Config.getPassword() + '"',
 				"https://www.nicovideo.jp/watch/" + song.getId(),
 				"-o", fileName,
-				"-f",
-				"\"best[height<=720]\"");
+				"-f", "\"best[height<=720]\"",	//get 720p video, don't worry it won't decrease audio quality
+				//increase downloading speed by enabling chunk-based HTTP downloading to bypass bandwidth throttling
+				"--http-chunk-size", "15M"); 	//15Mb is a suitable chunk size for niconico
 		//set the download directory to the proper subfolder, for example, 20xx年V家新曲
 		youtubeDLProcessBuilder.directory(dir);
 		logger.debug("start running youtube-dl command: \n{}", youtubeDLProcessBuilder.command());
