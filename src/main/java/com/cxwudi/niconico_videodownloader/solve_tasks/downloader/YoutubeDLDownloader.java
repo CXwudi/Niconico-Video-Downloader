@@ -7,16 +7,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.lang.invoke.MethodHandles;
 
 /**
  * An implementation of {@link AbstractVideoDownloader} that drives youtube-dl to download the Vocaloid PV
  * @author CX无敌
  */
 public class YoutubeDLDownloader extends AbstractVideoDownloader {
+	private static final Logger logger = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
 	public YoutubeDLDownloader(){}
-	
-	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	/**
 	 * The core honor function that download videos from a niconico website denoted by vsong obj
