@@ -18,9 +18,10 @@ public class FFmpegProcessTest {
         System.out.println("ffmpeg executable found in <"+ffmpegPath+">");
         String testFile = "いじめられっ子のルアン／初音ミク【雨の介】.mp4";
 		var ffpmegProcessBuilder = new ProcessBuilder(ffmpegPath,
-				"-i", testFile, //input file
-				"-y", //answer yes for overwriting files
-				"-vn","-acodec","copy", //copy audio stream from video
+				"-i", testFile, 	//input file
+				"-y", 				//answer yes for overwriting files
+				"-vn", 				//no video stream
+				"-acodec","copy", 	//copy audio stream from video
 				testFile.replace(".mp4", ".aac")); //output file
 		ffpmegProcessBuilder.directory(new File("test_files"));
 		ffpmegProcessBuilder = ffpmegProcessBuilder.redirectOutput(Redirect.INHERIT).redirectError(Redirect.INHERIT).redirectErrorStream(true);
@@ -34,10 +35,13 @@ public class FFmpegProcessTest {
 	public void testExtractAudioWithApis() throws IllegalArgumentException, InputFormatException, EncoderException {
 		var audio = new AudioAttributes();
 		audio.setCodec(AudioAttributes.DIRECT_STREAM_COPY);
+
+		var video = new VideoAttributes();
+		video.setFaststart(true); //equilavent to -movflags +faststart, useful for ffmpeg to perform a MP4Box operation
 		
 		var attributes = new EncodingAttributes();
 		attributes.setAudioAttributes(audio);
-		attributes.setVideoAttributes(null);
+		attributes.setVideoAttributes(video);
 		
 		var ffmpegEncoder = new Encoder();
 		var directory = new File("test_files");

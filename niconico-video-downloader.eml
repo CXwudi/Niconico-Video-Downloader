@@ -5,23 +5,23 @@
 		<testFolder url="file://$MODULE_DIR$/src/test/java"/>
 		<excludeFolder url="file://$MODULE_DIR$/target"/>
 	</contentEntry>
-	<lib name="Maven: org.junit.jupiter:junit-jupiter:5.5.2" scope="TEST"/>
-	<lib name="Maven: org.junit.jupiter:junit-jupiter-api:5.5.2" scope="TEST"/>
+	<lib name="Maven: org.junit.jupiter:junit-jupiter:5.6.2" scope="TEST"/>
+	<lib name="Maven: org.junit.jupiter:junit-jupiter-api:5.6.2" scope="TEST"/>
 	<lib name="Maven: org.apiguardian:apiguardian-api:1.1.0" scope="TEST"/>
 	<lib name="Maven: org.opentest4j:opentest4j:1.2.0" scope="TEST"/>
-	<lib name="Maven: org.junit.platform:junit-platform-commons:1.5.2" scope="TEST"/>
-	<lib name="Maven: org.junit.jupiter:junit-jupiter-params:5.5.2" scope="TEST"/>
-	<lib name="Maven: org.junit.jupiter:junit-jupiter-engine:5.5.2" scope="TEST"/>
-	<lib name="Maven: org.junit.platform:junit-platform-engine:1.5.2" scope="TEST"/>
+	<lib name="Maven: org.junit.platform:junit-platform-commons:1.6.2" scope="TEST"/>
+	<lib name="Maven: org.junit.jupiter:junit-jupiter-params:5.6.2" scope="TEST"/>
+	<lib name="Maven: org.junit.jupiter:junit-jupiter-engine:5.6.2" scope="TEST"/>
+	<lib name="Maven: org.junit.platform:junit-platform-engine:1.6.2" scope="TEST"/>
 	<levels>
-		<level name="Maven: org.junit.jupiter:junit-jupiter:5.5.2" value="project"/>
-		<level name="Maven: org.junit.jupiter:junit-jupiter-api:5.5.2" value="project"/>
+		<level name="Maven: org.junit.jupiter:junit-jupiter:5.6.2" value="project"/>
+		<level name="Maven: org.junit.jupiter:junit-jupiter-api:5.6.2" value="project"/>
 		<level name="Maven: org.apiguardian:apiguardian-api:1.1.0" value="project"/>
 		<level name="Maven: org.opentest4j:opentest4j:1.2.0" value="project"/>
-		<level name="Maven: org.junit.platform:junit-platform-commons:1.5.2" value="project"/>
-		<level name="Maven: org.junit.jupiter:junit-jupiter-params:5.5.2" value="project"/>
-		<level name="Maven: org.junit.jupiter:junit-jupiter-engine:5.5.2" value="project"/>
-		<level name="Maven: org.junit.platform:junit-platform-engine:1.5.2" value="project"/>
+		<level name="Maven: org.junit.platform:junit-platform-commons:1.6.2" value="project"/>
+		<level name="Maven: org.junit.jupiter:junit-jupiter-params:5.6.2" value="project"/>
+		<level name="Maven: org.junit.jupiter:junit-jupiter-engine:5.6.2" value="project"/>
+		<level name="Maven: org.junit.platform:junit-platform-engine:1.6.2" value="project"/>
 		<level name="Maven: org.seleniumhq.selenium:selenium-java:3.141.59" value="project"/>
 		<level name="Maven: org.seleniumhq.selenium:selenium-api:3.141.59" value="project"/>
 		<level name="Maven: org.seleniumhq.selenium:selenium-chrome-driver:3.141.59" value="project"/>
@@ -48,17 +48,17 @@
 		<level name="Maven: commons-logging:commons-logging:1.2" value="project"/>
 		<level name="Maven: commons-beanutils:commons-beanutils:1.9.4" value="project"/>
 		<level name="Maven: commons-collections:commons-collections:3.2.2" value="project"/>
-		<level name="Maven: ws.schild:jave-all-deps:2.7.1" value="project"/>
-		<level name="Maven: ws.schild:jave-core:2.7.1" value="project"/>
-		<level name="Maven: ws.schild:jave-nativebin-win32:2.7.1" value="project"/>
-		<level name="Maven: ws.schild:jave-nativebin-win64:2.7.1" value="project"/>
-		<level name="Maven: ws.schild:jave-nativebin-linux32:2.7.1" value="project"/>
-		<level name="Maven: ws.schild:jave-nativebin-linux64:2.7.1" value="project"/>
-		<level name="Maven: ws.schild:jave-nativebin-osx64:2.7.1" value="project"/>
+		<level name="Maven: ws.schild:jave-all-deps:2.7.3" value="project"/>
+		<level name="Maven: ws.schild:jave-core:2.7.3" value="project"/>
+		<level name="Maven: ws.schild:jave-nativebin-win32:2.7.3" value="project"/>
+		<level name="Maven: ws.schild:jave-nativebin-win64:2.7.3" value="project"/>
+		<level name="Maven: ws.schild:jave-nativebin-linux32:2.7.3" value="project"/>
+		<level name="Maven: ws.schild:jave-nativebin-linux64:2.7.3" value="project"/>
+		<level name="Maven: ws.schild:jave-nativebin-osx64:2.7.3" value="project"/>
 		<level name="Maven: org.slf4j:slf4j-api:1.7.28" value="project"/>
-		<level name="Maven: org.apache.logging.log4j:log4j-api:2.13.0" value="project"/>
-		<level name="Maven: org.apache.logging.log4j:log4j-core:2.13.0" value="project"/>
-		<level name="Maven: org.apache.logging.log4j:log4j-slf4j-impl:2.13.0" value="project"/>
+		<level name="Maven: org.apache.logging.log4j:log4j-api:2.13.1" value="project"/>
+		<level name="Maven: org.apache.logging.log4j:log4j-core:2.13.1" value="project"/>
+		<level name="Maven: org.apache.logging.log4j:log4j-slf4j-impl:2.13.1" value="project"/>
 		<level name="Maven: com.lmax:disruptor:3.4.2" value="project"/>
 	</levels>
 </component>
