@@ -27,7 +27,6 @@
     <selenium.rootDir>${lib.dir}/selenium_drivers</selenium.rootDir>
     <release.dir>release</release.dir>
     <dependencies.dir>package</dependencies.dir>
-    <copyResources.mainClass>com.cxwudi.niconico_videodownloader.setup.CopyFilesForRelease</copyResources.mainClass>
     <niconico_downloader.mainClass>com.cxwudi.niconico_videodownloader.Main</niconico_downloader.mainClass>
   </properties>
 
@@ -155,87 +154,39 @@
         </configuration>
       </plugin>
 
-      <!-- following two plugin can generate executable jar with linked dependency jars-->
-      <!-- move maven dependencies jar to a folder -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>3.1.1</version>
-        <executions>
-          <execution>
-            <id>copy-dependencies</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>copy-dependencies</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${release.dir}/${dependencies.dir}</outputDirectory>
-              <overWriteReleases>false</overWriteReleases>
-              <overWriteSnapshots>false</overWriteSnapshots>
-              <overWriteIfNewer>true</overWriteIfNewer>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <!-- with the maven-dependency-plugin, link these dependencies into jar's MF file -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
+      <plugin> <!-- jar + assembly to produce a fat zip, recommended way to publish releases-->
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.1.2</version>
+        <version>3.2.0</version>
         <configuration>
-          <outputDirectory>${release.dir}</outputDirectory>
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-              <classpathPrefix>${dependencies.dir}/</classpathPrefix>
+              <classpathPrefix>${dependencies.dir}</classpathPrefix>
               <mainClass>${niconico_downloader.mainClass}</mainClass>
             </manifest>
           </archive>
         </configuration>
       </plugin>
 
-      <!--  with the maven-resources-plugin, copy lib/ and data/ into ${project.build.directory}  -->
       <plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>3.1.0</version>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.2.0</version>
         <executions>
           <execution>
-            <id>copy-lib</id>
-            <phase>prepare-package</phase>
+            <id>make-assembly</id> <!-- this is used for inheritance merges -->
+            <phase>package</phase> <!-- bind to the packaging phase -->
             <goals>
-              <goal>copy-resources</goal>
+              <goal>single</goal>
             </goals>
-            <configuration>
-              <outputDirectory>${release.dir}/${lib.dir}</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>${lib.dir}/</directory>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-          <execution>
-            <id>copy-data</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${release.dir}/${data.dir}</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>${data.dir}/</directory>
-                </resource>
-              </resources>
-            </configuration>
           </execution>
         </executions>
         <configuration>
-          <nonFilteredFileExtensions>
-            <nonFilteredFileExtension>exe</nonFilteredFileExtension>
-            <nonFilteredFileExtension>zip</nonFilteredFileExtension>
-          </nonFilteredFileExtensions>
+          <appendAssemblyId>false</appendAssemblyId>
+          <descriptors>
+            <!-- children plz specify your location of configuration file -->
+            <descriptor>src/main/resources/assembly/zip.xml</descriptor> <!-- this should be independent for each children -->
+          </descriptors>
+          <outputDirectory>${release.dir}</outputDirectory>
         </configuration>
       </plugin>
 
