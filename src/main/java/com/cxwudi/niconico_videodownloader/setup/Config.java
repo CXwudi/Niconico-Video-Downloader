@@ -2,6 +2,7 @@ package com.cxwudi.niconico_videodownloader.setup;
 
 import com.cxwudi.niconico_videodownloader.solve_tasks.downloader.DLMethodNamesEnum;
 import com.cxwudi.niconico_videodownloader.util.LazyVar;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.FileBasedConfiguration;
 import org.apache.commons.configuration2.PropertiesConfiguration;
@@ -92,12 +93,7 @@ public class Config {
 		setupUserConfig(params);
 
 		//setup selenium system properties
-		var webDriverProperties = systemConfig.getKeys("webdriver");
-		webDriverProperties.forEachRemaining(keyStr -> {
-			var value = systemConfig.getString(keyStr);
-			logger.debug("Selenium system property set: {} -> {}", keyStr, value);
-			System.setProperty(keyStr, value);
-		});
+		WebDriverManager.chromedriver().setup();
 	}
 
 	private static void setupUserConfig(Parameters params) {

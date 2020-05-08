@@ -27,7 +27,6 @@
     <selenium.rootDir>${lib.dir}/selenium_drivers</selenium.rootDir>
     <release.dir>release</release.dir>
     <dependencies.dir>package</dependencies.dir>
-    <init.mainClass>com.cxwudi.niconico_videodownloader.setup.WriteConfigFileByMaven</init.mainClass>
     <copyResources.mainClass>com.cxwudi.niconico_videodownloader.setup.CopyFilesForRelease</copyResources.mainClass>
     <niconico_downloader.mainClass>com.cxwudi.niconico_videodownloader.Main</niconico_downloader.mainClass>
   </properties>
@@ -44,8 +43,15 @@
     <!-- The Selenium library -->
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
-      <artifactId>selenium-java</artifactId>
+      <artifactId>selenium-chrome-driver</artifactId>
       <version>3.141.59</version>
+    </dependency>
+
+    <!-- Auto download webdriver and setup the environment -->
+    <dependency>
+      <groupId>io.github.bonigarcia</groupId>
+      <artifactId>webdrivermanager</artifactId>
+      <version>3.8.1</version>
     </dependency>
 
     <!-- Apache Common Configuration, use for reading .property file -->
@@ -118,102 +124,6 @@
 
   <build>
     <plugins>
-      <plugin> <!-- selenium driver download plugin -->
-        <groupId>com.lazerycode.selenium</groupId> <!-- plug-in that can download Selenium exe drivers -->
-        <artifactId>driver-binary-downloader-maven-plugin</artifactId>
-        <version>1.0.17</version>
-        <configuration>
-          <!-- root directory that downloaded driver binaries will be stored in -->
-          <rootStandaloneServerDirectory>${selenium.rootDir}/bin</rootStandaloneServerDirectory>
-          <!-- Where you want to store downloaded zip files -->
-          <downloadedZipFileDirectory>${selenium.rootDir}/zips</downloadedZipFileDirectory>
-          <!-- Location of a custom repository map -->
-          <customRepositoryMap>${selenium.rootDir}/repo.xml</customRepositoryMap>
-          <!-- This will ensure that the plugin only downloads binaries for the current OS, this will 
-            override anything specified in the <operatingSystems> configuration -->
-          <onlyGetDriversForHostOperatingSystem>true</onlyGetDriversForHostOperatingSystem>
-          <!-- Operating systems you want to download binaries for (Only valid options are: windows, 
-            linux, osx) -->
-          <operatingSystems>
-            <windows>true</windows>
-            <linux>false</linux>
-            <mac>false</mac>
-          </operatingSystems>
-          <!-- Download 32bit binaries -->
-          <thirtyTwoBitBinaries>true</thirtyTwoBitBinaries>
-          <!-- Download 64bit binaries -->
-          <sixtyFourBitBinaries>true</sixtyFourBitBinaries>
-          <!-- If set to false will download every version available (Other filters will be taken into 
-            account -->
-          <onlyGetLatestVersions>true</onlyGetLatestVersions>
-
-          <!-- Throw an exception if any specified binary versions that the plugin tries to download 
-            do not exist -->
-          <throwExceptionIfSpecifiedVersionIsNotFound>false</throwExceptionIfSpecifiedVersionIsNotFound>
-          <!-- Number of times to attempt to download each file -->
-          <fileDownloadRetryAttempts>2</fileDownloadRetryAttempts>
-          <!-- Number of ms to wait before timing out when trying to connect to remote server to download 
-            file -->
-          <fileDownloadConnectTimeout>20000</fileDownloadConnectTimeout>
-          <!-- Number of ms to wait before timing out when trying to read file from remote server -->
-          <fileDownloadReadTimeout>10000</fileDownloadReadTimeout>
-          <!-- Overwrite any existing binaries that have been downloaded and extracted -->
-          <overwriteFilesThatExist>false</overwriteFilesThatExist>
-          <!-- Check file hashes of downloaded files. Default: true -->
-          <checkFileHashes>false</checkFileHashes>
-          <!-- auto detect system proxy to use when downloading files -->
-          <!-- To specify an explicit proxy set the environment variables http.proxyHost and http.proxyPort -->
-          <useSystemProxy>true</useSystemProxy>
-        </configuration>
-        <executions>
-          <execution> <!-- in eclipse it shows error of the phase, but it has no problem in fact, so ignore it -->
-            <id>download-selenium</id>
-            <phase>generate-sources</phase> <!-- avaliable phases => https://balamaci.ro/maven-lifecycles-explained/ -->
-            <goals>
-              <goal>selenium</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <!-- run main class plugin, to write selenium system properties into property file -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.6.0</version>
-        <executions>
-          <execution>
-            <id>setup-selenium-properties</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>java</goal>
-            </goals>
-            <configuration>
-              <mainClass>${init.mainClass}</mainClass>
-              <arguments>
-              </arguments>
-              <systemProperties>
-                <!-- values will be resolved by selenium binary downloader plugin-->
-                <systemProperty>
-                  <key>webdriver.edge.driver</key>
-                  <!--suppress UnresolvedMavenProperty -->
-                  <value>${webdriver.edge.driver}</value>
-                </systemProperty>
-                <systemProperty>
-                  <key>webdriver.opera.driver</key>
-                  <!--suppress UnresolvedMavenProperty -->
-                  <value>${webdriver.opera.driver}</value>
-                </systemProperty>
-                <systemProperty>
-                  <key>webdriver.chrome.driver</key>
-                  <!--suppress UnresolvedMavenProperty -->
-                  <value>${webdriver.chrome.driver}</value>
-                </systemProperty>
-              </systemProperties>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
 
       <plugin> <!-- if want to configure test, use this plugin -->
         <groupId>org.apache.maven.plugins</groupId>
@@ -235,17 +145,8 @@
         </executions>
         <!-- Learn mavan: <configuration> tab put here will set parameter for all executions in <executions> -->
       </plugin>
-      
-      <plugin> <!-- Need this plugin to allow Java 11 -->
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>versions-maven-plugin</artifactId>
-        <version>2.7</version>
-        <configuration>
-          <generateBackupPoms>false</generateBackupPoms>
-        </configuration>
-      </plugin>
 
-      <plugin> <!-- Update Eclipse IDE own maven-compiler-plugin from 3.1.0 to 3.8.1, in order to support compilation 
+      <plugin> <!-- Update Maven own maven-compiler-plugin from 3.1.0 to 3.8.1, in order to support compilation
           of Java 11 -->
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.1</version>
