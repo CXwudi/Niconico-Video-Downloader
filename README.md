@@ -32,4 +32,4 @@ Currently this project only supports Windows and only support GoogleChrome, sinc
  - run: open terminal in the project root folder, type `java -jar .\<the jar filename>`
  
  # Known Issue:
- - recent Chrome 80 webdriver would ![flash timeout warning](https://stackoverflow.com/questions/60114639/timed-out-receiving-message-from-renderer-0-100-log-messages-using-chromedriver) and occasionally throw `ConnectException`, if that happens, simply clean out all `Runtime Broker` in Windows Task Manager, clean up chromedriver.exe, and restart the program.
+ - recent Chrome 80 webdriver would [flash timeout warning](https://stackoverflow.com/questions/60114639/timed-out-receiving-message-from-renderer-0-100-log-messages-using-chromedriver) and occasionally throw `ConnectException`, if that happens, simply clean out all `Runtime Broker` in Windows Task Manager, clean up chromedriver.exe, and restart the program.
