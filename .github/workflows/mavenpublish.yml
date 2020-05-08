@@ -24,7 +24,9 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
-    - name: Publish to GitHub Packages Apache Maven
-      run: mvn deploy -Dregistry=https://maven.pkg.github.com/CXwudi -Dtoken=GITHUB_TOKEN
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
+    - name: GH Release
+      uses: softprops/action-gh-release@v0.1.5
+      with:
+        body: Auto-released by Github Action
+        prerelease: true
+        files: /.jar
