@@ -30,6 +30,6 @@ jobs:
       with:
         body: Auto-released by Github Action
         prerelease: true
-        files: /.jar
+        files: release/*.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
