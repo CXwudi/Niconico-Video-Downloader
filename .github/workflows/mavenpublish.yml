@@ -30,6 +30,6 @@ jobs:
       with:
         body: Auto-released by Github Action
         prerelease: true
-        files: release/*.zip
+        files: release/niconico-video-downloader.*\.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
