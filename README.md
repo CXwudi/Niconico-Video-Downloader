@@ -23,10 +23,13 @@ Currently this project only supports Windows and only support GoogleChrome, sinc
  - Chrome browser
 ## Step to setup
  - download the artifact from release pages, unpack it 
- - go to the `data/` folder, create an copy of `example_user.properties`, and fill in that property file. 
+ - create your own profile: go to the `data/` folder, create an copy of `example_user.properties`, and fill in that property file. 
    - modify the `data.downloadedList` to something else to avoid using the prefilled `download.txt` in `data/`
  - modify `system_config.property`
-   - modify `user.config` to use your own property file
-   - modify `idm` if you plan to use IDM to download PVs (which means you set `downloadMethod` to "idm")
+   - modify `user.config` to use your own profile
+   - modify `idm` property valye if you plan to use IDM to download PVs (which means you set `downloadMethod` to "idm")
  - (optional, recommended) update youtube-dl.exe in `lib/` with command 'youtube-dl.exe --update'
- - open terminal in the project root folder, type `java -jar .\<the jar filename>`
+ - run: open terminal in the project root folder, type `java -jar .\<the jar filename>`
+ 
+ # Known Issue:
+ - recent Chrome 80 webdriver would ![flash timeout warning](https://stackoverflow.com/questions/60114639/timed-out-receiving-message-from-renderer-0-100-log-messages-using-chromedriver) and occasionally throw `ConnectException`, if that happens, simply clean out all `Runtime Broker` in Windows Task Manager, clean up chromedriver.exe, and restart the program.
