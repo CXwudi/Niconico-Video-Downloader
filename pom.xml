@@ -5,7 +5,7 @@
 
   <groupId>com.cxwudi</groupId>
   <artifactId>niconico-video-downloader</artifactId>
-  <version>3.0.1-SNAPSHOT</version>
+  <version>3.0.5-SNAPSHOT</version>
 
   <prerequisites>
     <maven>3.6.1</maven>
