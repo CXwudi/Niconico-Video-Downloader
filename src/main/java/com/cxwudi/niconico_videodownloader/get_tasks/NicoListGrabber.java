@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeSet;
@@ -36,8 +35,7 @@ public class NicoListGrabber extends CollectionReader{
 	@Override
 	public void readRecord() {
 		HashMap<String, String> mylists = getMyListsIdAndName();
-		for (Iterator<Entry<String, String>> iterator = mylists.entrySet().iterator(); iterator.hasNext();) {
-			Entry<String, String> list = iterator.next();
+		for (Entry<String, String> list : mylists.entrySet()) {
 			collection.addAll(getOneFolderCollection(list.getKey(), list.getValue()));
 		}
 		isDone = true;
@@ -45,7 +43,7 @@ public class NicoListGrabber extends CollectionReader{
 	
 	private HashMap<String, String> getMyListsIdAndName() {
 		try {
-			HashMap<String, String> myLists = new HashMap<>();
+			HashMap<String, String> myLists = new HashMap<>(10);
 			driver.get("http://www.nicovideo.jp/my/mylist/");
 			driver.navigate().refresh();
 

@@ -5,7 +5,7 @@
 
   <groupId>com.cxwudi</groupId>
   <artifactId>niconico-video-downloader</artifactId>
-  <version>3.0.5-SNAPSHOT</version>
+  <version>3.1.0</version>
 
   <prerequisites>
     <maven>3.6.1</maven>
@@ -24,8 +24,7 @@
 
     <lib.dir>lib</lib.dir>
     <data.dir>data</data.dir>
-    <selenium.rootDir>${lib.dir}/selenium_drivers</selenium.rootDir>
-    <release.dir>release</release.dir>
+    <release.dir>${project.basedir}/release</release.dir>
     <dependencies.dir>package</dependencies.dir>
     <niconico_downloader.mainClass>com.cxwudi.niconico_videodownloader.Main</niconico_downloader.mainClass>
   </properties>
