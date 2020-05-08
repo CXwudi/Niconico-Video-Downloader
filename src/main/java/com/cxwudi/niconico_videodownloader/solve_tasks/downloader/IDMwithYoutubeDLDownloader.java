@@ -27,6 +27,8 @@ public class IDMwithYoutubeDLDownloader extends AbstractVideoDownloader {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    private static final String idmProcessName = "IDMan.exe";
+
     /**
      * The second honor function that first use youtube-dl to get a url of the video,
      * then use IDM to download the video from the url
@@ -41,8 +43,7 @@ public class IDMwithYoutubeDLDownloader extends AbstractVideoDownloader {
         var urlStrBuilder = new StringBuilder();
         if (getUrl(song.getId(), urlStrBuilder)){
             // Call IDM to download url
-            var status = downloadUsingIDM(urlStrBuilder.toString(), dir, fileName);
-            return status;
+            return downloadUsingIdm(urlStrBuilder.toString(), dir, fileName);
         } else {
             return DownloadStatus.FAIL_INITIAL;
         }
@@ -57,7 +58,7 @@ public class IDMwithYoutubeDLDownloader extends AbstractVideoDownloader {
      */
     private boolean getUrl(String smId, StringBuilder urlStrBuilder) throws IOException {
         logger.info("start getting video URL for {}", smId);
-        var youtubeDL_getUrlPB = new ProcessBuilder(
+        var youtubeDlGetUrlPb = new ProcessBuilder(
                 Config.getYoutubeDlFile().getAbsolutePath(),
                 "-v",
                 "--username", '"' + Config.getEmail() + '"',
@@ -65,8 +66,8 @@ public class IDMwithYoutubeDLDownloader extends AbstractVideoDownloader {
                 "https://www.nicovideo.jp/watch/" + smId,
                 "--get-url",
                 "-f", "\"best[height<=1080]\""); //for IDM, we trust it to download 1080p video for real fast
-        youtubeDL_getUrlPB.redirectError(ProcessBuilder.Redirect.INHERIT);
-        var getUrlProcess = youtubeDL_getUrlPB.start();
+        youtubeDlGetUrlPb.redirectError(ProcessBuilder.Redirect.INHERIT);
+        var getUrlProcess = youtubeDlGetUrlPb.start();
 
         try (var output = new BufferedReader(new InputStreamReader(getUrlProcess.getInputStream()))){
             var url = output.readLine();
@@ -87,30 +88,62 @@ public class IDMwithYoutubeDLDownloader extends AbstractVideoDownloader {
      * @return {@link DownloadStatus#SUCCESS} if download success
      * @throws IOException if IDM process throw exception, or fail to delete existing file
      */
-    private DownloadStatus downloadUsingIDM(String url, File dir, String fileName) throws IOException {
+    private DownloadStatus downloadUsingIdm(String url, File dir, String fileName) throws IOException {
         var targetFile = new File(dir, fileName);
         if (targetFile.exists()){
             logger.warn("{} already exists, now deleted and re-download", targetFile);
             Files.delete(targetFile.toPath());
         }
+        var idmPath = Config.getIdmFile().toString();
+
+        if (!terminateExistingIdmProcess(idmPath)) {
+            return DownloadStatus.FAIL_INITIAL;
+        }
 
         logger.info("CXwudi and Miku are invoking IDM to download it 😂");
         var idmPB = new ProcessBuilder(
-                Config.getIdmFile().toString(),
+            idmPath,
                 "/d", url,
                 "/p", dir.getAbsolutePath(),
                 "/f", fileName,
-                "/n");
-        idmPB.start(); //this process will fork a new process and return immediately
-
+                "/n", "/q"); //no question and quite after download
+        var idmProcess = idmPB.inheritIO().start();
         try {
-            return waitUntilFileIsHere(targetFile);
+            idmProcess.waitFor();
         } catch (InterruptedException e) {
-            logger.error("Interrupted in IDMwithYoutubeDLDownloader.waitUntilFileIsHere", e);
+            idmProcess.destroy();
+            logger.error("Interrupted in IDMwithYoutubeDLDownloader.downloadUsingIdm", e);
             System.exit(-1);
         }
+        if (Files.exists(targetFile.toPath())){
+            return DownloadStatus.SUCCESS;
+        } else {
+            return DownloadStatus.FAIL_DOWNLOAD;
+        }
 
-        return DownloadStatus.FAIL_DOWNLOAD;
+    }
+
+    /**
+     * To terminate IDM,
+     * used for make sure we are synchronized when calling IDM, the existing IDM process must be terminated
+     * @param idmPath path of IDM
+     * @return {@code true} if termination success
+     */
+    private boolean terminateExistingIdmProcess(String idmPath) {
+        try {
+            var taskKillPb = new ProcessBuilder("taskkill", "/F", "/FI", String.format("\"imagename eq %s\"", idmProcessName));
+            logger.info("killing IDM with {}", taskKillPb.command());
+            var p = taskKillPb.inheritIO().start();
+            p.waitFor();
+            return true;
+        } catch (IOException e) {
+            logger.error("Fail to kill IDM process", e);
+            return false;
+        } catch (InterruptedException e) {
+            logger.error("Interrupted in IDMwithYoutubeDLDownloader.terminateExistingIdmProcess", e);
+            System.exit(-1);
+            return false; // let compiler happy
+        }
     }
 
     /**

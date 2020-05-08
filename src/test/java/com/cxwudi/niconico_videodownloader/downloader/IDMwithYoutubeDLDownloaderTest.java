@@ -5,7 +5,7 @@ import com.cxwudi.niconico_videodownloader.solve_tasks.downloader.IDMwithYoutube
 import com.cxwudi.niconico_videodownloader.util.DownloadStatus;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class IDMwithYoutubeDLDownloaderTest extends DownloaderTestSupport{
 
@@ -14,7 +14,7 @@ class IDMwithYoutubeDLDownloaderTest extends DownloaderTestSupport{
         var downloader = new IDMwithYoutubeDLDownloader();
         VsongDownloadTask task = getSampleVsongDownloadTask();
         var status = downloader.downloadVocaloidPV(task);
-        assertTrue(status == DownloadStatus.SUCCESS);
+        assertEquals(status, DownloadStatus.SUCCESS);
     }
 
 }

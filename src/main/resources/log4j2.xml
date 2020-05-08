@@ -19,9 +19,12 @@
 
   <Loggers>
     <!-- global logger setup-->
-    <Root level="trace">
+    <Root level="info">
       <AppenderRef ref="stdout" /> 
     </Root>
+    <Logger name="com.cxwudi" level="debug" additivity="false">
+      <AppenderRef ref="stdout"/>
+    </Logger>
   </Loggers>
   
 </Configuration>

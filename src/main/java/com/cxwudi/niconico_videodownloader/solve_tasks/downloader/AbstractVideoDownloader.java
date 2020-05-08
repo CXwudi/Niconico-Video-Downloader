@@ -40,7 +40,9 @@ public abstract class AbstractVideoDownloader {
      */
     public DownloadStatus downloadVocaloidPV(VsongDownloadTask task) {
         Objects.requireNonNull(task);
-        if (task.getSong().getId().equals("")) return FAIL_INITIAL;
+        if (task.getSong().getId().equals("")) {
+            return FAIL_INITIAL;
+        }
         var song = task.getSong();
         var file = task.getOutputDir();
         var songFileName = task.getFileName();
@@ -59,7 +61,7 @@ public abstract class AbstractVideoDownloader {
 //            }
 
         }  catch (IOException e) {
-            logger.error("IOException: ", e);
+            logger.error("IOException in AbstractVideoDownloader.downloadVocaloidPV: ", e);
             return FAIL_INITIAL;
         }
     }
