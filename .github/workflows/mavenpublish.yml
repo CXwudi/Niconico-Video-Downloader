@@ -26,7 +26,10 @@ jobs:
 
     - name: GH Release
       uses: softprops/action-gh-release@v0.1.5
+      if: startsWith(github.ref, 'refs/tags/')
       with:
         body: Auto-released by Github Action
         prerelease: true
         files: /.jar
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
