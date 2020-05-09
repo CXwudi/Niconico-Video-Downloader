@@ -29,6 +29,56 @@ public class Config {
 	private static Configuration systemConfig, userConfig;
 	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+	public static final void touch() {/*simply invoke the static block above*/}
+
+	static {
+		//don't forget to set UTF-8 to support Chinese and Japanese
+		FileBasedConfigurationBuilder.setDefaultEncoding(PropertiesConfiguration.class, "UTF-8");
+		Parameters params = new Parameters();
+
+		setupSystemConfig(params);
+		setupUserConfig(params);
+		setupWebDriver();
+
+	}
+
+	private static void setupWebDriver() {
+		//setup selenium system properties
+		WebDriverManager.chromedriver().setup();
+	}
+
+	private static void setupUserConfig(Parameters params) {
+		var userConfigFile = systemConfig.getString("user.config");
+		var builder = new FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
+				.configure(params.properties()
+						.setFileName(userConfigFile));
+		try
+		{
+			userConfig = builder.getConfiguration();
+			logger.info("successfully load {}", userConfigFile);
+		}
+		catch(ConfigurationException cex)
+		{
+			logger.error("Can not get user configuration", cex);
+		}
+	}
+
+	private static void setupSystemConfig(Parameters params) {
+		var builder = new FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
+				.configure(params.properties()
+						.setFileName(systemConfigFile.getPath()));
+		try
+		{
+			systemConfig = builder.getConfiguration();
+			logger.info("successfully load {}", systemConfigFile);
+		}
+		catch(ConfigurationException cex)
+		{
+			logger.error("Can not get system configuration", cex);
+		}
+	}
+
+
 	private static final LazyVar<String> EMAIL = new LazyVar<>(
 			() -> userConfig.getString("niconico.email")
 	);
@@ -81,51 +131,6 @@ public class Config {
 			}
 	);
 	public static List<String> getExcludedListContainStrings() { return EXCLUDE_LIST_CONTAIN_STRINGS.get(); }
-
-	public static final void touch() {/*simply invoke the static block above*/}
-
-	static {
-		//don't forget to set UTF-8 to support Chinese and Japanese
-		FileBasedConfigurationBuilder.setDefaultEncoding(PropertiesConfiguration.class, "UTF-8");
-		Parameters params = new Parameters();
-
-		setupSystemConfig(params);
-		setupUserConfig(params);
-
-		//setup selenium system properties
-		WebDriverManager.chromedriver().setup();
-	}
-
-	private static void setupUserConfig(Parameters params) {
-		var userConfigFile = systemConfig.getString("user.config");
-		var builder = new FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
-				.configure(params.properties()
-						.setFileName(userConfigFile));
-		try
-		{
-			userConfig = builder.getConfiguration();
-			logger.info("successfully load {}", userConfigFile);
-		}
-		catch(ConfigurationException cex)
-		{
-			logger.error("Can not get user configuration", cex);
-		}
-	}
-
-	private static void setupSystemConfig(Parameters params) {
-		var builder = new FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
-				.configure(params.properties()
-						.setFileName(systemConfigFile.getPath()));
-		try
-		{
-			systemConfig = builder.getConfiguration();
-			logger.info("successfully load {}", systemConfigFile);
-		}
-		catch(ConfigurationException cex)
-		{
-			logger.error("Can not get system configuration", cex);
-		}
-	}
 
 	private Config() {}
 }

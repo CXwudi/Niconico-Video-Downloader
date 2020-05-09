@@ -19,7 +19,7 @@ public class ConfigTest {
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Test
-    void testSeleniumProperties() {
+    void testSelenium() {
         Config.touch();
         try {
             var driver = new ChromeDriver();
