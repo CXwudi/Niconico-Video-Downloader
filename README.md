@@ -1,5 +1,7 @@
 # Niconico-Video-Downloader
-The coolest project I wrote that use selenium, youtube-dl to fetch videos list from niconico account favourite list and download these videos.
+The coolest project I wrote that use selenium, youtube-dl to fetch videos list from niconico account favourite list and download these videos.  
+Warning: the project is not working any more in 2020 as NicoNico completely remade their user pages, which breaks Selenium code from fetching the favourite list contents.  
+A solution is possible, but I probably won't implement it as I am actively coding the successor project [project-vd](https://github.com/CXwudi/project-vd)
 
 ![alt text](https://upload.wikimedia.org/wikipedia/de/c/ce/NicoNicoDouga-Logo-Vector.svg)
 
