@@ -4,8 +4,15 @@ The coolest project I wrote that use selenium, youtube-dl to fetch videos list f
 ![alt text](https://upload.wikimedia.org/wikipedia/de/c/ce/NicoNicoDouga-Logo-Vector.svg)
 
 ## About this project
+The project is no longer maintained.  
 The project is not working any more in 2020 as NicoNico completely remade their user pages, which breaks Selenium code from fetching the favourite list contents.  
-A solution is possible, but I probably won't able to work on it until I have time, I don't know when either.
+A solution is possible, but I won't do it anymore
+
+## Alternates to this project
+if you still want to batch download videos from niconico account favourite list, consider following programs:
+- tsukumijima's folk of youtube-dl with niconico fix https://github.com/tsukumijima/youtube-dl/tree/fix/niconico
+- my own folk of youtubr-dl with tsukumijima's niconico fix but updated with official youtube-dl https://github.com/CXwudi/youtube-dl-niconico-enhanced/tree/tsukumijima/niconico-fix
+- downloader for niconico only https://github.com/AlexAplin/nndownload
 
 ## Appreciation 
 Special thanks for the 3rd party programable video downloader------Youtube-dl,
