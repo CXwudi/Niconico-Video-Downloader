@@ -10,9 +10,10 @@ A solution is possible, but I won't do it anymore
 
 ## Alternates to this project
 if you still want to batch download videos from niconico account favourite list, consider following programs:
-- tsukumijima's folk of youtube-dl with niconico fix https://github.com/tsukumijima/youtube-dl/tree/fix/niconico
-- my own folk of youtubr-dl with tsukumijima's niconico fix but updated with official youtube-dl https://github.com/CXwudi/youtube-dl-niconico-enhanced/tree/tsukumijima/niconico-fix
-- downloader for niconico only https://github.com/AlexAplin/nndownload
+- [yt-dlp](https://github.com/yt-dlp/yt-dlp), which contains tsukumijima's [niconico fix](https://github.com/ytdl-org/youtube-dl/pull/23824)
+- [nndownload](https://github.com/AlexAplin/nndownload), a python command line downloader for niconico only 
+- [nao20010128nao's youtube-dl](https://github.com/nao20010128nao/ytdl-patched)
+- [animelover1984's youtube-dl](https://github.com/animelover1984/youtube-dl)
 
 ## Appreciation 
 Special thanks for the 3rd party programable video downloader------Youtube-dl,
